@@ -9,3 +9,5 @@ Goals:
 Website
 
 improvements of existing ai based on certain categories
+
+Steam workshop mod?
