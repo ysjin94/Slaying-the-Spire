@@ -5,5 +5,7 @@
 This project is built using ForgottenArbiter's spirecomm which communicates with Slay the Spire through his Communication Mod.
 
 Goals:
+
 Website
+
 improvements of existing ai based on certain categories
