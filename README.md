@@ -8,6 +8,6 @@ Goals:
 
 Website
 
-improvements of existing ai based on certain categories
+improvements of existing ai based on certain categories like clear rate, and speed
 
 Steam workshop mod?
