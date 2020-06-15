@@ -12,7 +12,7 @@ improvements of existing ai based on certain categories like clear rate, and spe
 Steam workshop mod?
 |  | | 
 | ---- | --- | 
-| ![draftbot card](utilities/pics/draftbot.png) | <h2>Tech Used</h2><h3><br/><ul><li>Python</li><li>Website</li></li><li>Reinforcement Learning</li><li>Minimax algorithm</li></ul></h3>|
+|![draftbot card](utilities/draftbot.png)| <h2>Tech Used</h2><h3><br/><ul><li>Python</li><li>Website</li></li><li>Reinforcement Learning</li><li>Minimax algorithm</li></ul></h3>|
 
 # SetUp :
 
