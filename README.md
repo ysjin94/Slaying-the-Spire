@@ -3,13 +3,12 @@
 
 This project is built using ForgottenArbiter's spirecomm which communicates with Slay the Spire through his Communication Mod.
 
-Goals:
+Goals: improvements of existing ai based on certain categories like clear rate, and speed by using Minimax algorithm.
 
-Website
+Website : Empty for now
 
-improvements of existing ai based on certain categories like clear rate, and speed
 
-Steam workshop mod?
+
 |  | | 
 | ---- | --- | 
 |![draftbot card](utilities/draftbot.png)| <h2>Tech Used</h2><h3><br/><ul><li>Python</li><li>Website</li></li><li>Simple AI</li><li>Minimax algorithm</li></ul></h3>|
