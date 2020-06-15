@@ -28,8 +28,8 @@ Steam workshop mod?
 4. Launch Slay The Spire with mods and go to communication mods setting and click "Start External Process"
 
 
-If the mod does not run correctly, 
-check the "communication_mod_errors.log"
+If the mod does not run correctly
+* check the "communication_mod_errors.log"
 You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes localfile"->"Resource"
 
 # Theory :
