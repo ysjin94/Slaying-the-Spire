@@ -43,8 +43,24 @@ You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes local
   
   If upgrade bounce is greater than overall socre cards in a store, select the upgrades Bonuce.
   
+![shop_screen](utilities/shop.png)
 
-  
+ We are also useing the purchased item data as a base data. (https://spirelogs.com/stats/shop-items.php)
+ 
+The Upper cards is the class cards, and bottom one is item and potion.
+
+The priority "Class card" -> "shop card" -> "potion" for now (It could be changed) 
+
+It will be chosen by the winrates base on the data. 
+
+we need to convert postion winrate to overall points
+* 0% ~ 10% winrate for shop card = 30 overall points
+* 10% ~ 20% winrate for shop card = 60 overall points
+* 20% ~ 40% winrate for shop card = 100 overall points
+* 40% ~ 50% winrate for shop card = 130 overall points
+* 50% ~ 100% winrate for shop card = 200 overall points
+
+
 # Theory : 
   * Run the AI with the base data.
   * Modify the base data, bese on the Result of Run.
