@@ -52,7 +52,9 @@ The Upper cards is the class cards, and bottom one is item and potion.
 The priority "Class card" -> "shop card" -> "potion" for now (It could be changed) 
 
 It will be chosen by the winrates base on the data. 
+create converter caculate winrate to overall points
 
+e.g)
 we need to convert postion winrate to overall points
 * 0% ~ 10% winrate for shop card = 30 overall points
 * 10% ~ 20% winrate for shop card = 60 overall points
