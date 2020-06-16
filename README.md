@@ -33,13 +33,15 @@ You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes local
 
 
 # Building Deck :
+![card_choice_screen](utilities/Building_deck_.png)
+
   We are using the data form https://spirelogs.com/stats/silent/tierlist.php. 
   
-  The AI always going to select the highest overall score cards. 
+  The AI always going to select the highest overall score cards.(The Top one is overall, Bottom is upgrade Bonuce ) 
   
-  If AI does not has enough money to buy highest overall score cards, select the next overall cards.
+  If AI does not has enough money to buy the highest overall score cards, select the next overall cards. If there are same overall cards, Select the highest upgrade bonuce.
   
-  If upgrade bounce is greater than overall socre cards, select the upgrades
+  If upgrade bounce is greater than overall socre cards in a store, select the upgrades Bonuce.
   
 
   
