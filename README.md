@@ -71,5 +71,7 @@ we need to convert postion winrate to overall points
 # Future Improvements:
  * Develop the website
  * Improve the sample AI by using Minimax algorithm
+ * spirelog.com is updated, check the new table, and the Deck Building will be changed.
+ (https://dev.spirelogs.com/ironclad/shop.php)
 
 [Presentation Link - Has more diagrams and info](https://docs.google.com/presentation/d/1RxQuOPTGZf5BejvV4l8MaKA3IbAYYN19-rI9gjpSf4s/edit#slide=id.p)
