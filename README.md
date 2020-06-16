@@ -19,7 +19,7 @@ Website : Empty for now
    * ModTheSpire - Steam Workshop version
    * BaseMod - Steam Workshop versio
 2. Update Communication Mod config
-  * Windows: `%LOCALAPPDATA%\ModTheSpire\config.properties` 
+  * Windows: `%LOCALAPPDATA%\ModTheSpire\CommunicationMod\config.properties` 
   * Linux: `~/.config/ModTheSpire/config.properties` 
   * Mac: `~/Library/Preferences/ModTheSpire/config.properties` 
 3. Set command=python3 Location where is the main.py
