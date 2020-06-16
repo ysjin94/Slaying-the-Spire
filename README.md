@@ -34,8 +34,8 @@ You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes local
 
 # Building Deck :
 ![card_choice_screen](utilities/Building_deck_.png)
-
-  We are using the data form https://spirelogs.com/stats/silent/tierlist.php. 
+  
+  We are using the data form (https://spirelogs.com/stats/silent/tierlist.php) as a base data. 
   
   The AI always going to select the highest overall score cards.(The Top one is overall, Bottom is upgrade Bonuce ) 
   
@@ -46,6 +46,10 @@ You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes local
 
   
 # Theory : 
+  * Run the AI with the base data.
+  * Modify the base data, bese on the Result of Run.
+  * The data will be more accurately.
+  
 # Overview :
 
 # Future Improvements:
