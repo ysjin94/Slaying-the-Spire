@@ -31,11 +31,20 @@ If the mod does not run correctly
 * check the "communication_mod_errors.log"
 You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes localfile"->"Resource"
 
-# Theory :
-
-# Overview :
 
 # Building Deck :
+  We are using the data form https://spirelogs.com/stats/silent/tierlist.php. 
+  
+  The AI always going to select the highest overall score cards. 
+  
+  If AI does not has enough money to buy highest overall score cards, select the next overall cards.
+  
+  If upgrade bounce is greater than overall socre cards, select the upgrades
+  
+
+  
+# Theory : 
+# Overview :
 
 # Future Improvements:
 
