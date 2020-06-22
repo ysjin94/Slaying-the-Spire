@@ -118,7 +118,7 @@ def Combust(gamestate, hitmonster, Temp_State):
     # attack monster1, monster2, and monster3
     for attack in len(hitmonster):
         newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[attack]], Temp_State.attacknum)
-
+  
     newstate.discard_pile.append('Combust')
 
     return newstate
@@ -179,17 +179,22 @@ def Dropkick(gamestate, hitmonster, Temp_State):
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
 def Dual_Wield(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add Create a copy of an Attack or Power Card.
+    newstate.discard_pile['Dual Wield']
     return newstate
 
 #entrench 2 cost Double your current Block.
 def Entrench(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #doulbe your current Block
     newstate.player.block = newstate.player.block * 2
     newstate.discard_pile['Entrench']
     return newstate
     
 #evolve 1 cost Whenever you draw a Status, draw 1 card.
+#Add draw 
 def Evolve(gamestate, hitmonster, Temp_State):
+    #add Draw card, if you draw a Status
     newstate =  gmaestate
     return newstate
 
