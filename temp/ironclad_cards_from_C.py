@@ -80,6 +80,7 @@ class Temp_State:
         self.check_start_of_turn =check_start_of_turn
         self.check_end_of_turn = check_end_of_turn
         self.current_cost =current_cost
+        # This is for #double tap 1 cost This turn, your next Attack is played twice.
         self.attacknum = attacknum
         
         
@@ -222,13 +223,17 @@ def Double_Tap(gamestate, hitmonster, Temp_State):
 #
 def Dropkick(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster], Temp_State.attacknum)
+    if is_Vulnerable: 
+        #Gain 1 energy, and draw 1 card
+    newstate.discard_pile.append('Dropkick')
     return newstate
     
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
 def Dual_Wield(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     #add Create a copy of an Attack or Power Card.
-    newstate.discard_pile['Dual Wield']
+    newstate.discard_pile.append('Dual Wield')
     return newstate
 
 #entrench 2 cost Double your current Block.
@@ -236,7 +241,7 @@ def Entrench(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     #doulbe your current Block
     newstate.player.block = newstate.player.block * 2
-    newstate.discard_pile['Entrench']
+    newstate.discard_pile.append('Entrench')
     return newstate
     
 #evolve 1 cost Whenever you draw a Status, draw 1 card.
@@ -244,6 +249,7 @@ def Entrench(gamestate, hitmonster, Temp_State):
 def Evolve(gamestate, hitmonster, Temp_State):
     #add Draw card, if you draw a Status
     newstate =  gmaestate
+    newstate.discard_pile.append('Evolve')
     return newstate
 
 #exhume 1 cost Place a card from your Exhaust pile into your hand. Exhaust.
@@ -251,7 +257,7 @@ def Evolve(gamestate, hitmonster, Temp_State):
 def Exhume(gmaestate, hitmonster, Temp_State):
     newstate = gamestate
     #add Place a card from your Exhaust pile
-    newstate.exhaust_pile['Exhume']
+    newstate.exhaust_pile.append('Exhume')
     return newstate
 
 #feed 1 cost Deal 10 damage. If this kills a non-minion enemy, gain 3 permanent Max HP. Exhaust.
@@ -270,18 +276,25 @@ def Feed(gamestate, hitmonster, Temp_State):
 #feel no pain 1 cost Whenever a card is Exhausted, gain 3 Block.
 def Feel_No_Pain(gamestate, hitmonster, Temp_State):
     newstate = gamestate
-    #check if a card is Exhausted,
+    #check if a card is Exhausted, whenever after playing Feel No pain
+    #how to represent?
     newstate.player.block = newstate.player.block+3
     return newstate
 
 #fiend fire 2 cost Exhaust your hand. Deal 7 damage for each Exhausted card. Exhaust.
 def Fiend_Fire(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    # if This card is played, turn on(True) the "Exhaust" helper function if not turn off(False)
+    newstate.exhaust_pile.append('Fiend Fire')
     return newstate
 
 #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6 damage to all enemies.
 def Fire_Breathing(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    if draw_State_or_Curse
+        for x in len(hitmonster):
+            newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster[num]], Temp_State.attacknum)
+    newstate.discard_pile.append('Fire Breathing')
     return newstate
 
 #flame barrier 2 cost Gain 12 Block. Whenever you are attacked this turn, deal 4 damage to the attacker.
