@@ -33,7 +33,7 @@ cards = {
     'Ghostly Armor' : [1, False, Ghostly_Armor],
     'Havoc' : [1, False, Havoc],
     'Headbutt' : [1, True, Headbutt],
-    'Heavy Blade' : [2, True. Heavy_Blade],
+    'Heavy Blade' : [2, True, Heavy_Blade],
     'Hemokinesis' : [1, True, Hemokinesis],
     'Immolate' : [2, True, Immolate],
     'Impervious' : [2, False, Impervious],
