@@ -330,16 +330,23 @@ def Ghostly_Armor(gamestate, hitmonster, Temp_State):
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
 def Havoc(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    
     return newstate
 
 #headbutt 1 cost Deal 9 damage. Place a card from your discard pile on top of your draw pile.
 def Headbutt(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 9, newstate.Monster[hitmonster], Temp_State.attacknum)
+    #add  Place a card from your discard pile on top of your draw pile.
+    newstate.discard_pile.append('Headbutt')
     return newstate
 
 #heavy blade 2 cost Deal 14 damage. Strength affects Heavy Blade 3 times.
 def Heavy_Blade(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster], Temp_State.attacknum)
+    #add  Strength affects Heavy Blade 3 times
+    newstate.discard_pile.append('Heavy Blade')
     return newstate
 
 #hemokinesis 1 cost Lose 3 HP. Deal 14 damage.
@@ -381,6 +388,8 @@ def Inflame(gamestate, hitmonster, Temp_State):
 #intimidate 0 cost Apply 1 Weak to ALL enemies. Exhaust.
 def Intimidate(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add apply 1 weeak to All enemies.
+    newstate.exhuast_pile.append('Exhaust')
     return newstate
 
 #iron wave 1 cost Gain 5 Block. Deal 5 damage.
@@ -406,31 +415,51 @@ def Limit_Break(gamestate, hitmonster, Temp_State):
 #metallicize 1 cost At the end of your turn, gain 3 Block.
 def Metallicize(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add helper function for at end of your turn
     return newstate
 
 #offering 0 cost Lose 6 HP. Gain 2 energy. Draw 3 cards. Exhaust.
 def Offering(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.current_hp = newstate.player.current_hp - 6
+    #add Draw 3 Cards
+    #add 2 energy
+    newstate.exhaust_pile.append('Offering')
     return newstate
 
 #perfected strike 2 cost Deal 6 damage. Deals an additional 2 damage for ALL of your cards containing "Strike".
 def Perfected_Strike(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 6, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    #add Deals an additional 2 damage for ALL of your cards containing "Strike".
+    newstate.discard_pile.append('Perfected Strike')
     return newstate
 
 #pommel strike 1 cost Deal 9 damage. Draw 1 card(s).
 def Pommel_Strike(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 9, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    #add draw 1 card
+    newstate.discard_pile.append('Pommel Strike')
     return newstate
 
 #power through 1 cost Add 2 Wounds to your hand. Gain 15 Block.
 def Power_Through(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block = newstate.player.block + 15
+    newstate.discard_pile.append('Power Through')
+    newstate.hand.append('Wound')
+    newstate.hand.append('Wound')
     return newstate
 
 #pummel 1 cost Deal 2 damage 4 times. Exhaust.
 def Pummel(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 4, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 4, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 4, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 4, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    newstate.exhaust_pile.append('Pummel')
     return newstate
 
 #rage 0 cost Whenever you play an Attack this turn, gain 3 Block
@@ -462,6 +491,7 @@ def Rupture(gamestate, hitmonster, Temp_State):
 def Searing_Blow(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     newstate = newstate = dealdmg(newstate, 12, newstate.Monsters[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Searching Blow')
     return newstate
 
 #second wind 1 cost Exhaust all non-Attack cards in your hand and gain 5 Block for each.
