@@ -134,9 +134,11 @@ def Clash (gmaestate, hitmonster, is_all_attack_in_hand, Temp_State):
         newstate = dealdmg(newstate, 20, newstate.Monster[hitmonster], Temp_State.attacknum)
         newstate.discard_pile.append['Clash']
         return newstate
-    else:
-        newstate.discard_pile.append['Clash']
-        return  newstate
+    #Card remains in hand for next round if not played.
+    #How to represent?
+    #else:
+        #newstate.discard_pile.append['Clash']
+        #return  newstate
 
 #cleave 1 cost Deal 8 damage to ALL enemies.
 def Cleave (gamestate, hitmonster, Temp_State):
@@ -162,7 +164,7 @@ def Clothsline (gamestate, hitmonster, Temp_State):
 def Combust(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     # attack monster1, monster2, and monster3
-    for attack in len(hitmonster):
+    for x in len(hitmonster):
         newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[attack]], Temp_State.attacknum)
   
     newstate.discard_pile.append('Combust')
