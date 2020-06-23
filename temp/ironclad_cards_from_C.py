@@ -196,8 +196,8 @@ def Defend (gamestate, hitmonster, Temp_State):
 #How to apply start of each turn?
 def Demon Form(gamestate, hitmonster, Temp_State):
     newstate = gamestate
-    if State.check_start_of_turn
-        State.My_Strength = State.My_Strength + 2
+    if Temp_State.check_start_of_turn
+        Temp_State.My_Strength = Temp_State.My_Strength + 2
         newstate.discard_pile.append('Demon Form')
         return newstate
     else:
