@@ -24,7 +24,7 @@ cards = {
     'Entrench' :[2, False, Entrench],
     'Evolve' : [1, False, Evolve],
     'Exhume' : [1, False, Exhume],
-    'Feed' :[1, True, Feed]
+    'Feed' :[1, True, Feed],
     'Feel No Pain' : [1, False, Feel_No_Pain],
     'Fiend Fire' : [2, True, Fiend_Fire],
     'Fire Breathing' : [1, True, Fire_Breathing],
