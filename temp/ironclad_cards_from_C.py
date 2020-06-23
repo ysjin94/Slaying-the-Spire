@@ -166,7 +166,7 @@ def Combust(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     # attack monster1, monster2, and monster3
     for x in len(hitmonster):
-        newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[attack]], Temp_State.attacknum)
+        newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
   
     newstate.discard_pile.append('Combust')
 
@@ -267,7 +267,7 @@ def Feed(gamestate, hitmonster, Temp_State):
     # if monster is dead
     if newstate.is_dead:
         newstate.Character[Character].max_hp + 3
-        newstate.exhaust_pile['Feed']
+        newstate.exhaust_pile.append('Feed')
         return newstate
     else:
         #Remain the card if it is not played
@@ -289,20 +289,29 @@ def Fiend_Fire(gamestate, hitmonster, Temp_State):
     return newstate
 
 #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6 damage to all enemies.
+#need to update
 def Fire_Breathing(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    # Whenever you draw a Status or Curse card
     if draw_State_or_Curse
         for x in len(hitmonster):
-            newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster[num]], Temp_State.attacknum)
+            newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster[x]], Temp_State.attacknum)
     newstate.discard_pile.append('Fire Breathing')
     return newstate
 
 #flame barrier 2 cost Gain 12 Block. Whenever you are attacked this turn, deal 4 damage to the attacker.
 def Flame_Barrier(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block =  newstate.player.block + 12
+    #if you are attacked this turn
+    if is_attacked:
+        #how to represent attacker?
+        #how to represent this turn?
+        #newstate = dealdmg(newstate, 4, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Flame_Barrier')   
     return newstate
 
-#flex 0 cost Gain 2 Strength. At the end of your turn, lose 2 Strength.
+#flex 0 cost 2 Strength. At the end of your turn, lose 2 Strength.
 def Flex(gamestate, hitmonster, Temp_State):
     newstate = gamestate
     return newstate
