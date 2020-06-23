@@ -261,7 +261,11 @@ def Feed(gamestate, hitmonster, Temp_State):
     # if monster is dead
     if newstate.is_dead:
         newstate.Character[Character].max_hp + 3
-    return newstate
+        newstate.exhaust_pile['Feed']
+        return newstate
+    else:
+        #Remain the card if it is not played
+        return newstate
 
 #feel no pain 1 cost Whenever a card is Exhausted, gain 3 Block.
 def Feel_No_Pain(gamestate, hitmonster, Temp_State):
@@ -453,6 +457,8 @@ def Spot_Weakness(gamestate, hitmonster, Temp_State):
 #strike 1 cost Deal 6 damage.
 def Strike(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile('Strike')
     return newstate
 
 #sword boomerang 1 cost Deal 3 damage to a random enemy 3 times.
