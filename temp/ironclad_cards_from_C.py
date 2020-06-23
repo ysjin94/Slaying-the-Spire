@@ -461,6 +461,7 @@ def Rupture(gamestate, hitmonster, Temp_State):
 #searing blow 2 cost Deal 12 damage. Can be upgraded any number of times.
 def Searing_Blow(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = newstate = dealdmg(newstate, 12, newstate.Monsters[hitmonster], Temp_State.attacknum)
     return newstate
 
 #second wind 1 cost Exhaust all non-Attack cards in your hand and gain 5 Block for each.
@@ -471,26 +472,37 @@ def Second_Wind(gamestate, hitmonster, Temp_State):
 #seeing red 1 cost Gain 2 energy. Exhaust.
 def Seeing_Red(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add Gain 2 energy
+    newstate.exhaust_pile.append('Seeing Red')
     return newstate
 
 #sentinel 1 cost Gain 5 Block. If this card is Exhausted, gain 2 energy.
 def Sentinel(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block = newstate.player.block + 5
+    #add If this card is Exhausted, gain 2 energy
     return newstate
 
 #sever soul 2 cost Exhaust all non-Attack cards in your hand. Deal 16 damage.
 def Sever_Soul(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add exhuast all non-Attack Cards in your hand
+    newstate = dealdmg(newstate, 16, newstate.Monsters[hitmonster], Temp_State.attacknum)
     return newstate
 
 #shock wave 2 cost Apply 3 Weak and Vulnerable to ALL enemies.Exhaust.
 def Shock_Wave(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add apply 3 Weak and Vulneralble to All enemies
+    newstate.exhaust_pile.append('Shock Wave')
     return newstate
 
 #shrug it off 1 cost Gain 8 Block. Draw 1 card.
 def Shrug_It_Off(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block = newstate.player.block + 8
+    #add Draw Card
+    newstate.discard_pile.append('Strug It Off')
     return newstate
 
 #spot weakness 1 cost If an enemy intends to attack, gain 3 Strength.
@@ -508,31 +520,53 @@ def Strike(gamestate, hitmonster, Temp_State):
 #sword boomerang 1 cost Deal 3 damage to a random enemy 3 times.
 def Sword_Boomerang(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    # a random enemy.
+    x = randomrange(len(hitmonster))
+    # deal 3 damage
+    newstate = dealdmg(newstate, 3, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 3, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 3, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
     return newstate
 
 #thunderclap 1 cost Deal 4damage and apply 1 Vulnerable to ALL enemies.
 def Thunderclap(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    for x in len(hitmonster):
+        newstate = dealdmg(newstate, 4, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
+        #add apply 1 Vulnerable
+    newstate.discard_pile.append('Thunderclap')
     return newstate
 
 #true grit 1 cost Gain 7 Block. Exhaust a random card from your hand.
 def True_Grit(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block = newstate.player.block + 7
+    #add Exhuast a random card from your hand
+    newstate.discard_pile.append('True Grit')
     return newstate
 
 #twin strike 1 cost Deal 5 damage twice.
 def Twin_Strike(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Twin Strike')
     return newstate
 
 #uppercut 2 cost Deal 13 damage. Apply 1 Weak. Apply 1 Vulnerable.
 def Uppercut(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = dealdmg(newstate, 13, newstate.Monster[hitmonster], Temp_State.attacknum)
+    #apply 1 weak, and 1 Vulnerable
+    newstate.discard_pile.append('Uppercut')
     return newstate
 
 #warcry 0 cost Draw 1 card. Place a card from your hand on top of your draw pile. Exhaust.
 def Warcry(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #Draw 1 Card
+    #Place a Card from your hand on top of your draw pile.
+    newstate.exhaust_pile.append('Warcry')
     return newstate
 
 #whirlwind X cost Deal 5 damage to ALL enemies X times.
@@ -543,5 +577,8 @@ def Whirlwind(gamestate, hitmonster, Temp_State):
 #wildstrike 1 cost Deal 12 damage. Shuffle a Wound into your draw pile.
 def Wildstrike(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate = newstate = dealdmg(newstate, 12, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Wildstrike')
+    newstate.draw_pile.append('Wound')
     return newstate
 
