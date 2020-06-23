@@ -73,12 +73,10 @@ cards = {
 }
 #States
 class Temp_State:
-    def __init__(self, My_Strength, Monster_Strength,check_start_of_turn, weak, check_end_of_turn, current_cost, attacknum):
+    def __init__(self, My_Strength, Monster_Strength, weak, current_cost, attacknum):
         self.weak = weak
         self.My_Strength = My_Strength
         self.Monster_Strength = Monster_Strength
-        self.check_start_of_turn =check_start_of_turn
-        self.check_end_of_turn = check_end_of_turn
         self.current_cost =current_cost
         # This is for #double tap 1 cost This turn, your next Attack is played twice.
         self.attacknum = attacknum
@@ -96,6 +94,10 @@ def dealdmg(gamestate, damage, monster, attacknum):
         newstate.Monsters[monster].current_hp -= damage * attacknum
         return newstate
 
+# Effect at end of turn
+def end_of_turn(gamestate,Temp_State):
+    
+    
 #Need to Helper Function
 #Cost,
 
@@ -266,7 +268,8 @@ def Feed(gamestate, hitmonster, Temp_State):
     newstate = dealdmg(newstate, 10, newstate.Monsters[hitmonster], Temp_State.attacknum)
     # if monster is dead
     if newstate.is_dead:
-        newstate.Character[Character].max_hp + 3
+        # gain 3 permanent Max HP
+        newstate.max_hp =newstate.max_hp + 3
         newstate.exhaust_pile.append('Feed')
         return newstate
     else:
@@ -317,8 +320,11 @@ def Flex(gamestate, hitmonster, Temp_State):
     return newstate
 
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
+#add if you do not use this card, Ethereal.
 def Ghostly_Armor(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block =newstate.player.block + 10
+    newstate.discard_pile.append('Ghostly_Armor')
     return newstate
 
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
@@ -339,21 +345,32 @@ def Heavy_Blade(gamestate, hitmonster, Temp_State):
 #hemokinesis 1 cost Lose 3 HP. Deal 14 damage.
 def Hemokinesis(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.current_hp =newstate.current_hp - 3
+    newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Hemokinesis')
     return newstate
 
 #immolate 2 cost Deal 21 damage to ALL enemies. Add a Burn to your discard pile.
 def Immolate(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    for x in len(hitmonster):
+        newstate = dealdmg(newstate, 21, newstate.Monsters[hitmonster[x]], Temp_State.attacknum)
+    newstate.discard_pile.append('Burn')
+    newstate.discard_pile.append('Immolate')
     return newstate
 
 #impervious 2 cost Gain 30 Block. Exhaust.
 def Impervious(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block =newstate.player.block + 10
+    newstate.exhaust_pile.append('Impervious')
     return newstate
 
 #infernal blade 1 cost Add a random Attack to your hand. It costs 0 this turn. Exhaust.
 def Infernal_Blade(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add a random Attack to your hand
+    newstate.exhaust_pile.append('Infernal_Blade')
     return newstate
 
 #inflame 1 cost Gain 2 Strength.
@@ -369,6 +386,9 @@ def Intimidate(gamestate, hitmonster, Temp_State):
 #iron wave 1 cost Gain 5 Block. Deal 5 damage.
 def Iron_wave(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    newstate.player.block = newstate.player.block +5
+    dealdmg(newstate, 5, newstate.Monster[hitmonster], Temp_State.attacknum)
+    newstate.discard_pile.append('Iron Wave')
     return newstate
     
 #juggernaut 2 cost Whenever you gain Block, deal 5 damage to a random enemy.
@@ -379,6 +399,8 @@ def Juggernaut(gamestate, hitmonster, Temp_State):
 #limit break 1 cost Double your Strength. Exhaust.
 def Limit_Break(gamestate, hitmonster, Temp_State):
     newstate = gamestate
+    #add double your Strength
+    newstate.exhaust_pile.append('Limit Break')
     return newstate
 
 #metallicize 1 cost At the end of your turn, gain 3 Block.
