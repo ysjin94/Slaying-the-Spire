@@ -1,5 +1,5 @@
 from spirecomm.spire.character.py import Character
-
+import random
 #THIS IS PARTLY PSEUDOCODE
 #problems:upgrading a card not implemented
 
