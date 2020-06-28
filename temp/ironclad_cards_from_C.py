@@ -84,7 +84,7 @@ cards = {
     'Shrug It Off' : [1, False, Shrug_It_Off, 'S'], #draw
     'Spot Weakness' : [1, False, Spot_Weakness, 'S'], #check enemy intent
     'Strike' : [1, True, Strike, 'A'],
-    'Second Wind' : [1, False, Second_Wind, 'S']
+    'Second Wind' : [1, False, Second_Wind, 'S'],
     'Sword Boomerang' : [1, True, Sword_Boomerang, 'A'], #some way to handle probability
     'Thunderclap' : [1, True,Thunderclap, 'A'], #apply vulnerable
     'True grit' : [1, False, True_Grit, 'S'], #need some way to randomly handle probability
