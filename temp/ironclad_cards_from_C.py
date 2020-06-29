@@ -40,6 +40,7 @@ cards = {
     'Double Tap' : [1, False, Double_Tap, 'D'], #gamestate
     'Dropkick' : [1, True, Dropkick, 'A'], #draw if conditions are met
     'Dual Wield' : [1, False, Dual_Wield,'S'],
+    'Demon Form' : [3, False, Demon_Form, 'P'],
     'Entrench' :[2, False, Entrench, 'S'],
     'Evolve' : [1, False, Evolve, 'P'], #new gamestate
     'Exhume' : [1, False, Exhume, 'S'], #exhaust
@@ -81,6 +82,7 @@ cards = {
     'Shrug It Off' : [1, False, Shrug_It_Off, 'S'], #draw
     'Spot Weakness' : [1, False, Spot_Weakness, 'S'], #check enemy intent
     'Strike' : [1, True, Strike, 'A'],
+    'Second Wind' : [1, False, Second_Wind, 'S'],
     'Sword Boomerang' : [1, True, Sword_Boomerang, 'A'], #some way to handle probability
     'Thunderclap' : [1, True,Thunderclap, 'A'],
     'True grit' : [1, False, True_Grit, 'S'], #need some way to randomly handle probability
