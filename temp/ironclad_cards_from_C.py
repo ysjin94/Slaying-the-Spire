@@ -20,9 +20,9 @@ cards = {
     'Armaments' : [1, False, Armaments, 'S'], #need upgrade function
     'Barricade' : [3, False, Barricade, 'P'], #Barricade needs to be a game state field, do not lose block at turn end
     'Bash' : [2, True, Bash, 'A'],
-    'Battle Trance' : [0, False, Battle_Trance, 'S'], #Need new gamestate disable drawing
+    'Battle Trance' : [0, False, Battle_Trance, 'S'], # gamestate, You cannot draw additional cards this turn.
     'Berserk' : [0, False, Berserk, 'P'], #somehow figure out energy
-    'Blood For Blood' : [4, True, Blood_For_Blood, 'A'], #need new gamestate
+    'Blood For Blood' : [4, True, Blood_For_Blood, 'A'],#gamestate, 1 less energy for each time you lose HP in combat
     'Bloodletting' : [0, False, Bloodletting, 'S'],
     'Bludgeon' : [3, True, Bludgeon, 'A'],
     'Body Slam' : [1, True, Body_Slam, 'A'],
@@ -32,24 +32,24 @@ cards = {
     'Clash' : [0, True, Clash. 'A'], #Clash does not play if not all cards are attacks, SHOULD IGNORE DISCARD, card itself will handle discard
     'Cleave' : [1, True, Cleave, 'A'],
     'Clothesline' : [2, True, Clothsline,'A'],
-    'Combust' :[1, True, Combust, 'P'], #Need gamestate
-    'Corruption' : [3, False, Corruption, 'P'], #new gamestate
-    'Dark Embrace' : [2, False, Dark_Embrace,'P'], #Needs new gamestate field
+    'Combust' :[1, True, Combust, 'P'], # gamestate, At the end of your turn
+    'Corruption' : [3, False, Corruption, 'P'], # gamestate, Whenever you play a Skill, Exhaust it
+    'Dark Embrace' : [2, False, Dark_Embrace,'P'], #gamestate, Whenever a card is Exhausted, draw 1 card.
     'Defend' : [1, False, Defend, 'S'],
     'Disarm' : [3, True, Disarm, 'S'], #exhaust
-    'Double Tap' : [1, False, Double_Tap, 'D'], #gamestate
+    'Double Tap' : [1, False, Double_Tap, 'D'], #gamestate, This turn, your next Attack is played twice.
     'Dropkick' : [1, True, Dropkick, 'A'], #draw if conditions are met
     'Dual Wield' : [1, False, Dual_Wield,'S'],
-    'Demon Form' : [3, False, Demon_Form, 'P'],
+    'Demon Form' : [3, False, Demon_Form, 'P'], # gamestate, at the start of each turn, gain 2 strength
     'Entrench' :[2, False, Entrench, 'S'],
-    'Evolve' : [1, False, Evolve, 'P'], #new gamestate
+    'Evolve' : [1, False, Evolve, 'P'], # gamestate, Whenever you draw a Status, draw 1 card.
     'Exhume' : [1, False, Exhume, 'S'], #exhaust
     'Feed' :[1, True, Feed, 'A'], #exhaust
-    'Feel No Pain' : [1, False, Feel_No_Pain, 'P'], #gamestate
+    'Feel No Pain' : [1, False, Feel_No_Pain, 'P'],#gamestate, Whenever a card is Exhausted, gain 3 Block.
     'Fiend Fire' : [2, True, Fiend_Fire, 'A'], #exhaust
-    'Fire Breathing' : [1, True, Fire_Breathing, 'P'], #gamestate
-    'Flame Barrier' : [2, False, Flame_Barrier, 'S'], #gamestate
-    'Flex' : [0, False, Flex,'S'], #gamestate lose 2 strength at end of turn
+    'Fire Breathing' : [1, True, Fire_Breathing, 'P'],#gamestate,  Whenever you draw a Status or Curse card,
+    'Flame Barrier' : [2, False, Flame_Barrier, 'S'], #gamestate,  Whenever you are attacked this turn
+    'Flex' : [0, False, Flex,'S'], #gamestate, lose 2 strength at end of turn
     'Ghostly Armor' : [1, False, Ghostly_Armor,'S'],
     'Havoc' : [1, False, Havoc, 'S'],
     'Headbutt' : [1, True, Headbutt,'A'], #need new function to return card from discard pile
@@ -61,19 +61,19 @@ cards = {
     'Inflame' : [1, True, Inflame, 'P'],
     'Intimidate' : [0, True, Intimidate,'S'], # exhaust
     'Iron wave' : [1, True, Iron_wave,'A'],
-    'Juggernaut' : [2, True, Juggernaut, 'P'], #gamestate, to work with block
+    'Juggernaut' : [2, True, Juggernaut, 'P'], # gamstate, Whenever you gain Block,
     'Limit Break' : [1, False, Limit_Break, 'S'], #exhaust
-    'Metallicize' : [1, False, Metallicize,'P'], #gamestate
+    'Metallicize' : [1, False, Metallicize,'P'], #gamestate,At the end of your turn, gain 3 Block.
     'Offering' : [0, False, Offering, 'S'], #need add energy/mana function, exhaust
     'Perfected Strike' : [2, True, Perfected_Strike, 'A'],
     'Pommel Strike' : [1, True, Pommel_Strike, 'A'], #draw
     'Power Through' : [1, False, Power_Through, 'S'], #add 2 wounds to hand
     'Pummel' : [1, True, Pummel, 'A'], #exhaust
-    'Rage' : [0, False, Rage, 'S'], #gamestate
+    'Rage' : [0, False, Rage, 'S'], # gamestate, Whenever you play an Attack this turn, gain 3 Block
     'Rampage' : [1, True, Rampage, 'A'], #need ability to track unique cards of rampage
     'Reaper' : [2, True, Reaper, 'A'], #exhaust
     'Reckless Charge' : [0, True, Reckless_Charge, 'A'], #shuffle daze in draw pile
-    'Rupture' : [1, False, Rupture, 'P'], #gamestate
+    'Rupture' : [1, False, Rupture, 'P'], #gamestate, Whenever you lose HP from a card, gain 1 Strength.
     'Searing Blow' : [2, True, Searing_Blow, 'A'], #can be upgraded nay number of times
     'Seeing Red' : [0, False, Seeing_Red, 'S'], #exhaust
     'Sentinel' : [1, False, Sentinel, 'S'], #check gamestate for exhaust skills when used
@@ -82,7 +82,8 @@ cards = {
     'Shrug It Off' : [1, False, Shrug_It_Off, 'S'], #draw
     'Spot Weakness' : [1, False, Spot_Weakness, 'S'], #check enemy intent
     'Strike' : [1, True, Strike, 'A'],
-    'Second Wind' : [1, False, Second_Wind, 'S'],
+    'Second Wind' : [1, False, Second_Wind, 'S'], # #Exhaust all non-Attack Cards in your hand.
+    #Gain 5 Block for each
     'Sword Boomerang' : [1, True, Sword_Boomerang, 'A'], #some way to handle probability
     'Thunderclap' : [1, True,Thunderclap, 'A'],
     'True grit' : [1, False, True_Grit, 'S'], #need some way to randomly handle probability
@@ -221,7 +222,7 @@ def barricade(gamestate):
     newstate = gamestate
 
     #Block no longer expires at the start of your turn.
-    newstate.barricade = true;
+    newstate.barricade = True
 
     return newstate
 
@@ -239,7 +240,9 @@ def bash(gamestate, hitmonster):
 def Battle_Trance(gamestate, hitmonster):
     newstate = gamestate
     #Draw 3 Cards
+    
     #Cannot draw additional Cards this turn
+    gamestate.Battle_Trance = True
     return newstate
 
 #berserk 0 cost Gain 2 Vulnerable. Gain 1 Energy at the start of your turn.
@@ -255,6 +258,7 @@ def Berserk(gamestate, hitmonster):
 def Blood_For_Blood(gamestate, hitmonster):
     newstate = gamestate
     #if lose HP in combat
+    newstate.Blood_For_Blood = True
         #Cost 1 less energy for each time
     #Deal 18 damage
     newstate = dealdmg(newstate, 18, newstate.Monster[hitmonster])
@@ -288,7 +292,7 @@ def Body_Slam(gamestate, hitmonster):
 def Brutality(gamestate, hitmonster):
     newstate = gamestate
     # At start of turn
-        # newstate.player.current_hp = newsate.player.current_hp - 1
+        # newstate.player.current_hp = newstate.player.current_hp - 1
         # draw 1 card
     return newstate
 
@@ -345,6 +349,8 @@ def Clothesline (gamestate, hitmonster):
 #How to apply At the end of your turn?
 def Combust(gamestate, hitmonster):
     newstate = gamestate
+    # At the end of your turn
+    newstate.Combust = True
     # attack monster1, monster2, and monster3
     for x in len(hitmonster):
         newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[x]])
@@ -358,6 +364,7 @@ def Combust(gamestate, hitmonster):
 def Corruption(gamestate, hitmonster):
     newstate = gamestate
     # Set the skill cost 0
+    newstate.Corruption = True
     # When you play the skill
     # Exhaust it
 
@@ -367,6 +374,7 @@ def Corruption(gamestate, hitmonster):
 def Dark_Embrace(gamestate, hitmonster):
     newstate = gamestate
     #whenever a card is Exhausted,
+    newstate.Dark_Embrace = True
     #Draw 1 Card.
 
     return newstate
@@ -384,6 +392,7 @@ def Demon_Form(gamestate, hitmonster):
     newstate = gamestate
         #gain 2 Strength
     #if at the start of each turn,
+    newstate.Demon_Form = True
     #gain 2 Strength
     return newstate
 
@@ -397,7 +406,7 @@ def Disarm(gamestate, hitmonster):
 #double tap 1 cost This turn, your next Attack is played twice.
 def Double_Tap(gamestate, hitmonster):
     newstate = gamestate
-    #need to modifiy
+    newstate.Double_Tap = True
     return newstate
 
 #dropkick 1 cost Deal 5 damage. If the enemy is Vulnerable, gain 1 energy and draw 1 card.
@@ -429,6 +438,7 @@ def Entrench(gamestate, hitmonster):
 def Evolve(gamestate, hitmonster):
     #add Draw card, if you draw a Status
     newstate =  gamestate
+    newstate.Evolve = True
     return newstate
 
 #exhume 1 cost Place a card from your Exhaust pile into your hand. Exhaust.
@@ -457,8 +467,7 @@ def Feed(gamestate, hitmonster):
 def Feel_No_Pain(gamestate, hitmonster):
     newstate = gamestate
     #check if a card is Exhausted, whenever after playing Feel No pain
-    #how to represent?
-    newstate = addblock(newstate, 3)
+    newstate.Feel_No_Pain = True
     return newstate
 
 #fiend fire 2 cost Exhaust your hand. Deal 7 damage for each Exhausted card. Exhaust.
@@ -469,10 +478,11 @@ def Fiend_Fire(gamestate, hitmonster):
     return newstate
 
 #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6 damage to all enemies.
-#need to update
+
 def Fire_Breathing(gamestate, hitmonster):
     newstate = gamestate
     # Whenever you draw a Status or Curse card
+    newstate.Fire_Breathing = True
     if draw_State_or_Curse
         for x in len(hitmonster):
             newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster[x]])
@@ -483,6 +493,7 @@ def Flame_Barrier(gamestate, hitmonster):
     newstate = gamestate
     newstate = addblock(newstate, 12)
     #whenever you are attacked this turn
+    newstate.Flame_Barrier = True
     if is_attacked:
         #how to represent attacker?
         #how to represent this turn?
@@ -494,6 +505,7 @@ def Flex(gamestate, hitmonster):
     newstate = gamestate
     #gain 2 Strength
     #end_of_turn lose 2 Strength
+    newstate.Flex = True
     return newstate
 
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
@@ -578,6 +590,7 @@ def Iron_wave(gamestate, hitmonster):
 def Juggernaut(gamestate, hitmonster):
     newstate = gamestate
     #Whenever you Gain Block,
+    newstate.Juggernaut = True
     #deal 5 Damage to a random enemy.
         #x = randomrange(len(hitmonster))
         #newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster[x]])
@@ -594,6 +607,7 @@ def Limit_Break(gamestate, hitmonster):
 def Metallicize(gamestate, hitmonster):
     newstate = gamestate
     #add helper function for at end of your turn
+    newstate.Metallicize = True
     return newstate
 
 #offering 0 cost Lose 6 HP. Gain 2 energy. Draw 3 cards. Exhaust.
@@ -637,8 +651,8 @@ def Pummel(gamestate, hitmonster):
 #rage 0 cost Whenever you play an Attack this turn, gain 3 Block
 def Rage(gamestate, hitmonster):
     newstate = gamestate
-    # whenever player play an Attack this turn
-    newstate = addblock(newstate, 3)
+    # whenever player play an Attack this turn, gain 3 Block
+    newstate.Rage = True
     return newstate
 
 #rampage 1 cost Deal 8 damage. Every time this card is played, increase its damage by 8 for this combat.
@@ -667,6 +681,7 @@ def Reckless_Charge(gamestate, hitmonster):
 def Rupture(gamestate, hitmonster):
     newstate = gamestate
     #whenevr player lose Hp from a cards
+    newstate.Rupture = False
     #gain 1 Strength
     return newstate
 
