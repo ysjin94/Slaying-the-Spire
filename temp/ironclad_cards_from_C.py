@@ -169,8 +169,8 @@ for cardname, card in Game.hand:
     x = cards[card]
     #check if enough energy to play card
     #might have to add energy to game state
-    if Game.energy >= x[0]:
-        Game.energy = Game.energy - x[0]
+    if SimGame.energy >= x[0]:
+        SimGame.energy = Game.energy - x[0]
         #somehow play card/call card function from dict
         #PROBLEM: how are monsters stores in gamestate?'
         #since some cards don't need targets, the card function will loop through the targets if needed?
@@ -348,7 +348,7 @@ def Combust(gamestate, hitmonster):
     # attack monster1, monster2, and monster3
     for x in len(hitmonster):
         newstate = dealdmg(newstate, 5, newstate.Monsters[hitmonster[x]])
-     
+
 
 
     return newstate

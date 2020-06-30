@@ -1,6 +1,25 @@
 import random
 from anytree import Node, RenderTree, LevelOrderGroupIter
 
+class SimGame:
+    self.in_combat = False
+    self.player = None
+    self.monsters = []
+    self.draw_pile = []
+    self.discard_pile = []
+    self.exhaust_pile = []
+    self.hand = []
+    self.limbo = []
+    self.card_in_play = None
+    self.turn = 0
+    self.cards_discarded_this_turn = 0
+    self.barricade = False
+
+
+def getstate:
+    n = SimGame()
+    n.player = Game.player
+
 #return a random evaluation number for given game state
 def eval_function(gamestate):
     #eval is a number between -50 and 50
@@ -15,7 +34,7 @@ def get_next_game_state(card, cards):
     #remove the card being played from list of cards
     remaining_cards.remove(card)
     return remaining_cards #return remaining list of cards
-     
+
 #builds a tree using current game
 def build_tree(gamestate):
         for x in gamestate.name.card_list:
@@ -37,7 +56,7 @@ def tree_search(r):
             if node in r.children:
                 tree_search(node)
                 if node.name.grade > max:
-                    max = node.name.grade        
+                    max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
 cards = ['card1', 'card2', 'card3']
