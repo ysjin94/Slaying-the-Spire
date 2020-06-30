@@ -46,7 +46,7 @@ class Game_State:
     card_list = []
     grade = 0
 
-a = G_State()
+a = Game_State()
 a.card_list = cards.copy()
 root = Node(a, parent=None)
 build_tree(root)
