@@ -13,12 +13,83 @@ class SimGame:
     self.card_in_play = None
     self.turn = 0
     self.cards_discarded_this_turn = 0
-    self.barricade = False
+    #--------- Additional
+    self.energy = 3
+    #--------- Card switches needed for combat
+    self.Barricade = False
+    self.Battle_Trace = False
+    self.Blood_For_Blood = False
+    self.Combust = False
+    self.Corruption = False
+    self.Dark_Embrace = False
+    self.Demon_Form = False
+    self.Double_Tap = False
+    self.Evolve = False
+    self.Feel_No_Pain = False
+    self.Fire_Breathing = False
+    self.Flame_Barrier = False
+    self.Flex = False
+    self.Juggernaut = False
+    self.Metallicize = False
+    self.Rage = False
+    self.Rupture = False
+
+
 
 
 def getstate:
     n = SimGame()
     n.player = Game.player
+    n.monsters = Game.monsters
+    n.draw_pile = Game.draw_pile
+    n.discard_pile = Game.discard_pile
+    n.exhaust_pile = Game.exhaust_pile
+    n.hand = Game.hand
+    n.limbo = Game.limbo
+    n.card_in_play = Game.card_in_play
+    n.turn = Game.turn
+    n.cards_discarded_this_turn = Game.cards_discarded_this_turn
+
+
+#---------------
+
+# Effect at end of turn
+def end_of_turn(gamestate):
+    newstate = gamestate
+    #deal poison damage
+    #ethereal check, if card is ethereal, exhaust it
+    return newstate
+
+def start_of_turn(gamestate):
+    newstate = gamestate
+    #reset energy/mana
+    return newstate
+#Need to Helper Function
+#Cost,
+
+#example pseudocode
+for cardname, card in Game.hand:
+    x = cards[card]
+    #check if enough energy to play card
+    #might have to add energy to game state
+    if SimGame.energy >= x[0]:
+        SimGame.energy = Game.energy - x[0]
+        #somehow play card/call card function from dict
+        #PROBLEM: how are monsters stores in gamestate?'
+        #since some cards don't need targets, the card function will loop through the targets if needed?
+        if x[1] = False:
+            x[2](SimGame)
+            SimGame = SimGame.hand.remove(cardname)
+            SimGame = SimGame.discard_pile.append(cardname)
+        else:
+            for target in SimGame.Monsters:
+                x[2](SimGame, target)
+                SimGame = SimGame.hand.remove(cardname)
+                SimGame = SimGame.discard_pile.append(cardname)
+
+#will need to evaluate the new gamestate the card function returns?
+
+#---------------
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
