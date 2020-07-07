@@ -10,39 +10,22 @@
 #body slam 1 cost	Deal damage equal to your current Block.
 #brutality 0 cost (Innate.) At the start of your turn, lose 1 HP and draw 1 card.
 #burning pact 1 cost Exhaust 1 card. Draw 2 cards.
-
 #carnage 2 cost	Ethereal. Deal 20(28) damage.
-
 #clash 0 cost Can only be played if every card in your hand is an Attack. Deal 14 damage.
-
 #cleave 1 cost Deal 8 damage to ALL enemies.
-
 #clothsline 2 cost Deal 12 damage. Apply 2 Weak.
-
 #combust 1 cost At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies.
-
 #corruption 3 cost Skills cost 0. Whenever you play a Skill, Exhaust it.
-
 #dark embrace 2 cost Whenever a card is Exhausted, draw 1 card.
-
 #defend 1 cost Gain 5 Block.
-
 #demon form 3 cost At the start of each turn, gain 2 Strength.
-
 #disarm 1 cost Enemy loses 2 Strength. Exhaust.
-
 #double tap 1 cost This turn, your next Attack is played twice.
-
 #dropkick 1 cost Deal 5 damage. If the enemy is Vulnerable, gain 1 energy and draw 1 card.
-
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
-
 #entrench 2 cost Double your current Block.
-
 #evolve 1 cost Whenever you draw a Status, draw 1 card.
-
 #exhume 1 cost Place a card from your Exhaust pile into your hand. Exhaust.
-
 #feed 1 cost Deal 10 damage. If this kills a non-minion enemy, gain 3 permanent Max HP. Exhaust.
 #feel no pain 1 cost Whenever a card is Exhausted, gain 3 Block.
 #fiend fire 2 cost Exhaust your hand. Deal 7 damage for each Exhausted card. Exhaust.
@@ -50,9 +33,6 @@
 #flame barrier 2 cost Gain 12 Block. Whenever you are attacked this turn, deal 4 damage to the attacker.
 #flex 0 cost Gain 2 Strength. At the end of your turn, lose 2 Strength.
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
-
-
-
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
 #headbutt 1 cost Deal 9 damage. Place a card from your discard pile on top of your draw pile.
 #heavy blade 2 cost Deal 14 damage. Strength affects Heavy Blade 3 times.
