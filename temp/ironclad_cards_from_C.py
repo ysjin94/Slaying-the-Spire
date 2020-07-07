@@ -23,6 +23,8 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
         if pmonster.power_name == 'Vulnerable':
             damage = damage * 1.5
     newstate.Monsters[monster].current_hp -= (damage * attacknum)
+    if newstate.Monsters[Monster].current_hp <= 0:
+        del newstate.Monsters[Monster]
     return newstate
 
 def addblock(gamestate, block):
@@ -150,7 +152,7 @@ def Bash(gamestate, hitmonster):
 def Battle_Trance(gamestate, hitmonster):
     newstate = gamestate
     #Draw 3 Cards
-    
+
     #Cannot draw additional Cards this turn
     gamestate.Battle_Trance = True
     return newstate
