@@ -68,26 +68,6 @@ def start_of_turn(gamestate):
 #Need to Helper Function
 #Cost,
 
-#example pseudocode
-for cardname, card in Game.hand:
-    x = cards[card]
-    #check if enough energy to play card
-    #might have to add energy to game state
-    if SimGame.energy >= x[0]:
-        SimGame.energy = Game.energy - x[0]
-        #somehow play card/call card function from dict
-        #PROBLEM: how are monsters stores in gamestate?'
-        #since some cards don't need targets, the card function will loop through the targets if needed?
-        if x[1] = False:
-            x[2](SimGame)
-            SimGame = SimGame.hand.remove(cardname)
-            SimGame = SimGame.discard_pile.append(cardname)
-        else:
-            for target in SimGame.Monsters:
-                x[2](SimGame, target)
-                SimGame = SimGame.hand.remove(cardname)
-                SimGame = SimGame.discard_pile.append(cardname)
-
 #will need to evaluate the new gamestate the card function returns?
 
 #---------------
@@ -184,22 +164,32 @@ def return_path(r):
 
 
 
-cards2 = ['card1', 'card2', 'card3']
 
-class Game_State:
-    card_list = []
-    grade = 0
 
-a = Game_State()
-a.card_list = cards2.copy()
+cards = ['health', 'potion', 'attack']
+
+a = SimGame()
+a.hand = cards.copy()
 root = Node(a, parent=None)
 build_tree(root)
 for pre, fill, node in RenderTree(root):
-    print("%s%s%s" % (pre, node.name.card_list, node.name.grade))
+    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
+eval_tree(root)
+print()
+print()
+print()
+print()
+for pre, fill, node in RenderTree(root):
+    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
 tree_search(root)
 print()
 print()
 print()
 print()
 for pre, fill, node in RenderTree(root):
-    print("%s%s%s" % (pre, node.name.card_list, node.name.grade))
+    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
+print()
+print()
+print()
+print()
+print(return_path(root))
