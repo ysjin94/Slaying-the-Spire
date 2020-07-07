@@ -3,8 +3,8 @@ from anytree import Node, RenderTree, LevelOrderGroupIter
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
-    #eval is a number between -50 and 50
-    eval = random.randrange(-50, 51)
+    #eval is a number between -100 and 100
+    eval = random.randrange(-100, 101)
     return eval
 
 
@@ -39,6 +39,24 @@ def tree_search(r):
                 if node.name.grade > max:
                     max = node.name.grade        
     r.name.grade = max #set current node's eval to max of children
+
+#returns card played 
+def return_move(hand1, hand2):
+    for x in hand1:
+        if x not in hand2:
+            return x 
+
+#returns path to max gamestate
+def return_path(r):
+    move_list = []
+    for children in LevelOrderGroupIter(r, maxlevel=2):
+        for node in children:
+            if node in r.children:
+                if node.name.grade == r.name.grade:
+                    move = return_move(r.name.card_list, node.name.card_list)
+                    move_list.append(move)
+                    move_list += return_path(node)
+    return move_list 
 
 cards = ['card1', 'card2', 'card3']
 
