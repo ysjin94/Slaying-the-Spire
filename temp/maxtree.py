@@ -37,7 +37,7 @@ class SimGame:
 
 
 
-def getstate:
+def getstate():
     n = SimGame()
     n.player = Game.player
     n.monsters = Game.monsters
@@ -49,6 +49,7 @@ def getstate:
     n.card_in_play = Game.card_in_play
     n.turn = Game.turn
     n.cards_discarded_this_turn = Game.cards_discarded_this_turn
+    return n
 
 
 #---------------
@@ -97,31 +98,64 @@ def eval_function(gamestate):
     eval = random.randrange(-100, 101)
     return eval
 
+root_node.state = getstate()
+newstate = root_node.state
+for cardname, card in newstate.hand:
+    x = cards[card]
+    #check if enough energy to play card
+    #might have to add energy to game state
+    if newstate.energy >= x[0]:
+        newstate.energy = newstate.energy - x[0]
+        #somehow play card/call card function from dict
+        #PROBLEM: how are monsters stores in gamestate?'
+        #since some cards don't need targets, the card function will loop through the targets if needed?
+        if x[1] = False:
+            x[2](newstate)
+            newstate = newstate.hand.remove(cardname)
+            newstate = newstate.discard_pile.append(cardname)
+        else:
+            for target in newstate.Monsters:
+                x[2](newstate, target)
+                newstate = newstate.hand.remove(cardname)
+                newstate = newstate.discard_pile.append(cardname)
 
-#return new list of available cards after playing one
-def get_next_game_state(card, cards):
-    remaining_cards = cards.copy() #copy list of cards
 
-    #remove the card being played from list of cards
-    remaining_cards.remove(card)
-    return remaining_cards #return remaining list of cards
+
+def get_next_game_state(card, enough_energy, state_node):
+        gs = SimGame()
+        x = cards[card]
+        if state_node.name.energy >= x[0]:
+            gs.hand = state_node.name.hand.copy()
+            gs.hand.remove(card)
+            gs.discard_pile = state_node.name.discard_pile.copy()
+            gs.discard_pile.append(card)
+            gs.energy = state_node.name.energy
+            gs.energy -= x[0]
+            gs = x[2](state_node)
+        else:
+            enough_energy = False
+        return gs
 
 #builds a tree using current game
 def build_tree(gamestate):
-        for x in gamestate.name.card_list:
-            temp = Game_State() #new child game state
-            temp.card_list = gamestate.name.card_list #copy card list
-            temp.card_list = get_next_game_state(x, temp.card_list) #get next game state
-            if len(temp.card_list) == 1: #if this is a leaf assign evaluation
-                temp.grade = eval_function(1)
-            if temp.card_list: #if card list is not empty
+        for x in gamestate.name.hand:
+            temp = SimGame()
+            can_play = True
+            temp = get_next_game_state(x, can_play, gamestate)
+            if can_play and temp.hand: #if card list is not empty
                 child = Node(temp, parent=gamestate) #create child node
                 build_tree(child) #recursively build tree
+
+def eval_tree(r):
+    for children in LevelOrderGroupIter(r):
+        for node in children:
+            if not node.children:
+                node.name.grade = eval_function(1)
 
 def tree_search(r):
     if not r.children: #if node is a leaf
         return
-    max = -51
+    max = -101
     for children in LevelOrderGroupIter(r, maxlevel=2):
         for node in children:
             if node in r.children:
@@ -130,11 +164,11 @@ def tree_search(r):
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
-#returns card played 
+#returns card played
 def return_move(hand1, hand2):
     for x in hand1:
         if x not in hand2:
-            return x 
+            return x
 
 #returns path to max gamestate
 def return_path(r):
@@ -143,19 +177,21 @@ def return_path(r):
         for node in children:
             if node in r.children:
                 if node.name.grade == r.name.grade:
-                    move = return_move(r.name.card_list, node.name.card_list)
+                    move = return_move(r.name.hand, node.name.hand)
                     move_list.append(move)
                     move_list += return_path(node)
-    return move_list 
+    return move_list
 
-cards = ['card1', 'card2', 'card3']
+
+
+cards2 = ['card1', 'card2', 'card3']
 
 class Game_State:
     card_list = []
     grade = 0
 
 a = Game_State()
-a.card_list = cards.copy()
+a.card_list = cards2.copy()
 root = Node(a, parent=None)
 build_tree(root)
 for pre, fill, node in RenderTree(root):

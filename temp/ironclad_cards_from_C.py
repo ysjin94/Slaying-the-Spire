@@ -41,7 +41,8 @@ def dealvulnerable(gamestate, amount, monster):
         if pmonster.power_name == 'Vulnerable':
             pmonster.amount = pmonster.amount + amount
             return newstate
-    newvulnerable = Power('simtemp', 'Vulnerable', amount)
+    newvulnerable = Power('Vulnerable', 'Vulnerable', amount)
+    newvulnerable.just_applied = True
     newstate.Monsters[monster].power.append(newvulnerable)
     return newstate
 
@@ -51,7 +52,8 @@ def dealweak(gamestate, amount, monster):
         if pmonster.power_name == 'Weak':
             pmonster.amount = pmonster.amount + amount
             return newstate
-    newweak = Power('simtemp', 'Weak', amount)
+    newweak = Power('Weak', 'Weak', amount)
+    newweak.just_applied = True
     newstate.Monsters[monster].power.append(newweak)
     return newstate
 
@@ -832,7 +834,7 @@ cards = {
     'Twin Strike' : [1, True, Twin_Strike, 'A'],
     'Uppercut' : [2, True, Uppercut, 'A'],
     'Warcry' : [0, False, Warcry, 'S'],
-    'Whirlwind' : [3, True, Whirlwind, 'A'], #COST IS VARIABLE PAY ATTENTION
+    'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A'], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A'], #shuffle wound to draw pile
 
 }
