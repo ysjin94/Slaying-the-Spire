@@ -19,6 +19,8 @@ class SimGame:
     self.Barricade = False
     self.Battle_Trace = False
     self.Blood_For_Blood = False
+    self.Berserk = False
+    self.Brutality = False
     self.Combust = False
     self.Corruption = False
     self.Dark_Embrace = False
