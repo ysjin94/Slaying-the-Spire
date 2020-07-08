@@ -22,6 +22,7 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
     for pmonster in newstate.Monsters[monster].power:
         if pmonster.power_name == 'Vulnerable':
             damage = damage * 1.5
+    #need to check block. if block is existed, reduce block. Not the HP
     newstate.Monsters[monster].current_hp -= (damage * attacknum)
     if newstate.Monsters[Monster].current_hp <= 0:
         del newstate.Monsters[Monster]
@@ -66,15 +67,67 @@ def dealweak(gamestate, amount, monster):
     #     return newstate
 
 # Effect at end of turn
-def end_of_turn(gamestate):
+def end_of_turn(gamestate, monster):
     newstate = gamestate
-    #deal poison damage
+    
+    # lose 1 HP and deal 5 damage to ALL enemies.
+    # Warning : even if player has block, lose 1 HP.
+    if Combust :
+        newstate.player.current_hp = newstate.player.current_hp - 1
+        for x in len(monster):
+                newstate = dealdmg(newstate, 5, newstate.Monsters[monster[x]])
+       
+    # At the end of your turn, lose 2 Strength.
+    if newstate.Flex :
+        # lose 2 Strength.
+        newstate.Flex = False
+    
+    #  At the end of your turn, gain 3 Block.
+    if newstate.Metallicize:
+        # need to modify, when metallicize used N times, gain (3 * N) block every turn.
+        newstate.player.block = newstate.player.block + 3
+    
+    #deal poison damage, reduces poison stack
+    for pmonster in newstate.Monsters[monster].power:
+        if pmonster.power_name == 'Poison':
+           # if moster has block reduce block, instead of current HP
+            if hitmonster.block == 0 :
+                newstate.Monsters[monster].current_hp -= pmonster.amount
+                newvulnerable = Power('Poison', 'Poison', amount - 1)
+                newvulnerable.just_applied = True
+                newstate.Monsters[monster].power.append(newvulnerable)
+            else :
+                newstate.Monsters[monster].block -= pmonster.amount
+                newvulnerable = Power('Poison', 'Poison', amount - 1)
+                newvulnerable.just_applied = True
+                newstate.Monsters[monster].power.append(newvulnerable)
+        
     #ethereal check, if card is ethereal, exhaust it
+    for cardname,card in newstate.hand:
+        x = cards[card]
+        # if x is ethereal
+            # exhaust it
+        # else:
+            # newstate.hand.remove(cardname)
+            # newstate.discard_pile.append(cardname)
+    
     return newstate
 
 def start_of_turn(gamestate):
     newstate = gamestate
     #reset energy/mana
+    newstate.energy = 3 # it can be changed by the cards
+    
+    #at the start of your turn, Block no longer expires
+    if newstate.Barricade:
+        # do not reset the block if Barricade is played
+        newstate.player.block = gamestate.player.block
+    else:
+        # else do reset the block
+        newstate.player.block = 0
+
+    #Draw Cards
+
     return newstate
 #Need to Helper Function
 #Cost,
