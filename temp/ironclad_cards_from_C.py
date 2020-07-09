@@ -19,7 +19,7 @@ To do list:
      
      "discard_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"29397503-e3d0-4e84-813a-a47e7d382c99","upgrades":0,"rarity":"BASIC","has_target":true},
                     {"exhausts":false,"is_playable":true,"cost":1,"name":"Survivor","id":"Survivor","type":"SKILL","uuid":"7a683fef-6192-4745-95e2-1514759386d3","upgrades":0,"rarity":"BASIC","has_target":false}]
-     
+     "exhaust_pile":[]
      "hand":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"3d5fb93d-9340-44cd-aec3-99428a972eb3","upgrades":0,"rarity":"BASIC","has_target":false},
             {"exhausts":false,"is_playable":true,"cost":0,"name":"Neutralize","id":"Neutralize","type":"ATTACK","uuid":"f3efc536-de1a-466a-85a2-100dcc0e6b95","upgrades":0,"rarity":"BASIC","has_target":true}]
      
