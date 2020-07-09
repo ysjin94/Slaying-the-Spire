@@ -103,29 +103,31 @@ for cardname, card in newstate.hand:
 
 
 
-def get_next_game_state(card, enough_energy, state_node):
-        gs = SimGame()
+def get_next_game_state(card, state):
         x = cards[card]
-        if state_node.name.energy >= x[0]:
-            gs.hand = state_node.name.hand.copy()
-            gs.hand.remove(card)
-            gs.discard_pile = state_node.name.discard_pile.copy()
-            gs.discard_pile.append(card)
-            gs.energy = state_node.name.energy
-            gs.energy -= x[0]
-            gs = x[2](state_node)
+        if state.energy >= x[0]:
+            state.hand.remove(card)
+            state.discard_pile.append(card)
+            #state.energy -= x[0]
+            return True
         else:
-            enough_energy = False
-        return gs
+            return False
 
 #builds a tree using current game
 def build_tree(gamestate):
         for x in gamestate.name.hand:
-            temp = SimGame()
-            can_play = True
-            temp = get_next_game_state(x, can_play, gamestate)
-            if can_play and temp.hand: #if card list is not empty
-                child = Node(temp, parent=gamestate) #create child node
+            next_state = copy.deepcopy(gamestate.name)
+            can_play = get_next_game_state(x, next_state)
+            #if can_play and x == 'armament':
+            #    child2 = Node(temp, parent=gamestate) #create child node
+            #    for i in range(len(temp.hand)):
+            #        temp2 = copy.deepcopy(temp)
+            #        temp2.hand[i] += ' upgrade' 
+            #        child3 = Node(temp2, parent=child2)
+            #        build_tree(child3) #recursively build tree
+            #else:
+            if can_play:
+                child = Node(next_state, parent=gamestate) #create child node
                 build_tree(child) #recursively build tree
 
 def eval_tree(r):
@@ -146,14 +148,14 @@ def tree_search(r):
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
-#returns card played
+#returns card played 
 def return_move(hand1, hand2):
     for x in hand1:
         if x not in hand2:
-            return x
+            return x 
 
 #returns path to max gamestate
-def return_path(r):
+def find_path(r):
     move_list = []
     for children in LevelOrderGroupIter(r, maxlevel=2):
         for node in children:
@@ -161,8 +163,17 @@ def return_path(r):
                 if node.name.grade == r.name.grade:
                     move = return_move(r.name.hand, node.name.hand)
                     move_list.append(move)
-                    move_list += return_path(node)
-    return move_list
+                    move_list += find_path(node)
+    return move_list 
+
+def return_path(r):
+    moves = find_path(r)
+    for i in range(len(moves)):
+        #if moves[i-1] == 'play armament':
+        #    moves[i] = 'upgrade ' + moves[i]
+        #else:
+        moves[i] = 'play ' + moves[i]
+    print(moves)
 
 
 
@@ -170,7 +181,7 @@ def return_path(r):
 
 cards = ['health', 'potion', 'attack']
 
-a = SimGame()
+a = getstate()
 a.hand = cards.copy()
 root = Node(a, parent=None)
 build_tree(root)
