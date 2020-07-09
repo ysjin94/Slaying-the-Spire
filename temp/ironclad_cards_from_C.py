@@ -4,8 +4,9 @@
 
 To do list:
     Debug
+    Modify dealdmg : lose block first, than lose hp
     Make helper function : Gain Strangth
-    Modify Monster -> Monsters (e.g newstate.Monster[hitmonster] -> .. Monsters[hitmonster] )
+    Modify Monsters -> Monster (e.g newstate.Monsters[hitmonster] -> .. Monster[hitmonster] )
     Modify Start_of_turn : Add reset monster block = 0
     Need to Update Some functions that contains switch, example: Feel_No_Pain
     
