@@ -12,29 +12,33 @@ To do list:
     Convert boolean to int e.g) Feel_No_Pain
     
     <Data From AI>:
-    
+     Sending message:{
      "combat_state":{"draw_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true},
                                   {"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"efa253c0-0c03-4229-8bcf-16e1b2f14257","upgrades":0,"rarity":"BASIC","has_target":true},
                                   {"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"721e873c-b829-4a31-ad52-6b6a6c9422b2","upgrades":0,"rarity":"BASIC","has_target":false}]
      
-     "discard_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"29397503-e3d0-4e84-813a-a47e7d382c99","upgrades":0,"rarity":"BASIC","has_target":true},
-                    {"exhausts":false,"is_playable":true,"cost":1,"name":"Survivor","id":"Survivor","type":"SKILL","uuid":"7a683fef-6192-4745-95e2-1514759386d3","upgrades":0,"rarity":"BASIC","has_target":false}]
-     "exhaust_pile":[]
-     "hand":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"3d5fb93d-9340-44cd-aec3-99428a972eb3","upgrades":0,"rarity":"BASIC","has_target":false},
-            {"exhausts":false,"is_playable":true,"cost":0,"name":"Neutralize","id":"Neutralize","type":"ATTACK","uuid":"f3efc536-de1a-466a-85a2-100dcc0e6b95","upgrades":0,"rarity":"BASIC","has_target":true}]
+                    "discard_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"29397503-e3d0-4e84-813a-a47e7d382c99","upgrades":0,"rarity":"BASIC","has_target":true},
+                                   {"exhausts":false,"is_playable":true,"cost":1,"name":"Survivor","id":"Survivor","type":"SKILL","uuid":"7a683fef-6192-4745-95e2-1514759386d3","upgrades":0,"rarity":"BASIC","has_target":false}]
+                    "exhaust_pile":[]
+                    "hand":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"3d5fb93d-9340-44cd-aec3-99428a972eb3","upgrades":0,"rarity":"BASIC","has_target":false},
+                            {"exhausts":false,"is_playable":true,"cost":0,"name":"Neutralize","id":"Neutralize","type":"ATTACK","uuid":"f3efc536-de1a-466a-85a2-100dcc0e6b95","upgrades":0,"rarity":"BASIC","has_target":true}]
      
-     "player":{"orbs":[],"current_hp":70,"block":8,"max_hp":70,"powers":[],"energy":1}},
+                    "player":{"orbs":[],"current_hp":70,"block":8,"max_hp":70,"powers":[],"energy":1}},
      
-     "deck":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true}]
+                    "deck":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true}]
 
-    "relics":[{"name":"Ring of the Snake","id":"Ring of the Snake","counter":-1}]
+                    "relics":[{"name":"Ring of the Snake","id":"Ring of the Snake","counter":-1}]
     
-    "potions":[{"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
-               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
-               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"}],]
-    
-    
-    "monsters":[{"is_gone":false,"move_hits":1,"move_base_damage":11,"half_dead":false,"move_adjusted_damage":11,"max_hp":41,"intent":"ATTACK","move_id":1,"name":"Jaw Worm","current_hp":35,"block":0,"id":"JawWorm","powers":[]}
+                    "potions":[{"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
+                               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
+                               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"}],]   
+                    
+                    "monsters":[{"is_gone":false,"move_hits":1,"move_base_damage":11,"half_dead":false,"move_adjusted_damage":11,"max_hp":41,"intent":"ATTACK","move_id":1,"name":"Jaw Worm","current_hp":35,"block":0,"id":"JawWorm","powers":[]}]
+                    }
+         }
+       how to call the dictionary
+       print(message["combat_state"]["draw_pile"][0]["name"]) # print out " Strike"
+       Im not sure the name of dictionary", check the dictionary_name
 """
 
 import random
