@@ -1,13 +1,13 @@
 #Modify here
 
 """
-Need To Update Functions
 
 To do list:
     Debug
     Make helper function : Gain Strangth
     Modify Monster -> Monsters (e.g newstate.Monster[hitmonster] -> .. Monsters[hitmonster] )
     Modify Start_of_turn : Add reset monster block = 0
+    Need to Update Some functions that contains switch, example: Feel_No_Pain
     
 """
 
