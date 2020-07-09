@@ -10,29 +10,29 @@ To do list:
     Modify Start_of_turn : Add reset monster block = 0
     Need to Update Some functions that contains switch, example: Feel_No_Pain
     Convert boolean to int e.g) Feel_No_Pain
-    
+
     <Data From AI>:
      Sending message:{
      "combat_state":{"draw_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true},
                                   {"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"efa253c0-0c03-4229-8bcf-16e1b2f14257","upgrades":0,"rarity":"BASIC","has_target":true},
                                   {"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"721e873c-b829-4a31-ad52-6b6a6c9422b2","upgrades":0,"rarity":"BASIC","has_target":false}]
-     
+
                     "discard_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"29397503-e3d0-4e84-813a-a47e7d382c99","upgrades":0,"rarity":"BASIC","has_target":true},
                                    {"exhausts":false,"is_playable":true,"cost":1,"name":"Survivor","id":"Survivor","type":"SKILL","uuid":"7a683fef-6192-4745-95e2-1514759386d3","upgrades":0,"rarity":"BASIC","has_target":false}]
                     "exhaust_pile":[]
                     "hand":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Defend","id":"Defend_G","type":"SKILL","uuid":"3d5fb93d-9340-44cd-aec3-99428a972eb3","upgrades":0,"rarity":"BASIC","has_target":false},
                             {"exhausts":false,"is_playable":true,"cost":0,"name":"Neutralize","id":"Neutralize","type":"ATTACK","uuid":"f3efc536-de1a-466a-85a2-100dcc0e6b95","upgrades":0,"rarity":"BASIC","has_target":true}]
-     
+
                     "player":{"orbs":[],"current_hp":70,"block":8,"max_hp":70,"powers":[],"energy":1}},
-     
+
                     "deck":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true}]
 
                     "relics":[{"name":"Ring of the Snake","id":"Ring of the Snake","counter":-1}]
-    
+
                     "potions":[{"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
                                {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"},
-                               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"}],]   
-                    
+                               {"requires_target":false,"can_use":false,"can_discard":false,"name":"Potion Slot","id":"Potion Slot"}],]
+
                     "monsters":[{"is_gone":false,"move_hits":1,"move_base_damage":11,"half_dead":false,"move_adjusted_damage":11,"max_hp":41,"intent":"ATTACK","move_id":1,"name":"Jaw Worm","current_hp":35,"block":0,"id":"JawWorm","powers":[]}]
                     }
          }
@@ -107,28 +107,38 @@ def dealweak(gamestate, amount, monster):
     #     newstate.Monsters[monster].current_hp -= damage * attacknum
     #     return newstate
 
+def upgrade(card):
+    if card.name == 'Searing Blow':
+        card.upgrades += 1
+    elif card.upgrades == 0:
+        card.upgrades = 1
+    return card
+
+# def changestrength(gamestate, amount, character):
+#     newstate = gamestate
+#     character
 
 # Effect at end of turn
 def end_of_turn(gamestate, monster):
     newstate = gamestate
-    
+
     # lose 1 HP and deal 5 damage to ALL enemies.
     # Warning : even if player has block, lose 1 HP.
     if Combust :
         newstate.player.current_hp = newstate.player.current_hp - 1
         for x in len(monster):
                 newstate = dealdmg(newstate, 5, newstate.Monsters[monster[x]])
-       
+
     # At the end of your turn, lose 2 Strength.
     if newstate.Flex :
         # lose 2 Strength.
         newstate.Flex = False
-    
+
     #  At the end of your turn, gain 3 Block.
     if newstate.Metallicize:
         # need to modify, when metallicize used N times, gain (3 * N) block every turn.
         newstate.player.block = newstate.player.block + 3
-    
+
     #deal poison damage, reduces poison stack
     for pmonster in newstate.Monsters[monster].power:
         if pmonster.power_name == 'Poison':
@@ -143,7 +153,7 @@ def end_of_turn(gamestate, monster):
                 newvulnerable = Power('Poison', 'Poison', amount - 1)
                 newvulnerable.just_applied = True
                 newstate.Monsters[monster].power.append(newvulnerable)
-        
+
     #ethereal check, if card is ethereal, exhaust it
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
     for cardname,card in newstate.hand:
@@ -153,8 +163,8 @@ def end_of_turn(gamestate, monster):
         # else:
             # newstate.hand.remove(cardname)
             # newstate.discard_pile.append(cardname)
-    
-    
+
+
     return newstate
 
 def start_of_turn(gamestate):
@@ -165,12 +175,12 @@ def start_of_turn(gamestate):
         newstate.energy = 3 + 1
     else :
         newstate.energy = 3
-    
+
     #At the start of your turn, lose 1 HP and draw 1 card.
     if newstate.Brutality:
         newstate.player.current_hp = newstate.player.current_hp - 1
         #Draw 1 Card
-    
+
     #at the start of your turn, Block no longer expires
     if newstate.Barricade:
         # do not reset the block if Barricade is played
@@ -228,21 +238,17 @@ def Anger(gamestate, hitmonster, Upgrade):
         return newstate
 
 #armaments 1 cost Gain 5 Block. Upgrade a card in your hand for the rest of combat.
-def Armaments(gamestate, Upgrade):
+def Armaments(gamestate, cardtoupgrade, Upgrade,):
     newstate = gamestate
     #add 5 block
     newstate = addblock(newstate, 5)
     if Upgrade:
         #upgrade all card in your hand for the rest of combat
         for card in newstate.hand:
-            newstate.hand.upgrade(card)
+            newstate.hand[card] = upgrade(newstate.hand[card])
         return newstate
     else:
-        #upgrade a card in your hand for the rest of combat
-        # Need to modify here.
-        for card in newstate.hand:
-            #if card == chosen_card
-                #newstate.hand.upgrade(card)
+
         return newstate
         #somehow return a new gamestate for every card which can be upgraded
 
@@ -265,7 +271,7 @@ def Barricade(gamestate, Upgrade):
 #bash 2 cost Deal 8damage. Apply 2 Vulnerable.
 def Bash(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     if Upgrade:
         #deal 10 damage
         newstate = dealdmg(newstate, 10, newstate.Monster[hitmonster])
@@ -333,7 +339,7 @@ def Bloodletting(gamestate, hitmonster, Upgrade):
         newstate.player.current_hp = newstate.player.current_hp - 3
         # Gain 1 Energy.
         newstate.energy += 1
-        
+
     return newstate
 
 #bludgeon 3 cost Deal 32 damage.
@@ -373,10 +379,10 @@ def Burning_Pact(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     #Exhaust 1 card
     #newstate.exhaust_pile.append('chosen_card_name')
-    if Upgrade :
-        #Draw 2 cards
-    else :
-        #Draw 3 cards
+    # if Upgrade :
+    #     #Draw 3 cards
+    # else :
+    #     #Draw 2 cards
     return newstate
 
 #carnage 2 cost	Ethereal. Deal 20(28) damage : Ethereal removed at end of combat.
@@ -398,12 +404,12 @@ def Clash (gamestate, hitmonster, Upgrade):
         #if Upgrade:
         #deal 18 damage
         #    newstate = dealdmg(newstate, 18, newstate.Monster[hitmonster])
-        
+
         #else :
         #deal 14 damage
         #    newstate = dealdmg(newstate, 18, newstate.Monster[hitmonster])
     return newstate
-    
+
 #cleave 1 cost Deal 8 damage to ALL enemies.
 def Cleave (gamestate, hitmonster, Upgrade):
     newstate = gamestate
@@ -428,13 +434,13 @@ def Clothesline (gamestate, hitmonster, Upgrade):
         newstate = dealdmg(newstate, 14, newstate.Monsters[hitmonster[x]])
         #apply 3 weak
         newstate = dealweak(newstate, 3, hitmonster)
-    
+
     else:
         #deal 12 damage
         newstate = dealdmg(newstate, 12, newstate.Monsters[hitmonster[x]])
         #apply 2 weak
         newstate = dealweak(newstate, 2, hitmonster)
-    
+
     return newstate
 
 #combust 1 cost At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies.
@@ -469,7 +475,7 @@ def Dark_Embrace(gamestate, hitmonster, Upgrade):
         #cost is 1
     #else :
         #cost is 2
-    
+
     #whenever a card is Exhausted,
     newstate.Dark_Embrace = True
     #Draw 1 Card.
@@ -640,7 +646,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent attacker?
             #how to represent this turn?
             #newstate = dealdmg(newstate, 6, newstate.Monster[hitmonster], 1)
-        
+
     else:
         #Gain 12 Block
         newstate = addblock(newstate, 12)
@@ -650,7 +656,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent attacker?
             #how to represent this turn?
             #newstate = dealdmg(newstate, 4, newstate.Monster[hitmonster], 1)
-        
+
     return newstate
 
 #flex 0 cost 2 Strength. At the end of your turn, lose 2 Strength.
@@ -711,7 +717,7 @@ def Heavy_Blade(gamestate, hitmonster, Upgrade):
     else:
         newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster])
         #add  Strength affects Heavy Blade 3 times
-        
+
     return newstate
 
 #hemokinesis 1 cost Lose 3 HP. Deal 14 damage.
@@ -727,7 +733,7 @@ def Hemokinesis(gamestate, hitmonster, Upgrade):
         newstate.current_hp =newstate.current_hp - 3
         # Deal 14 Damage
         newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster])
-    
+
     return newstate
 
 #immolate 2 cost Deal 21 damage to ALL enemies. Add a Burn to your discard pile.
@@ -795,7 +801,7 @@ def Intimidate(gamestate, hitmonster, Upgrade):
         for x in len(hitmonster):
             newstate = dealweak(newstate, 1, hitmonster[x])
         newstate.exhaust_pile.append('intimidate')
-    
+
     return newstate
 
 #iron wave 1 cost Gain 5 Block. Deal 5 damage.
@@ -864,7 +870,7 @@ def Offering(gamestate, hitmonster, Upgrade):
         #Gain 2 energy
         newstate.energy = newstate.energy + 2
         newstate.exhaust_pile.append('Offering')
-    
+
     return newstate
 
 #perfected strike 2 cost Deal 6 damage. Deals an additional 2 damage for ALL of your cards containing "Strike".
@@ -889,7 +895,7 @@ def Pommel_Strike(gamestate, hitmonster, Upgrade):
         # Deal 9 damage
         newstate = dealdmg(newstate, 9, newstate.Monster[hitmonster])
         #add draw 1 card
-        
+
     return newstate
 
 #power through 1 cost Add 2 Wounds to your hand. Gain 15 Block.
@@ -903,7 +909,7 @@ def Power_Through(gamestate, hitmonster, Upgrade):
         newstate = addblock(newstate, 15)
         newstate.hand.append('Wound')
         newstate.hand.append('Wound')
-    
+
     return newstate
 
 #pummel 1 cost Deal 2 damage 4 times. Exhaust.
@@ -954,7 +960,7 @@ def Reaper(gamestate, hitmonster, Upgrade):
         for x in len(hitmonster):
             newstate = dealdmg(newstate, 4, newstate.Monster[hitmonster[x]])
         newstate.exhaust_pile.append('Reaper')
-    
+
     return newstate
 
 #reckless charge 0 cost Deal 7 damage. Shuffle a Dazed into your draw pile
@@ -968,7 +974,7 @@ def Reckless_Charge(gamestate, hitmonster, Upgrade):
         # deal 7 damage
         newstate = dealdmg(gamestate, 7, newstate.Monster[hitmonster])
         newstate.draw_pile.append('Dazed')
-    
+
     return newstate
 
 #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength.
@@ -986,7 +992,7 @@ def Rupture(gamestate, hitmonster, Upgrade):
 #searing blow 2 cost Deal 12 damage. Can be upgraded any number of times.
 def Searing_Blow(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     #if Upgrade:
         # if upgrade n times, deal n(n+7)/2 + 12 Damage (https://slay-the-spire.fandom.com/wiki/Searing_Blow)
         # newstate = newstate dealdmg(newstate, n(n+7)/2 + 12, newstate.Monster[hitmonster])
@@ -1112,13 +1118,13 @@ def Sword_Boomerang(gamestate, hitmonster, Upgrade):
         x = randomrange(len(hitmonster))
         # deal 3 damage, 4 times
         newstate = dealdmg(newstate, 3, newstate.Monster[hitmonster[x]], 4)
-           
+
     else:
         # a random enemy.
         x = randomrange(len(hitmonster))
         # deal 3 damage, 3 times
         newstate = dealdmg(newstate, 3, newstate.Monster[hitmonster[x]], 3)
-    
+
     return newstate
 
 #thunderclap 1 cost Deal 4damage and apply 1 Vulnerable to ALL enemies.
@@ -1145,7 +1151,7 @@ def Thunderclap(gamestate, hitmonster, Upgrade):
 #true grit 1 cost Gain 7 Block. Exhaust a random card from your hand.
 def True_Grit(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     if Upgrade:
         #Gain 9 Block
         newstate = addblock(newstate, 9)
@@ -1161,7 +1167,7 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         x = randomrange(len(hand))
         #Exhaust the it.
         newstate.exhaust_pile.append(hand[x])
-        
+
     return newstate
 
 #twin strike 1 cost Deal 5 damage twice.
@@ -1173,7 +1179,7 @@ def Twin_Strike(gamestate, hitmonster, Upgrade):
     else:
         #Deal 5 Damage twice
         newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster], 2)
-    
+
     return newstate
 
 #uppercut 2 cost Deal 13 damage. Apply 1 Weak. Apply 1 Vulnerable.
@@ -1192,13 +1198,13 @@ def Uppercut(gamestate, hitmonster, Upgrade):
         #apply 1 weak, and 1 Vulnerable
         newstate = dealweak(newstate, 1, hitmonster)
         newstate = dealvulnerable(newstate, 1, hitmonster)
-    
+
     return newstate
 
 #warcry 0 cost Draw 1 card. Place a card from your hand on top of your draw pile. Exhaust.
 def Warcry(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     if Upgrade:
         #Draw 2 Card
         #Place a Card from your hand on top of your draw pile.
@@ -1222,7 +1228,7 @@ def Whirlwind(gamestate, hitmonster, Upgrade):
         #repaet X times, X is cost, deal 5 damage
         for x in len(hitmonster):
             newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster[x]])
-    
+
     return newstate
 
 #wildstrike 1 cost Deal 12 damage. Shuffle a Wound into your draw pile.
@@ -1239,7 +1245,7 @@ def Wildstrike(gamestate, hitmonster, Upgrade):
         newstate = dealdmg(newstate, 12, newstate.Monster[hitmonster])
         #Shuffle a Wound into draw pile
         newstate.draw_pile.append('Wound')
-        
+
     return newstate
 
 
@@ -1294,7 +1300,7 @@ cards = {
     'Ghostly Armor' : [1, False, Ghostly_Armor,'S'],
     'Havoc' : [1, False, Havoc, 'S'],
     'Headbutt' : [1, True, Headbutt,'A'], #need new function to return card from discard pile
-    'Heavy Blade' : [2, True, Heavy_Blade, 'A'], #Strength affects heavy blad 3 times
+    'Heavy Blade' : [2, True, Heavy_Blade, 'A'], #Strength affects heavy blade 3 times
     'Hemokinesis' : [1, True, Hemokinesis, 'A'],
     'Immolate' : [2, True, Immolate, 'A'],
     'Impervious' : [2, False, Impervious, 'S'], #exhaust
@@ -1340,4 +1346,3 @@ cards = {
 #print(cards['Anger'][1])
 #newstate = cards['Anger'][2](gamestate,hitmonster)
 #print(cards['Anger'][3])
-

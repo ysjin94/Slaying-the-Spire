@@ -16,25 +16,25 @@ class SimGame:
     #--------- Additional
     self.energy = 3
     #--------- Card switches needed for combat
-    self.Barricade = False
-    self.Battle_Trace = False
-    self.Blood_For_Blood = False
-    self.Berserk = False
-    self.Brutality = False
-    self.Combust = False
-    self.Corruption = False
-    self.Dark_Embrace = False
-    self.Demon_Form = False
-    self.Double_Tap = False
-    self.Evolve = False
-    self.Feel_No_Pain = False
-    self.Fire_Breathing = False
-    self.Flame_Barrier = False
-    self.Flex = False
-    self.Juggernaut = False
-    self.Metallicize = False
-    self.Rage = False
-    self.Rupture = False
+    # self.Barricade = False
+    # self.Battle_Trace = False
+    # self.Blood_For_Blood = False
+    # self.Berserk = False
+    # self.Brutality = False
+    # self.Combust = False
+    # self.Corruption = False
+    # self.Dark_Embrace = False
+    # self.Demon_Form = False
+    # self.Double_Tap = False
+    # self.Evolve = False
+    # self.Feel_No_Pain = False
+    # self.Fire_Breathing = False
+    # self.Flame_Barrier = False
+    # self.Flex = False
+    # self.Juggernaut = False
+    # self.Metallicize = False
+    # self.Rage = False
+    # self.Rupture = False
 
 
 
@@ -57,16 +57,16 @@ def getstate():
 #---------------
 
 # Effect at end of turn
-def end_of_turn(gamestate):
-    newstate = gamestate
-    #deal poison damage
-    #ethereal check, if card is ethereal, exhaust it
-    return newstate
-
-def start_of_turn(gamestate):
-    newstate = gamestate
-    #reset energy/mana
-    return newstate
+# def end_of_turn(gamestate):
+#     newstate = gamestate
+#     #deal poison damage
+#     #ethereal check, if card is ethereal, exhaust it
+#     return newstate
+#
+# def start_of_turn(gamestate):
+#     newstate = gamestate
+#     #reset energy/mana
+#     return newstate
 #Need to Helper Function
 #Cost,
 
@@ -80,35 +80,49 @@ def eval_function(gamestate):
     eval = random.randrange(-100, 101)
     return eval
 
-root_node.state = getstate()
-newstate = root_node.state
-for cardname, card in newstate.hand:
-    x = cards[card]
-    #check if enough energy to play card
-    #might have to add energy to game state
-    if newstate.energy >= x[0]:
-        newstate.energy = newstate.energy - x[0]
-        #somehow play card/call card function from dict
-        #PROBLEM: how are monsters stores in gamestate?'
-        #since some cards don't need targets, the card function will loop through the targets if needed?
-        if x[1] = False:
-            x[2](newstate)
-            newstate = newstate.hand.remove(cardname)
-            newstate = newstate.discard_pile.append(cardname)
-        else:
-            for target in newstate.Monsters:
-                x[2](newstate, target)
-                newstate = newstate.hand.remove(cardname)
-                newstate = newstate.discard_pile.append(cardname)
+# root_node.state = getstate()
+# newstate = root_node.state
+# for cardname, card in newstate.hand:
+#     x = cards[card]
+#     #check if enough energy to play card
+#     #might have to add energy to game state
+#     if newstate.energy >= x[0]:
+#         newstate.energy = newstate.energy - x[0]
+#         #somehow play card/call card function from dict
+#         #PROBLEM: how are monsters stores in gamestate?'
+#         #since some cards don't need targets, the card function will loop through the targets if needed?
+#         if x[1] = False:
+#             x[2](newstate)
+#             newstate = newstate.hand.remove(cardname)
+#             newstate = newstate.discard_pile.append(cardname)
+#         else:
+#             for target in newstate.Monsters:
+#                 x[2](newstate, target)
+#                 newstate = newstate.hand.remove(cardname)
+#                 newstate = newstate.discard_pile.append(cardname)
 
 
+def get_decision(self):
+    #newstate is type simgame
+    simstate = getstate()
+    root = Node(simstate, parent=None)
+    build_tree(root)
+    eval_tree(root)
+    tree_search(root)
+    print(return_path(root))
 
-def get_next_game_state(card, state):
-        x = cards[card]
-        if state.energy >= x[0]:
+
+def get_next_game_state(cardindex, state):
+        #get the name of the card
+        cardname = state.hand[cardindex].name
+        #x is the list of attributes associated with the card
+        x = cards[cardname]
+        if state.player.energy >= x[0]:
             state.hand.remove(card)
+            x[2](state)
+            #need to account for cards that exhaust or is ethereal
             state.discard_pile.append(card)
-            #state.energy -= x[0]
+            state.player.energy -= x[0]
             return True
         else:
             return False
@@ -122,7 +136,7 @@ def build_tree(gamestate):
             #    child2 = Node(temp, parent=gamestate) #create child node
             #    for i in range(len(temp.hand)):
             #        temp2 = copy.deepcopy(temp)
-            #        temp2.hand[i] += ' upgrade' 
+            #        temp2.hand[i] += ' upgrade'
             #        child3 = Node(temp2, parent=child2)
             #        build_tree(child3) #recursively build tree
             #else:
@@ -134,7 +148,8 @@ def eval_tree(r):
     for children in LevelOrderGroupIter(r):
         for node in children:
             if not node.children:
-                node.name.grade = eval_function(1)
+                #assign evaluation
+                node.name.grade = eval_function(node.name)
 
 def tree_search(r):
     if not r.children: #if node is a leaf
@@ -148,11 +163,11 @@ def tree_search(r):
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
-#returns card played 
+#returns card played
 def return_move(hand1, hand2):
     for x in hand1:
         if x not in hand2:
-            return x 
+            return x
 
 #returns path to max gamestate
 def find_path(r):
@@ -164,7 +179,7 @@ def find_path(r):
                     move = return_move(r.name.hand, node.name.hand)
                     move_list.append(move)
                     move_list += find_path(node)
-    return move_list 
+    return move_list
 
 def return_path(r):
     moves = find_path(r)
