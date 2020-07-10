@@ -8,8 +8,10 @@ To do list:
     Make helper function : Gain Strangth
     Modify Monsters -> Monster (e.g newstate.Monsters[hitmonster] -> .. Monster[hitmonster] )
     Modify Start_of_turn : Add reset monster block = 0
-    Need to Update Some functions that contains switch, example: Feel_No_Pain
-    Convert boolean to int e.g) Feel_No_Pain
+
+    7/10
+    Need to Modify all helper function
+    Need to Modify "Attack All Monster"
 
     <Data From AI>:
      Sending message:{
@@ -118,6 +120,94 @@ def upgrade(card):
 #     newstate = gamestate
 #     character
 
+
+#"player":{"orbs":[],"current_hp":64,"block":4,"max_hp":80,
+#         "powers":[{"amount":4,"name":"Metallicize","id":"Metallicize"},}
+
+# Need to know name of dictionary
+def upgrade_card(gamestate, input_cardname):
+    newstate = gamestate
+    i = 0
+    card_name_from_dictionary = ""
+    while i < len(newstat.name_of_dicationary["combat_state"]["player"]["powers"]):
+        for x in newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["name"]:
+                card_name_from_dictionary += x
+
+        if  card_name_from_dictionary == input_cardname:
+            #cost is 2
+            if input_cardname == "Barricade":
+                    #newstate["combat_state"]["player"]["powers"][i]["amount"] = 7
+            
+            #Draw 4 cards. You cannot draw additional cards this turn.
+            #elif input_cardname == "Battle Trace":
+            #    newstate["combat_state"]["player"]["powers"][i]["amount"] = 4
+
+            # less energy for each time you lose HP in combat. Deal 18 damage.
+            elif input_cardname == "Blood_For_Blood":
+               # newstate["combat_state"]["player"]["powers"][i]["amount"] = 22
+
+            #At the end of your turn, lose 1 HP and deal 7 damage to ALL enemies.
+            elif input_cardname == "Combust":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 7
+
+            # cost is 2
+            elif input_cardname == "Corruption":
+                #newstate["combat_state"]["player"]["powers"][i]["amount"] = 7
+            
+            #At the start of each turn, gain 3 Strength.
+            elif input_cardname == "Demon Form":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 3
+            
+            #This turn, your next 2 Attack is played twice.
+            elif input_cardname == "Double Tap":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 2
+                
+            #Draw 2 carda, whenver you draw a status
+            elif input_cardname == "Evolve":
+                #newstate["combat_state"]["player"]["powers"][i]["amount"] = 22
+        
+            #feel no pain 1 cost Whenever a card is Exhausted, gain 4 Block.
+            elif input_cardname == "Feel No Pain":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 4
+            
+            #Whenever you draw a Status or Curse card, deal 6(10) damage to all enemies.
+            elif input_cardname == "Fire Breathing":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 10
+            
+            #Whenever you are attacked this turn, deal 4 damage to the attacker.
+            elif input_cardname == "Flame Barrier":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 4
+            
+            #At the end of your turn, lose 2 Strength.
+            elif input_cardname == "Flex":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 2
+            
+            #Whenever you gain Block, deal 7 damage to a random enemy.
+            elif input_cardname == "Juggernaut":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 7
+            
+            #At the end of your turn, gain 4 Block.
+            elif input_cardname == "Metallicize":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 4
+            
+            #Whenever you play an Attack this turn, gain 5 Block
+            elif input_cardname == "Rage":
+                newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["amount"] = 5
+
+            #Whenever you lose HP from a card, gain 1 Strength.
+            elif input_cardname == "Rupture":
+               #cost is 0
+                
+            else:
+                #do noting
+        
+        #reset the card_name_from_dictionary
+        card_name_from_dictionary = ""
+        #increase i
+        i += 1
+
+
+    return newstate
 # Effect at end of turn
 def end_of_turn(gamestate, monster):
     newstate = gamestate
