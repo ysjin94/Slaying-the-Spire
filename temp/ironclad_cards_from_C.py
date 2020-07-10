@@ -1,6 +1,7 @@
 #Modify here
 
 """
+Remove to do list if it is done.
 
 To do list:
     Debug
@@ -13,6 +14,7 @@ To do list:
     Need to Modify all helper function
     Need to Modify "Attack All Monster"
     Need to know name_of_dictionary for "upgrade_card(gamestate, input_cardname)"
+    
     <Data From AI>:
      Sending message:{
      "combat_state":{"draw_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true},
@@ -154,11 +156,13 @@ def upgrade_card(gamestate, input_cardname):
                     #newstate["combat_state"]["player"]["powers"][i]["amount"] = 7
             
             #Draw 4 cards. You cannot draw additional cards this turn.
-            #elif input_cardname == "Battle Trace":
+            #i think it exist in player.power
+            #make unable to draw for this turn by using boolean, if it is True, cannot draw.
+            elif input_cardname == "Battle Trace":
             #    newstate["combat_state"]["player"]["powers"][i]["amount"] = 4
 
             # less energy for each time you lose HP in combat. Deal 18 damage.
-            elif input_cardname == "Blood_For_Blood":
+            elif input_cardname == "Blood For Blood":
                # newstate["combat_state"]["player"]["powers"][i]["amount"] = 22
 
             #At the end of your turn, lose 1 HP and deal 7 damage to ALL enemies.
