@@ -12,7 +12,7 @@ To do list:
     7/10
     Need to Modify all helper function
     Need to Modify "Attack All Monster"
-
+    Need to know name_of_dictionary for "upgrade_card(gamestate, input_cardname)"
     <Data From AI>:
      Sending message:{
      "combat_state":{"draw_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true},
@@ -121,15 +121,30 @@ def upgrade(card):
 #     character
 
 
-#"player":{"orbs":[],"current_hp":64,"block":4,"max_hp":80,
-#         "powers":[{"amount":4,"name":"Metallicize","id":"Metallicize"},}
+# name_of_dictionary = {
+#         "combat_state":{
+#                         "player":{
+#                                    "orbs":[],
+#                                    "current_hp":64,
+#                                    "block":4,
+#                                    "max_hp":80,
+#                                    "powers":[
+#                                              {
+#                                                "amount":4,
+#                                                "name":"Metallicize",
+#                                                "id":"Metallicize"
+#                                               },
+#                                              ]
+#                                   }
+#                          }
+#                       }
 
 # Need to know name of dictionary
 def upgrade_card(gamestate, input_cardname):
     newstate = gamestate
     i = 0
     card_name_from_dictionary = ""
-    while i < len(newstat.name_of_dicationary["combat_state"]["player"]["powers"]):
+    while i < len(newstate.name_of_dicationary["combat_state"]["player"]["powers"]):
         for x in newstate.name_of_dicationary["combat_state"]["player"]["powers"][i]["name"]:
                 card_name_from_dictionary += x
 
