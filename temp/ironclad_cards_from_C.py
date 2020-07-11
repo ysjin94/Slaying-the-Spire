@@ -9,7 +9,7 @@ To do list:
 
     7/10
     Need to Modify "Attack All Monster"
-    
+
     7/11
     Modify all function that contains deal damage to monster.
         if block == 0 , reduce current_hp
@@ -17,7 +17,7 @@ To do list:
         but if damage > block, block - damage, and current_hp - remain
     Need Cost function
     Need to modify  : newstate.game.exhaust_pile.append(cards) not the string "cardname", should be object
-    
+
     7/12
     Add function : is_it_draw_Status()
     Finsih Help function : end_of_turn, start_of_turn
@@ -47,7 +47,7 @@ To do list:
                     "monsters":[{"is_gone":false,"move_hits":1,"move_base_damage":11,"half_dead":false,"move_adjusted_damage":11,"max_hp":41,"intent":"ATTACK","move_id":1,"name":"Jaw Worm","current_hp":35,"block":0,"id":"JawWorm","powers":[]}]
                     }
          }
-       
+
 """
 
 import random
@@ -88,8 +88,20 @@ def addblock(gamestate, block):
         if player_powers.power_name == "Juggernaut":
             x = randomrange(len(newstate.monsters))
             newstate = dealdmg(newstate, player_power.amount, Monsters[x])
-    
+
     return newstate
+
+def addcard(gamestate, name, pile):
+    newstate = gamestate
+    newcard = card(name = name, upgrades = 0, cost = cards[name][0])
+    if pile = 'discardpile':
+        newstate.discard_pile.append(newcard)
+    if pile = 'hand':
+        newstate.hand.append(newcard)
+    if pile = 'exhaust_pile':
+        newstate.hand.append(newcard)
+    return newstate
+
 
 #Will need to figure out what power_id is
 def dealvulnerable(gamestate, amount, monster):
@@ -116,15 +128,15 @@ def dealweak(gamestate, amount, monster):
 
 def player_gain_strangth(newstate, amount):
     newstate = gamestate
-    
+
     for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_name.amount = power_name.amount + amount
-    
+
     New_power = Power("Strength", "Strength", amount)
     New_power.just_applied = True
     newstate.player.powers.append(New_power)
-                
+
     return newstate
 
 def monster_lose_strangth(newstate, amount, monster):
@@ -155,7 +167,7 @@ def draw(gamestate, amount):
 
     if can_draw:
         if len(newstate.deck_pile) < amount :
-        
+
             left = amount - len(newstate.deck_pile)
 
             for x in range(len(newstate.deck_pile)):
@@ -167,12 +179,12 @@ def draw(gamestate, amount):
                     newstate.hand_pile.append(chosen_card)
                     # remove chosen_card from deck_pile
                     newstate.deck_pile.pop(x)
-        
+
             # add discard_pile to deck_pile
             newstate.deck_pile = newstate.discard_pile
             # reset the discard_pile
             newstate.discard_pile.clear()
-        
+
             for x in range(left):
                 #max hand
                 if len(newstate.hand_pile) != 10:
@@ -195,11 +207,11 @@ def draw(gamestate, amount):
                     newstate.deck_pile.pop(x)
 
     return newstate
-    
+
 def upgrade(card):
     if card.name == 'Searing Blow':
         card.upgrades += 1
-    elif card.upgrades == 0:
+    elif card.upgrades > 1:
         card.upgrades = 1
     return card
 
@@ -242,14 +254,14 @@ def end_of_turn(gamestate, monster):
 
 def start_of_turn(gamestate):
     newstate = gamestate
-    
+
     #reset energy/mana
     for player_power in newstate.player.powers:
         if player_power.power_name == "Berserk":
             newstate.energy = newstate.energy + player_power.amount
         else:
             newstate.energy = 3
-            
+
     #at the start of your turn, Block no longer expires
     # else do reset the block
     for player_power in newstate.player.powers:
@@ -258,13 +270,13 @@ def start_of_turn(gamestate):
             newstate.player.block = newstate.player.block
         else:
             newstate.player.block = 0
-    
+
     # Lose moster blocks
     newstate.monster.block = 0
 
     #Draw Cards initial is 5
     newstate = draw(newstate, 5)
-    
+
     return newstate
 
 #Need to Helper Function
@@ -332,12 +344,12 @@ def Barricade(gamestate, Upgrade):
     #make new object new_power
     New_power = Power("Barricade", "Brricade", 0)
     newstate.player.powers.append(New_power)
-    
+
     if Upgrade:
         #cost is 2
     else:
         #cost is 3
-    
+
     return newstate
 #bash 2 cost Deal 8damage. Apply 2 Vulnerable.
 def Bash(gamestate, hitmonster, Upgrade):
@@ -374,10 +386,10 @@ def Battle_Trance(gamestate, hitmonster, Upgrade):
 #berserk 0 cost Gain 2 Vulnerable. Gain 1 Energy at the start of your turn.
 def Berserk(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     New_power = Power("Berserk", "Berserk", 1)
     newstate.player.powers.append(New_power)
-    
+
     if Upgrade:
         #Gain 1 Vulnerable
         New_power_ = Power("Vulnerable", "Vulnerable", 1)
@@ -556,10 +568,10 @@ def Corruption(gamestate, hitmonster, Upgrade):
 #dark embrace 2 cost Whenever a card is Exhausted, draw 1 card.
 def Dark_Embrace(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     New_power = Power("Dark Embrace", "Dark Embrace", 0)
     newstate.player.powers.append(New_power)
-    
+
     if Upgrade :
         #cost is 1
     else :
@@ -633,7 +645,7 @@ def Dropkick(gamestate, hitmonster, Upgrade):
     else:
         #deal 5 damage
         newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster])
-    
+
     if pmonster in newstate.monsters[hitmonster].powers
         #Gain 1 energy, and draw 1 card
         if pmonster.power_name ==  "Vulnerable"
@@ -714,17 +726,17 @@ def Feed(gamestate, hitmonster, Upgrade):
 #feel no pain 1 cost Whenever a card is Exhausted, gain 3 Block.
 def Feel_No_Pain(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     New_power = Power("Feel No Pain", "Feel No Pain", 0)
     newstate.player.powers.append(New_power)
-    
+
     #if Upgrade :
         #check if a card is Exhausted, whenever after playing Feel No pain
         #gain 4 Block
     #else:
         #check if a card is Exhausted, whenever after playing Feel No pain
         #gain 3 Block
-    
+
     return newstate
 
 #fiend fire 2 cost Exhaust your hand. Deal 7(10) damage for each Exhausted card. Exhaust.
@@ -738,7 +750,7 @@ def Fiend_Fire(gamestate, hitmonster, Upgrade):
 
 def Fire_Breathing(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     # Whenever you draw a Status or Curse card
     if Upgrade :
         New_power = Power("Fire Breathing", "Fire Breathing", 10)
@@ -759,7 +771,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent this turn?
         New_power = Power("Flame Barrier", "Flame Barrier", 6)
         newstate.player.powers.append(New_power)
-  
+
     else:
         #Gain 12 Block
         newstate = addblock(newstate, 12)
@@ -769,7 +781,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent this turn?
         New_power = Power("Flame Barrier", "Flame Barrier", 4)
         newstate.player.powers.append(New_power)
- 
+
     return newstate
 
 #flex 0 cost 2 Strength. At the end of your turn, lose 2 Strength.
@@ -787,7 +799,7 @@ def Flex(gamestate, hitmonster, Upgrade):
         #end_of_turn lose 2 Strength
         New_power = Power("Strength", "Strength", -2)
         newstate.player.powers.append(New_power)
-        
+
     return newstate
 
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
@@ -834,20 +846,20 @@ def Heavy_Blade(gamestate, hitmonster, Upgrade):
         if power_player in newstate.player.powers:
             if power_player.power_name == "Strength":
                 power_player.amount = power_player.amount * 5
-                
+
         newstate = dealdmg(newstate, 14, newstate.monsters[hitmonster])
 
         # reset the affects after dealdmg
         if power_player in newstate.player.powers:
             if power_player.power_name == "Strength":
                 power_player.amount = power_player.amount / 5
-            
+
     else:
         #Strength affects Heavy Blade 3 times
         if power_player in newstate.player.powers:
             if power_player.power_name == "Strength":
                 power_player.amount = power_player.amount * 3
-            
+
         newstate = dealdmg(newstate, 14, newstate.monsters[hitmonster])
 
         # reset the affects after dealdmg
@@ -971,7 +983,7 @@ def Juggernaut(gamestate, hitmonster, Upgrade):
         #deal 5 damage to a random enemy
         New_power = Power("Juggernaut", "Juggernaut", 5)
         newstate.player.powers.append(New_power)
-        
+
     return newstate
 
 #limit break 1 cost Double your Strength. Exhaust.
@@ -983,15 +995,15 @@ def Limit_Break(gamestate, hitmonster, Upgrade):
             if power_player.power_name == "Strength"
                 power_player.amount = power_player.amount * 2
         # Do not Exhaust
-        
+
     else:
         # Double your Strength
         for power_player in newstate.player.powers:
                    if power_player.power_name == "Strength"
                        power_player.amount = power_player.amount * 2
-                       
+
         #newstate.exhaust_pile.append('Limit Break')
-        
+
     return newstate
 
 #metallicize 1 cost At the end of your turn, gain 3 Block.
@@ -1006,7 +1018,7 @@ def Metallicize(gamestate, hitmonster, Upgrade):
         # gain 3 blocks, at the end of your turn
         New_power = Power("Metallicize", "Metallicize", 3)
         newstate.player.powers.append(New_power)
-    
+
     return newstate
 
 #offering 0 cost Lose 6 HP. Gain 2 energy. Draw 3 cards. Exhaust.
@@ -1255,7 +1267,7 @@ def Shrug_It_Off(gamestate, hitmonster, Upgrade):
 #spot weakness 1 cost If an enemy intends to attack, gain 3 Strength.
 def Spot_Weakness(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    
+
     if Upgrade:
         #if an enemy intends to attack
         for Intend_monster in newstate.monsters:
@@ -1268,7 +1280,7 @@ def Spot_Weakness(gamestate, hitmonster, Upgrade):
             if Intend_monster.Intend == "ATTACK":
                 #gain 3 Strength
                 player_gain_strangth(newstate, 3)
-    
+
     return newstate
 
 #strike 1 cost Deal 6 damage.
