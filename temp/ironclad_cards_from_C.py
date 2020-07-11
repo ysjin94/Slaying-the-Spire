@@ -1,4 +1,3 @@
-#Modify here
 
 """
 Remove to do list if it is done.
@@ -6,7 +5,6 @@ Remove to do list if it is done.
 To do list:
     Debug
     Modify dealdmg : lose block first, than lose hp
-    Make helper function : Gain Strangth
 
     7/10
     Need to Modify "Attack All Monster"
@@ -84,7 +82,7 @@ def addblock(gamestate, block):
     newstate.player.block = newstate.player.block + block
     #dealdmg to random monster
     for player_power in newstate.player.powers:
-        if player_power.power_name == "Juggernaut":
+        if player_powers.power_name == "Juggernaut":
             x = randomrange(len(newstate.monsters))
             newstate = dealdmg(newstate, player_power.amount, Monsters[x])
     
@@ -99,7 +97,7 @@ def dealvulnerable(gamestate, amount, monster):
             return newstate
     newvulnerable = Power("Vulnerable", "Vulnerable", amount)
     newvulnerable.just_applied = True
-    newstate.Monsters[monster].power.append(newvulnerable)
+    newstate.Monsters[monster].powers.append(newvulnerable)
     return newstate
 
 def dealweak(gamestate, amount, monster):
@@ -110,9 +108,30 @@ def dealweak(gamestate, amount, monster):
             return newstate
     newweak = Power("Weak", "Weak", amount)
     newweak.just_applied = True
-    newstate.Monsters[monster].power.append(newweak)
+    newstate.Monsters[monster].powers.append(newweak)
     return newstate
 
+def player_gain_strangth(newstate, amount):
+    newstate = gamestate
+    
+    for power_player in newstate.Player.powers:
+        if power_player.power_name == "Strength":
+            power_name.amount = power_name.amount + amount
+    
+    New_power = Power("Strength", "Strength", amount)
+    New_power.just_applied = True
+    newstate.player.powers.append(New_power)
+                
+    return newstate
+
+def monster_lose_strangth(newstate, amount, monster):
+    newstate = gamestate
+
+    for power_monster in newstate.monsters[monster].powers:
+        if power_monster.power_name == "Strength":
+            power_name.amount = power_name.amount - amount
+
+    return newstate
     # for p in newstate.Player.Power:
     #     if p.power_name = Strength:
     #         newstate.Monsters[monster].current_hp -= (damage + p.amount) * attacknum
@@ -144,12 +163,12 @@ def end_of_turn(gamestate, monster):
                 newstate.Monsters[monster].current_hp -= pmonster.amount
                 newvulnerable = Power("Poison", "Poison", pmonster.amount - 1)
                 newvulnerable.just_applied = True
-                newstate.Monsters[monster].power.append(newvulnerable)
+                newstate.Monsters[monster].powers.append(newvulnerable)
             else :
                 newstate.Monsters[monster].block -= pmonster.amount
                 newvulnerable = Power("Poison", "Poison", pmonster.amount - 1)
                 newvulnerable.just_applied = True
-                newstate.Monsters[monster].power.append(newvulnerable)
+                newstate.Monsters[monster].powers.append(newvulnerable)
 
     #ethereal check, if card is ethereal, exhaust it
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
@@ -254,7 +273,7 @@ def Barricade(gamestate, Upgrade):
     newstate = gamestate
     #make new object new_power
     New_power = Power("Barricade", "Brricade", 0)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
     
     if Upgrade:
         #cost is 2
@@ -289,7 +308,7 @@ def Battle_Trance(gamestate, hitmonster, Upgrade):
 
     #Cannot draw additional Cards this turn
     New_power = Power("Battle Trace", "Battle Trace", 0)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
 
     return newstate
 
@@ -298,16 +317,16 @@ def Berserk(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     
     New_power = Power("Berserk", "Berserk", 1)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
     
     if Upgrade:
         #Gain 1 Vulnerable
         New_power_ = Power("Vulnerable", "Vulnerable", 1)
-        newstate.player.power.append(New_power_)
+        newstate.player.powers.append(New_power_)
     else :
         #Gain 2 Vulnerable
         New_power_ = Power("Vulnerable", "Vulnerable", 2)
-        newstate.player.power.append(New_power_)
+        newstate.player.powers.append(New_power_)
 
     return newstate
 
@@ -374,7 +393,7 @@ def Body_Slam(gamestate, hitmonster, Upgrade):
 def Brutality(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     New_power = Power("Brutality", "Brutality", 1)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
     return newstate
 
 #burning pact 1 cost Exhaust 1 card. Draw 2 cards.
@@ -452,10 +471,10 @@ def Combust(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade
         New_power = Power("Combust", "Combust", 7)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         New_power = Power("Combust", "Combust", 5)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
 
     return newstate
 
@@ -478,7 +497,7 @@ def Dark_Embrace(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     
     New_power = Power("Dark Embrace", "Dark Embrace", 0)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
     
     if Upgrade :
         #cost is 1
@@ -507,11 +526,11 @@ def Demon_Form(gamestate, hitmonster, Upgrade):
     if Upgrade:
         #at the start of each turn, gain 3 Strength
         New_power = Power("Demon Form", "Demon Form", 3)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         #at the start of each turn, gain 2 Strength
         New_power = Power("Demon Form", "Demon Form", 2)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
 
     return newstate
 
@@ -520,9 +539,13 @@ def Disarm(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade :
         #Enemy loses 3 Strength
+        monster_lose_strangth(newstate, 3, hitmonster)
     else :
         #Enemy loses 2 Strength.
+        monster_lose_strangth(newstate, 2, hitmonster)
+
     #Exhaust
+    newstate.exhaust_pile.append("Disarm")
     return newstate
 
 #double tap 1 cost This turn, your next Attack is played twice.
@@ -531,10 +554,10 @@ def Double_Tap(gamestate, hitmonster, Upgrade):
     if Upgrade :
         # your next 2 Attack are played twice
         New_power = Power("Double Tap", "Double Tap", 2)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         New_power = Power("Double Tap", "Double Tap", 1)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
         # your next Attack is played twice
     newstate.Double_Tap = True
     return newstate
@@ -579,7 +602,7 @@ def Evolve(gamestate, hitmonster, Upgrade):
     newstate = gamestate
 
     New_power = Power("Evolve", "Evolve", 0)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
 
     if Upgrade:
         # Draw 2 cards, if you draw a Status
@@ -627,7 +650,7 @@ def Feel_No_Pain(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     
     New_power = Power("Feel No Pain", "Feel No Pain", 0)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
     
     #if Upgrade :
         #check if a card is Exhausted, whenever after playing Feel No pain
@@ -653,10 +676,10 @@ def Fire_Breathing(gamestate, hitmonster, Upgrade):
     # Whenever you draw a Status or Curse card
     if Upgrade :
         New_power = Power("Fire Breathing", "Fire Breathing", 10)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else :
         New_power = Power("Fire Breathing", "Fire Breathing", 6)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     return newstate
 
 #flame barrier 2 cost Gain 12 Block. Whenever you are attacked this turn, deal 4 damage to the attacker.
@@ -669,7 +692,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent attacker?
             #how to represent this turn?
         New_power = Power("Flame Barrier", "Flame Barrier", 6)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
   
     else:
         #Gain 12 Block
@@ -679,7 +702,7 @@ def Flame_Barrier(gamestate, hitmonster, Upgrade):
             #how to represent attacker?
             #how to represent this turn?
         New_power = Power("Flame Barrier", "Flame Barrier", 4)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
  
     return newstate
 
@@ -688,12 +711,17 @@ def Flex(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade :
         #gain 4 Strength
+        player_gain_strangth(newstate, 4)
         #end_of_turn lose 4 Strength
-        New_power = Power("", "Strength", -4)
-        newstate.player.power.append(New_power)
+        New_power = Power("Strength", "Strength", -4)
+        newstate.player.powers.append(New_power)
     else:
         #gain 2 Strength
+        player_gain_strangth(newstate, 2)
         #end_of_turn lose 2 Strength
+        New_power = Power("Strength", "Strength", -2)
+        newstate.player.powers.append(New_power)
+        
     return newstate
 
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
@@ -736,11 +764,30 @@ def Headbutt(gamestate, hitmonster, Upgrade):
 def Heavy_Blade(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade:
+        #Strength affects Heavy Blade 5 times
+        if power_player in newstate.player.powers:
+            if power_player.power_name == "Strength":
+                power_player.amount = power_player.amount * 5
+                
         newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster])
-        #add  Strength affects Heavy Blade 5 times
+
+        # reset the affects after dealdmg
+        if power_player in newstate.player.powers:
+            if power_player.power_name == "Strength":
+                power_player.amount = power_player.amount / 5
+            
     else:
+        #Strength affects Heavy Blade 3 times
+        if power_player in newstate.player.powers:
+            if power_player.power_name == "Strength":
+                power_player.amount = power_player.amount * 3
+            
         newstate = dealdmg(newstate, 14, newstate.Monster[hitmonster])
-        #add  Strength affects Heavy Blade 3 times
+
+        # reset the affects after dealdmg
+        if power_player in newstate.player.powers:
+            if power_player.power_name == "Strength":
+                power_player.amount = power_player.amount / 3
 
     return newstate
 
@@ -806,10 +853,12 @@ def Infernal_Blade(gamestate, hitmonster, Upgrade):
 #inflame 1 cost Gain 2 Strength.
 def Inflame(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade:
+    if Upgrade:
         # Gain 3 Strength
-    #else :
+        player_gain_strangth(newstate, 3)
+    else :
         # Gain 2 Strength
+        player_gain_strangth(newstate, 2)
     return newstate
 
 #intimidate 0 cost Apply 1 Weak to ALL enemies. Exhaust.
@@ -851,23 +900,32 @@ def Juggernaut(gamestate, hitmonster, Upgrade):
     if Upgrade:
         #deal 7 damage to a random enemy
         New_power = Power("Juggernaut", "Juggernaut", 7)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         #deal 5 damage to a random enemy
         New_power = Power("Juggernaut", "Juggernaut", 5)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
         
     return newstate
 
 #limit break 1 cost Double your Strength. Exhaust.
 def Limit_Break(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade:
+    if Upgrade:
         # Double your Strength
+        for power_player in newstate.player.powers:
+            if power_player.power_name == "Strength"
+                power_player.amount = power_player.amount * 2
         # Do not Exhaust
-    #else:
-        #add double your Strength
+        
+    else:
+        # Double your Strength
+        for power_player in newstate.player.powers:
+                   if power_player.power_name == "Strength"
+                       power_player.amount = power_player.amount * 2
+                       
         #newstate.exhaust_pile.append('Limit Break')
+        
     return newstate
 
 #metallicize 1 cost At the end of your turn, gain 3 Block.
@@ -877,11 +935,11 @@ def Metallicize(gamestate, hitmonster, Upgrade):
     if Upgrade:
         # gain 4 Blocks at the end of your turn
         New_power = Power("Metallicize", "Metallicize", 4)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         # gain 3 blocks, at the end of your turn
         New_power = Power("Metallicize", "Metallicize", 3)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     
     return newstate
 
@@ -961,11 +1019,11 @@ def Rage(gamestate, hitmonster, Upgrade):
     if Upgrade:
         # whenever player play an Attack this turn, gain 5 Block
         New_power = Power("Rage", "Rage", 5)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     else:
         # whenever player play an Attack this turn, gain 3 Block
         New_power = Power("Rage", "Rage", 3)
-        newstate.player.power.append(New_power)
+        newstate.player.powers.append(New_power)
     newstate.Rage = True
     return newstate
 
@@ -1021,7 +1079,7 @@ def Rupture(gamestate, hitmonster, Upgrade):
         # cost is 1
     #whenevr player lose Hp from a cards gain 1 Strength
     New_power = Power("Ruptrue", "Rupture", 1)
-    newstate.player.power.append(New_power)
+    newstate.player.powers.append(New_power)
 
     return newstate
 
@@ -1126,12 +1184,20 @@ def Shrug_It_Off(gamestate, hitmonster, Upgrade):
 #spot weakness 1 cost If an enemy intends to attack, gain 3 Strength.
 def Spot_Weakness(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade:
+    
+    if Upgrade:
         #if an enemy intends to attack
-        #gain 4 Strength
-    #else:
+        for Intend_monster in newstate.monsters:
+            if Intend_monster.Intend == "ATTACK":
+                #gain 4 Strength
+                player_gain_strangth(newstate, 4)
+    else:
         #if an enemy intends to attack
-        #gain 3 Strength
+        for Intend_monster in newstate.monsters:
+            if Intend_monster.Intend == "ATTACK":
+                #gain 3 Strength
+                player_gain_strangth(newstate, 3)
+    
     return newstate
 
 #strike 1 cost Deal 6 damage.
