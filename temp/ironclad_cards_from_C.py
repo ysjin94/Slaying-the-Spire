@@ -1,4 +1,5 @@
 
+
 """
 Remove to do list if it is done.
 
@@ -14,10 +15,12 @@ To do list:
         if block == 0 , reduce current_hp
         if block > 0, reduce block
         but if damage > block, block - damage, and current_hp - remain
-    Need Draw function
     Need Cost function
     Need to modify  : newstate.game.exhaust_pile.append(cards) not the string "cardname", should be object
     Need to change : Monsters[hitmonster] => monsters[hitmonster] (uppercase to lowercase)
+    
+    7/12
+    Add function : is_it_draw_Status()
     
     <Data From AI>:
      Sending message:{
@@ -114,7 +117,7 @@ def dealweak(gamestate, amount, monster):
 def player_gain_strangth(newstate, amount):
     newstate = gamestate
     
-    for power_player in newstate.Player.powers:
+    for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_name.amount = power_name.amount + amount
     
@@ -140,6 +143,59 @@ def monster_lose_strangth(newstate, amount, monster):
     #     newstate.Monsters[monster].current_hp -= damage * attacknum
     #     return newstate
 
+def draw(gamestate, amount):
+    newstate = gamestate
+    #check deck
+    #if not enough cards add discards_pile to deck, and reset discard_pile
+    can_draw = True # it is for "Battle Trace", which is cannot draw card for this turn
+
+    for power_player in newstate.player.powers:
+        if power_player.power_name == "Battle Trace"
+            can_draw = False
+
+    if can_draw:
+        if len(newstate.deck_pile) < amount :
+        
+            left = amount - len(newstate.deck_pile)
+
+            for x in range(len(newstate.deck_pile)):
+                #max hand
+                if len(newstate.hand_pile) != 10:
+                    # chosen_card randomly
+                    chosen_card = randomrange(len(newstate.deck_pile))
+                    # add chosen_card to hand_pile
+                    newstate.hand_pile.append(chosen_card)
+                    # remove chosen_card from deck_pile
+                    newstate.deck_pile.pop(x)
+        
+            # add discard_pile to deck_pile
+            newstate.deck_pile = newstate.discard_pile
+            # reset the discard_pile
+            newstate.discard_pile.clear()
+        
+            for x in range(left):
+                #max hand
+                if len(newstate.hand_pile) != 10:
+                    # chosen_card randomly
+                    chosen_card = randomrange(len(newstate.deck_pile))
+                    # add chosen_card to hand_pile
+                    newstate.hand_pile.append(chosen_card)
+                    # remove chosen_card from deck_pile
+                    newstate.deck_pile.pop(x)
+
+        else:
+            for x in range(amount):
+                #max hand
+                if len(newstate.hand_pile) != 10:
+                    # chosen_card randomly
+                    chosen_card = randomrange(len(newstate.deck_pile))
+                    # add chosen_card to hand_pile
+                    newstate.hand_pile.append(chosen_card)
+                    # remove chosen_card from deck_pile
+                    newstate.deck_pile.pop(x)
+
+    return newstate
+    
 def upgrade(card):
     if card.name == 'Searing Blow':
         card.upgrades += 1
@@ -150,6 +206,7 @@ def upgrade(card):
 # def changestrength(gamestate, amount, character):
 #     newstate = gamestate
 #     character
+
 
 # Effect at end of turn
 def end_of_turn(gamestate, monster):
@@ -206,7 +263,8 @@ def start_of_turn(gamestate):
     newstate.monster.block = 0
 
     #Draw Cards initial is 5
-
+    newstate = draw(newstate, 5)
+    
     return newstate
 
 #Need to Helper Function
@@ -252,7 +310,7 @@ def Anger(gamestate, hitmonster, Upgrade):
         return newstate
 
 #armaments 1 cost Gain 5 Block. Upgrade a card in your hand for the rest of combat.
-def Armaments(gamestate, cardtoupgrade, Upgrade,):
+def Armaments(gamestate, cardtoupgrade, Upgrade):
     newstate = gamestate
     #add 5 block
     newstate = addblock(newstate, 5)
@@ -301,11 +359,12 @@ def Bash(gamestate, hitmonster, Upgrade):
 #battle trance 0 cost Draw 3 cards. You cannot draw additional cards this turn.
 def Battle_Trance(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade:
+    if Upgrade:
         #Draw 4 Cards
-    # else:
+        newstate = draw(gamestate, 4)
+     else:
         #Draw 3 Cards
-
+        newstate = draw(gamestate, 3)
     #Cannot draw additional Cards this turn
     New_power = Power("Battle Trace", "Battle Trace", 0)
     newstate.player.powers.append(New_power)
@@ -401,10 +460,12 @@ def Burning_Pact(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     #Exhaust 1 card
     #newstate.exhaust_pile.append('chosen_card_name')
-    # if Upgrade :
-    #     #Draw 3 cards
-    # else :
-    #     #Draw 2 cards
+     if Upgrade :
+         #Draw 3 cards
+         newstate = draw(newstate, 3)
+     else :
+         #Draw 2 cards
+         newstate = draw(newstatem 2)
     return newstate
 
 #carnage 2 cost	Ethereal. Deal 20(28) damage : Ethereal removed at end of combat.
@@ -573,8 +634,11 @@ def Dropkick(gamestate, hitmonster, Upgrade):
         #deal 5 damage
         newstate = dealdmg(newstate, 5, newstate.Monster[hitmonster])
     
-    if pmonster in newstate.Monsters
+    if pmonster in newstate.monsters[hitmonster].powers
         #Gain 1 energy, and draw 1 card
+        if pmonster.power_name ==  "Vulnerable"
+            newstate.energy += 1
+            newstate = draw(newstate, 1)
     return newstate
 
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
@@ -606,8 +670,10 @@ def Evolve(gamestate, hitmonster, Upgrade):
 
     if Upgrade:
         # Draw 2 cards, if you draw a Status
+        newstate = draw(newstate, 2)
     else:
         #add Draw card, if you draw a Status
+        newstate = draw(newstate, 1)
     return newstate
 
 #exhume 1 cost Place a card from your Exhaust pile into your hand. Exhaust.
@@ -951,12 +1017,14 @@ def Offering(gamestate, hitmonster, Upgrade):
         #add Draw 5 Cards
         #Gain 2 energy
         newstate.energy = newstate.energy + 2
+        newstate = draw(newstate, 5)
         newstate.exhaust_pile.append("Offering")
     else:
         newstate.player.current_hp = newstate.player.current_hp - 6
         #add Draw 3 Cards
         #Gain 2 energy
         newstate.energy = newstate.energy + 2
+        newstate = draw(newstate, 3)
         newstate.exhaust_pile.append("Offering")
 
     return newstate
@@ -979,11 +1047,12 @@ def Pommel_Strike(gamestate, hitmonster, Upgrade):
         # Deal 10 damage
         newstate =dealdmg(newstate, 10, newstate.Monster[hitmonster])
         # Add Draw 2 Cards
+        newstate = draw(newstate, 2)
     else:
         # Deal 9 damage
         newstate = dealdmg(newstate, 9, newstate.Monster[hitmonster])
         #add draw 1 card
-
+        newstate = draw(newstate, 1)
     return newstate
 
 #power through 1 cost Add 2 Wounds to your hand. Gain 15 Block.
@@ -1171,14 +1240,16 @@ def Shockwave(gamestate, hitmonster, Upgrade):
 #shrug it off 1 cost Gain 8 Block. Draw 1 card.
 def Shrug_It_Off(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade:
+    if Upgrade:
         #gain 11 block
         newstate = addblock(newstate, 11)
         #add Draw 1 card
-    #else:
+        newstate = draw(newstate, 1)
+    else:
         #gain 8 Block
         newstate = addblock(newstate, 8)
         #add Draw 1 Card
+        newstate = draw(newstate, 1)
     return newstate
 
 #spot weakness 1 cost If an enemy intends to attack, gain 3 Strength.
@@ -1309,11 +1380,13 @@ def Warcry(gamestate, hitmonster, Upgrade):
 
     if Upgrade:
         #Draw 2 Card
+        newstate = draw(newstate, 2)
         #Place a Card from your hand on top of your draw pile.
         newstate.exhaust_pile.append('Warcry')
 
     else:
         #Draw 1 Card
+        newstate = draw(newstate, 1)
         #Place a Card from your hand on top of your draw pile.
         newstate.exhaust_pile.append('Warcry')
 
