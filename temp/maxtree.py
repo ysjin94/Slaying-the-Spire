@@ -73,7 +73,7 @@ def getstate():
 
 #will need to evaluate the new gamestate the card function returns?
 
-#---------------
+#----------------
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
