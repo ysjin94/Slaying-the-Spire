@@ -113,14 +113,14 @@ def get_next_game_state(decision, state):
     next_state = copy.deepcopy(state)
 
     # if this decision is a card,
-    # remove from hand and add to discard pile 
+    # remove from hand and add to discard pile
     if decision != 'END TURN':
         next_state.hand.remove(decision)
         next_state.discard_pile.append(decision)
 
     # remove decision from list of decisions
     next_state.decisions.remove(decision)
-    # next_state.energy -= card energy cost 
+    # next_state.energy -= card energy cost
     return next_state
 
 # recursively builds a decision tree using current gamestate
@@ -139,7 +139,7 @@ def build_tree(gamestate):
             # next game state
             next_state = get_next_game_state(x, gamestate.name)
             # create child node
-            child = Node(next_state, parent=gamestate) 
+            child = Node(next_state, parent=gamestate)
             # do not create children for end turn
             if x != 'END TURN':
                 build_tree(child) #recursively build tree
@@ -147,11 +147,11 @@ def build_tree(gamestate):
             #################
            # if x == 'armament':
            #     for i in range(len(next_state.hand)):
-           #         temp = copy.deepcopy(next_state) 
+           #         temp = copy.deepcopy(next_state)
            #         for j in range(len(temp.decisions)):
            #             if temp.hand[i] == temp.decisions[j]:
            #                 temp.decisions[j] += ' upgrade'
-           #         temp.hand[i] += ' upgrade' 
+           #         temp.hand[i] += ' upgrade'
            #         child2 = Node(temp, parent=child)
            #         build_tree(child2) #recursively build tree
            # else:
@@ -180,13 +180,13 @@ def tree_search(r):
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
-# returns the choice made between a parent node and its child 
+# returns the choice made between a parent node and its child
 # @param list1: the list of decisions belonging to parent node
 # @param list2: the list of decisions belonging to child node
 def return_move(list1, list2):
     for x in list1:
         if x not in list2:
-            return x 
+            return x
 
 # returns path to gamestate with max evaluation value
 # @param r: the root node
@@ -199,9 +199,9 @@ def find_path(r):
                     move = return_move(r.name.decisions, node.name.decisions)
                     move_list.append(move)
                     move_list += find_path(node)
-    return move_list 
+    return move_list
 
-# returns the list of decisions to obtain max evaluation value 
+# returns the list of decisions to obtain max evaluation value
 # @param node: the root node
 # @param state: the game state
 def return_path(node, state):

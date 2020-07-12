@@ -596,7 +596,7 @@ def Clash (gamestate, hitmonster, Upgrade):
     #count how many attack in your hand
     is_it_all_attack = 0
     for card_type in newstate.hand:
-        if card_type.type == CardTpye.ATTACK:
+        if card_type.type == CardType.ATTACK:
             is_it_all_attack += 1
 
     #check is_an_attack_in_hand
@@ -1272,12 +1272,18 @@ def Rupture(gamestate, hitmonster, Upgrade):
 def Searing_Blow(gamestate, hitmonster, Upgrade):
     newstate = gamestate
 
-    #if Upgrade:
+    if Upgrade:
         # if upgrade n times, deal n(n+7)/2 + 12 Damage (https://slay-the-spire.fandom.com/wiki/Searing_Blow)
-        # newstate = newstate dealdmg(newstate, n(n+7)/2 + 12, newstate.Monster[hitmonster])
-    #else:
-        #deal 12 Damage
-        #newstate =  dealdmg(newstate, 12, newstate.Monster[hitmonster])
+        for card in newstate.hand:
+            if card.name == "Searing Blow":
+                upgrade(card)
+                damage = card.upgrades * (card.upgrades + 7) / 2 + 12
+                newstate = dealdmg(newstate, damage, hitmonster)
+    else:
+        for card in newstate.hand:
+            if card.name == "Searing Blow":
+                damage = card.upgrades * (card.upgrades + 7) / 2 + 12
+                newstate = dealdmg(newstate, damage, hitmonster)
 
     return newstate
 
@@ -1289,7 +1295,7 @@ def Second_Wind(gamestate, hitmonster, Upgrade):
         #Gain 7 Block for each
         count_non_attack = 0
         for card in newstate.hand:
-            if card.type != CardTpye.ATTACK:
+            if card.type != CardType.ATTACK:
                 count_non_attack += 1
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
                 del card
@@ -1299,7 +1305,7 @@ def Second_Wind(gamestate, hitmonster, Upgrade):
         #Gain 5 Block for each
         count_non_attack = 0
         for card in newstate.hand:
-            if card.type != CardTpye.ATTACK:
+            if card.type != CardType.ATTACK:
                 count_non_attack += 1
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
                 del card
@@ -1347,7 +1353,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
     if Upgrade:
         #add exhaust all non-Attack Cards in your hand
         for card in newstate.hand:
-            if card.type != 'ATTACK':
+            if card.type != CardType.ATTACK:
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
                 del card
         #Deal 20 Damage
@@ -1355,7 +1361,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
     else:
         # add exhaust all non-Attack Cards in your hand
         for card in newstate.hand:
-            if card.type != 'ATTACK':
+            if card.type != CardType.ATTACK:
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
                 del card
         # Deal 16 damage.
