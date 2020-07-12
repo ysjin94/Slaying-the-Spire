@@ -175,7 +175,8 @@ def player_gain_strangth(newstate, amount):
     for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_name.amount = power_name.amount + amount
-
+            return newstate
+        
     New_power = Power("Strength", "Strength", amount)
     New_power.just_applied = True
     newstate.player.powers.append(New_power)
