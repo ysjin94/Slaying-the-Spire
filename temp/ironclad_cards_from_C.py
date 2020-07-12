@@ -486,7 +486,7 @@ def Battle_Trance(gamestate, hitmonster, Upgrade):
         #Draw 3 Cards
         newstate = draw(gamestate, 3)
     #Cannot draw additional Cards this turn
-    New_power = Power("Battle Trace", "Battle Trace", 0)
+    New_power = Power("No Draw", "No Draw", 0)
     newstate.player.powers.append(New_power)
 
     return newstate
