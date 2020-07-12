@@ -51,8 +51,9 @@ def getstate():
     n.card_in_play = Game.card_in_play
     n.turn = Game.turn
     n.cards_discarded_this_turn = Game.cards_discarded_this_turn
+    n.hand = ['health', 'potion', 'armament']
+    n.decisions = n.hand + ['END TURN']
     return n
-
 
 #---------------
 
@@ -102,55 +103,72 @@ def eval_function(gamestate):
 #                 newstate = newstate.discard_pile.append(cardname)
 
 
-def get_decision(self):
-    #newstate is type simgame
-    simstate = getstate()
-    root = Node(simstate, parent=None)
-    build_tree(root)
-    eval_tree(root)
-    tree_search(root)
-    print(return_path(root))
 
+# returns the next game state after updating a copy of current state
+# @param decision: the decision chosen for the next game state
+# decision is either the card to be played or the end turn function
+# @param state: the current state to be copied and modified
+def get_next_game_state(decision, state):
 
-def get_next_game_state(cardindex, state):
-        #get the name of the card
-        cardname = state.hand[cardindex].name
-        #x is the list of attributes associated with the card
-        x = cards[cardname]
-        if state.player.energy >= x[0]:
-            state.hand.remove(card)
-            x[2](state)
-            #need to account for cards that exhaust or is ethereal
-            state.discard_pile.append(card)
-            state.player.energy -= x[0]
-            return True
-        else:
-            return False
+    # copy current state
+    next_state = copy.deepcopy(state)
 
-#builds a tree using current game
+    # if this decision is a card,
+    # remove from hand and add to discard pile 
+    if decision != 'END TURN':
+        next_state.hand.remove(decision)
+        next_state.discard_pile.append(decision)
+
+    # remove decision from list of decisions
+    next_state.decisions.remove(decision)
+    # next_state.energy -= card energy cost 
+    return next_state
+
+# recursively builds a decision tree using current gamestate
+# @param gamestate: the node containing the current game state
+# when the function is first called this is the root node
 def build_tree(gamestate):
-        for x in gamestate.name.hand:
-            next_state = copy.deepcopy(gamestate.name)
-            can_play = get_next_game_state(x, next_state)
-            #if can_play and x == 'armament':
-            #    child2 = Node(temp, parent=gamestate) #create child node
-            #    for i in range(len(temp.hand)):
-            #        temp2 = copy.deepcopy(temp)
-            #        temp2.hand[i] += ' upgrade'
-            #        child3 = Node(temp2, parent=child2)
-            #        build_tree(child3) #recursively build tree
-            #else:
-            if can_play:
-                child = Node(next_state, parent=gamestate) #create child node
+    for x in gamestate.name.decisions:
+        # card energy cost
+        card = cards[cardname]
+        card_cost = card[0]
+        if x == 'END TURN':
+            card_cost = 0
+
+        # if there is enough energy to play this card
+        if gamestate.name.energy >= card_cost:
+            # next game state
+            next_state = get_next_game_state(x, gamestate.name)
+            # create child node
+            child = Node(next_state, parent=gamestate) 
+            # do not create children for end turn
+            if x != 'END TURN':
                 build_tree(child) #recursively build tree
 
+            #################
+           # if x == 'armament':
+           #     for i in range(len(next_state.hand)):
+           #         temp = copy.deepcopy(next_state) 
+           #         for j in range(len(temp.decisions)):
+           #             if temp.hand[i] == temp.decisions[j]:
+           #                 temp.decisions[j] += ' upgrade'
+           #         temp.hand[i] += ' upgrade' 
+           #         child2 = Node(temp, parent=child)
+           #         build_tree(child2) #recursively build tree
+           # else:
+            #################
+
+
+# assigns evaluation values to the leaves of the tree only
+# @param r: the root node of the tree
 def eval_tree(r):
     for children in LevelOrderGroupIter(r):
         for node in children:
             if not node.children:
-                #assign evaluation
-                node.name.grade = eval_function(node.name)
+                node.name.grade = eval_function(1)
 
+# percolates the max evaluation value up to the root of the tree
+# @param r: the root node of the tree
 def tree_search(r):
     if not r.children: #if node is a leaf
         return
@@ -163,61 +181,42 @@ def tree_search(r):
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
 
-#returns card played
-def return_move(hand1, hand2):
-    for x in hand1:
-        if x not in hand2:
-            return x
+# returns the choice made between a parent node and its child 
+# @param list1: the list of decisions belonging to parent node
+# @param list2: the list of decisions belonging to child node
+def return_move(list1, list2):
+    for x in list1:
+        if x not in list2:
+            return x 
 
-#returns path to max gamestate
+# returns path to gamestate with max evaluation value
+# @param r: the root node
 def find_path(r):
     move_list = []
     for children in LevelOrderGroupIter(r, maxlevel=2):
         for node in children:
             if node in r.children:
                 if node.name.grade == r.name.grade:
-                    move = return_move(r.name.hand, node.name.hand)
+                    move = return_move(r.name.decisions, node.name.decisions)
                     move_list.append(move)
                     move_list += find_path(node)
-    return move_list
+    return move_list 
 
-def return_path(r):
-    moves = find_path(r)
-    for i in range(len(moves)):
-        #if moves[i-1] == 'play armament':
-        #    moves[i] = 'upgrade ' + moves[i]
-        #else:
-        moves[i] = 'play ' + moves[i]
-    print(moves)
+# returns the list of decisions to obtain max evaluation value 
+# @param node: the root node
+# @param state: the game state
+def return_path(node, state):
+    moves = find_path(node)
 
 
 
+def get_decision(self):
+    #newstate is type simgame
+    simstate = getstate()
+    root = Node(simstate, parent=None)
+    build_tree(root)
+    eval_tree(root)
+    tree_search(root)
+    return_path(root, simstate)
 
-
-cards = ['health', 'potion', 'attack']
-
-a = getstate()
-a.hand = cards.copy()
-root = Node(a, parent=None)
-build_tree(root)
-for pre, fill, node in RenderTree(root):
-    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
-eval_tree(root)
-print()
-print()
-print()
-print()
-for pre, fill, node in RenderTree(root):
-    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
-tree_search(root)
-print()
-print()
-print()
-print()
-for pre, fill, node in RenderTree(root):
-    print("%s%s%s" % (pre, node.name.hand, node.name.grade))
-print()
-print()
-print()
-print()
-print(return_path(root))
+get_decision(1)
