@@ -51,7 +51,6 @@ def getstate():
     n.card_in_play = Game.card_in_play
     n.turn = Game.turn
     n.cards_discarded_this_turn = Game.cards_discarded_this_turn
-    n.hand = ['health', 'potion', 'armament']
     n.decisions = n.hand + ['END TURN']
     return n
 
