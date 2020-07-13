@@ -264,30 +264,3 @@ def tree_search(r):
                 if node.name.grade > max:
                     max = node.name.grade
     r.name.grade = max #set current node's eval to max of children
-
-# returns the choice made between a parent node and its child
-# @param list1: the list of decisions belonging to parent node
-# @param list2: the list of decisions belonging to child node
-def return_move(list1, list2):
-    for x in list1:
-        if x not in list2:
-            return x
-
-# returns path to gamestate with max evaluation value
-# @param r: the root node
-def find_path(r):
-    move_list = []
-    for children in LevelOrderGroupIter(r, maxlevel=2):
-        for node in children:
-            if node in r.children:
-                if node.name.grade == r.name.grade:
-                    move = return_move(r.name.decisions, node.name.decisions)
-                    move_list.append(move)
-                    move_list += find_path(node)
-    return move_list
-
-# returns the list of decisions to obtain max evaluation value
-# @param node: the root node
-# @param state: the game state
-def return_path(node, state):
-    moves = find_path(node)
