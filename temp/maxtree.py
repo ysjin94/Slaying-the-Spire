@@ -1,5 +1,6 @@
 import random
 from anytree import Node, RenderTree, LevelOrderGroupIter
+from sys import stdout
 
 class SimGame:
     self.in_combat = False
@@ -77,8 +78,89 @@ def getstate():
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
+    #eval out of 1000 or so, can be more or less
     eval = 0
+    #hp
+    eval += (gamestate.current_hp * 2)
+    eval += gamestate.gold
+    if gamestate.monsters = []:
+        eval += 200
+    else:
+        for m in gamestate.monsters:
+            eval -= m.current_hp
+            eval -= (m.move_adjusted_damage * m.move_hits)
+            #have to do monster powers
 
+    #have to do player powers
+    for ppower in gamestate.player.powers:
+        if ppower.name = 'Strength':
+            eval += ppower.amount
+        if ppower.name = 'Weakened':
+            eval -= ppower.amount
+        if ppower.name = 'Vulnerable':
+            eval -= ppower.amount
+        if ppower.name = 'Rage':
+            eval += ppower.amount
+        if ppower.name = 'Double Tap':
+            eval += (ppower.amount * 25)
+        if ppower.name = 'Flame Barrier':
+            eval += ppower.amount
+        if ppower.name = 'Dexterity':
+            eval += ppower.amount
+        if ppower.name = 'Juggernaut':
+            eval += ppower.amount
+        if ppower.name = 'Dark Embrace':
+            eval += ppower.amount
+        if ppower.name = 'Feel No Pain':
+            eval += ppower.amount
+        if ppower.name = 'Sentinel':
+            eval += ppower.amount
+        if ppower.name = 'No Draw':
+            eval -= ppower.amount
+        if ppower.name = 'Evolve':
+            eval += ppower.amount
+        if ppower.name = 'Fire Breathing':
+            eval += ppower.amount
+        if ppower.name = 'Combust':
+            eval += ppower.amount
+        if ppower.name = 'Rupture':
+            eval += ppower.amount
+        if ppower.name = 'Flex':
+            eval += ppower.amount
+        if ppower.name = 'Metallicize':
+            #number of block in the end
+            eval += (ppower.amount*(ppower.amount + 1))/2
+        if ppower.name = 'Poison':
+            #number of damage in the end
+            eval -= (ppower.amount*(ppower.amount + 1))/2
+        if ppower.name = 'Energized':
+            eval += 100
+        if ppower.name = 'Barricade':
+            eval += (gamestate.player.block * 2)
+        if ppower.name = 'Demon Form':
+            eval += (ppower.amount * 100)
+        if ppower.name = 'Brutality':
+            eval += (ppower.amount * 25)
+        if ppower.name = 'Rupture':
+            eval += (ppower.amount * 25)
+    #have to do potions
+
+    original_stdout = sys.stdout # Save a reference to the original standard output
+
+    with open('powers .txt', 'a') as f:
+        sys.stdout = f # Change the standard output to the file we created.
+        playerpoweout = ['Player Powers']
+        for p in gamestate.player.powers:
+            powerout = []
+            powerout.append('power_id = ' + p.power_id)
+            powerout.append('power_name = ' + p.power_name)
+            powerout.append('amount = ' + p.amount)
+            powerout.append('damage = ' + p.damage)
+            powerout.append('misc = ' + p.misc)
+            powerout.append('just_applied' + p.just_applied)
+            powerout.append('card' + p.card)
+        print()
+        sys.stdout = original_stdout # Reset the standard output to its original value
     return eval
 
 # root_node.state = getstate()

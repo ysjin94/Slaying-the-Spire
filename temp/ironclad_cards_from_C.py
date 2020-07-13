@@ -14,7 +14,7 @@ To do list:
                       whirlwind() : X cost Deal 5 damage to ALL enemies X times.
                       reaper() :  Deal 4 damage to ALL enemies. Heal for unblocked damage.
     - Finish Help function : start_of_turn  -> reduce player.powers after few turns
-    
+
     #corruption 3 cost Skills cost 0. Whenever you play a Skill, Exhaust it.
     #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
     #reaper 2 cost Deal 4 damage to ALL enemies. Heal for unblocked damage. Exhaust.
@@ -146,9 +146,9 @@ def player_take_damage(gamestate):
     for player_power in newstate.player_power.powers:
         if player_power.power_name == "Flame Barrier":
             del player_power
-        
+
     return newstate
-    
+
 def addblock(gamestate, block):
     newstate = gamestate
 
@@ -333,10 +333,10 @@ def upgrade(card):
 # Effect at end of turn
 def end_of_turn(gamestate):
     newstate = gamestate
-    
+
     # Take demage from the monsters
     newstate = player_take_damage(newstate)
-    
+
     #combust At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies
     for power_player in newstate.player.powers:
         if power_player.power_name == "Combust":
@@ -344,12 +344,12 @@ def end_of_turn(gamestate):
             #deal power_player.amount dmage to All
             for monster in range(len(newstate.monsters)):
                 newstate = dealdmg(newstate, power_player.amount, monster)
-                
+
             #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
             for player_power in newstate.player.powers:
                 if player_power.power_name == "Rupture":
                     newstate = player_gain_strength(newstate, player_power.amount)
-                    
+
     #flex At the end of your turn, lose 2(4) Strength.
     for power_player in newstate.player.powers:
         if power_player.power_name == "Flex":
@@ -359,7 +359,7 @@ def end_of_turn(gamestate):
     for power_player in newstate.player.powers:
         if power_player.power_name == "Metallicize":
             newstate = addblock(newstate, power_player.amount)
-    
+
     #modify here
     #deal poison damage, reduces poison stack
     for pmonster in newstate.monsters[monster].powers:
@@ -386,7 +386,7 @@ def end_of_turn(gamestate):
     # Lose moster blocks
     for monster in range(len(newstate.monsters)):
         newstate.monsters[monster].block = 0
-        
+
 
     #ethereal check, if card is ethereal, exhaust it
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
@@ -428,7 +428,7 @@ def start_of_turn(gamestate):
         if player_power.power_name == "Brutality":
             newstate.player.current_hp -= 1
             newstate = draw(newstate, 1)
-            
+
             #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
             for player_power in newstate.player.powers:
                 if player_power.power_name == "Rupture":
@@ -1025,7 +1025,7 @@ def Hemokinesis(gamestate, hitmonster, Upgrade):
     else:
         # lose 3 HP
         newstate.player.current_hp =newstate.player.current_hp - 3
-        
+
         #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
         for player_power in newstate.player.powers:
             if player_power.power_name == "Rupture":
@@ -1183,7 +1183,7 @@ def Offering(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade:
         newstate.player.current_hp = newstate.player.current_hp - 6
-        
+
         #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
         for player_power in newstate.player.powers:
             if player_power.power_name == "Rupture":
