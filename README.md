@@ -17,7 +17,7 @@ Website : Empty for now
 1. Install three mods
    * Install [Communication Mod](https://github.com/ForgottenArbiter/CommunicationMod)
    * ModTheSpire - Steam Workshop version
-   * BaseMod - Steam Workshop versio
+   * BaseMod - Steam Workshop version
 2. Update Communication Mod config
   * Windows: `%LOCALAPPDATA%\ModTheSpire\CommunicationMod\config.properties` 
   * Linux: `~/.config/ModTheSpire/config.properties` 
@@ -29,7 +29,7 @@ Website : Empty for now
 
 If the mod does not run correctly
 * check the `communication_mod_errors.log`
-You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browes localfile"->"Resource"
+You can find it Steam->select "Slay the Spire" -> click "Manage"-> "Browse localfile"->"Resource"
 
 
 # Building Deck :
