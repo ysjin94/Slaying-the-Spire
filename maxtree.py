@@ -49,18 +49,18 @@ class SimGame():
 
 
 
-def getstate():
+def getstate(gamestate):
     n = SimGame()
-    n.player = Game.player
-    n.monsters = Game.monsters
-    n.draw_pile = Game.draw_pile
-    n.discard_pile = Game.discard_pile
-    n.exhaust_pile = Game.exhaust_pile
-    n.hand = Game.hand
-    n.limbo = Game.limbo
-    n.card_in_play = Game.card_in_play
-    n.turn = Game.turn
-    n.cards_discarded_this_turn = Game.cards_discarded_this_turn
+    n.player = gamestate.player
+    n.monsters = gamestate.monsters
+    n.draw_pile = gamestate.draw_pile
+    n.discard_pile = gamestate.discard_pile
+    n.exhaust_pile = gamestate.exhaust_pile
+    n.hand = gamestate.hand
+    n.limbo = gamestate.limbo
+    n.card_in_play = gamestate.card_in_play
+    n.turn = gamestate.turn
+    n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
     n.decisions = []
     return n
 
