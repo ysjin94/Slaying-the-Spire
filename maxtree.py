@@ -23,29 +23,6 @@ class SimGame():
     #--------- Additional
         self.energy = 3
         self.decisions = []
-    #--------- Card switches needed for combat
-    # self.Barricade = False
-    # self.Battle_Trace = False
-    # self.Blood_For_Blood = False
-    # self.Berserk = False
-    # self.Brutality = False
-    # self.Combust = False
-    # self.Corruption = False
-    # self.Dark_Embrace = False
-    # self.Demon_Form = False
-    # self.Double_Tap = False
-    # self.Evolve = False
-    # self.Feel_No_Pain = False
-    # self.Fire_Breathing = False
-    # self.Flame_Barrier = False
-    # self.Flex = False
-    # self.Juggernaut = False
-    # self.Metallicize = False
-    # self.Rage = False
-    # self.Rupture = False
-
-
-
 
 def getstate(gamestate):
     n = SimGame()
@@ -61,26 +38,6 @@ def getstate(gamestate):
     n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
     n.decisions = []
     return n
-
-#---------------
-
-# Effect at end of turn
-# def end_of_turn(gamestate):
-#     newstate = gamestate
-#     #deal poison damage
-#     #ethereal check, if card is ethereal, exhaust it
-#     return newstate
-#
-# def start_of_turn(gamestate):
-#     newstate = gamestate
-#     #reset energy/mana
-#     return newstate
-#Need to Helper Function
-#Cost,
-
-#will need to evaluate the new gamestate the card function returns?
-
-#----------------
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
@@ -220,28 +177,6 @@ def eval_function(gamestate):
         sys.stdout = original_stdout # Reset the standard output to its original value
     return eval
 
-# root_node.state = getstate()
-# newstate = root_node.state
-# for cardname, card in newstate.hand:
-#     x = cards[card]
-#     #check if enough energy to play card
-#     #might have to add energy to game state
-#     if newstate.energy >= x[0]:
-#         newstate.energy = newstate.energy - x[0]
-#         #somehow play card/call card function from dict
-#         #PROBLEM: how are monsters stores in gamestate?'
-#         #since some cards don't need targets, the card function will loop through the targets if needed?
-#         if x[1] = False:
-#             x[2](newstate)
-#             newstate = newstate.hand.remove(cardname)
-#             newstate = newstate.discard_pile.append(cardname)
-#         else:
-#             for target in newstate.Monsters:
-#                 x[2](newstate, target)
-#                 newstate = newstate.hand.remove(cardname)
-#                 newstate = newstate.discard_pile.append(cardname)
-
-
 
 # returns the next game state after updating a copy of current state
 # @param decision: the decision chosen for the next game state
@@ -356,16 +291,3 @@ def find_path(r):
 # @param state: the game state
 def return_path(node, state):
     moves = find_path(node)
-
-
-
-# def get_decision(gamestate):
-#     #newstate is type simgame
-#     simstate = getstate(gamestate)
-#     root = Node(simstate, parent=None)
-#     build_tree(root)
-#     eval_tree(root)
-#     tree_search(root)
-#     return_path(root, simstate)
-#
-# get_decision(1)
