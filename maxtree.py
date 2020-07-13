@@ -5,9 +5,7 @@ from sys import stdout
 from spirecomm.spire.game import Game
 from spirecomm.spire.character import Intent, PlayerClass
 import spirecomm.spire.card
-from spirecomm.spire.screen import RestOption
 from spirecomm.communication.action import *
-from spirecomm.ai.priorities import *
 
 class SimGame():
     def __init__(self):
@@ -208,7 +206,7 @@ def eval_function(gamestate):
 
     with open('powers .txt', 'a') as f:
         sys.stdout = f # Change the standard output to the file we created.
-        playerpoweout = ['Player Powers']
+        powerout = ['Player Powers']
         for p in gamestate.player.powers:
             powerout = []
             powerout.append('power_id = ' + p.power_id)
@@ -258,59 +256,32 @@ def get_next_game_state(play, state, target = False):
     if play == 'End_Turn':
         next_state = end_of_turn(next_state)
         next_state = start_of_turn(next_state)
-        decisionlist.append['End_Turn']
+        decisionlist.append('End_Turn')
 
     elif target == False:
         card = play.name
         next_state.hand.remove(play)
         next_state = cards[card](next_state, upgrades = play.upgrades)
         if play.exhausts == True:
-            addpile
-        decisionlist.append[play]
+            addcard(newstate, play.name, 'exhaust_pile')
+        else:
+            addcard(newstate, play.name, 'discard_pile')
+        decisionlist.append(play)
 
     elif target == True:
         card = play.name
+        next_state.hand.remove(play)
         next_state = cards[card](next_state, hitmonster = target, upgrades = play.upgrades)
-        decisionlist.append[play]
-        decisionlist.append[target]
+        if play.exhausts == True:
+            addcard(newstate, play.name, 'exhaust_pile')
+        else:
+            addcard(newstate, play.name, 'discard_pile')
+        decisionlist.append(play)
+        decisionlist.append(target)
 
 
     next_state.decision.append(decisionlist)
     return next_state
-
-# recursively builds a decision tree using current gamestate
-# @param gamestate: the node containing the current game state
-# when the function is first called this is the root node
-def build_tree(gamestate):
-    for x in gamestate.name.decisions:
-        # card energy cost
-        card = cards[cardname]
-        card_cost = card[0]
-        if x == 'END TURN':
-            card_cost = 0
-
-        # if there is enough energy to play this card
-        if gamestate.name.energy >= card_cost:
-            # next game state
-            next_state = get_next_game_state(x, gamestate.name)
-            # create child node
-            child = Node(next_state, parent=gamestate)
-            # do not create children for end turn
-            if x != 'END TURN':
-                build_tree(child) #recursively build tree
-
-            #################
-           # if x == 'armament':
-           #     for i in range(len(next_state.hand)):
-           #         temp = copy.deepcopy(next_state)
-           #         for j in range(len(temp.decisions)):
-           #             if temp.hand[i] == temp.decisions[j]:
-           #                 temp.decisions[j] += ' upgrade'
-           #         temp.hand[i] += ' upgrade'
-           #         child2 = Node(temp, parent=child)
-           #         build_tree(child2) #recursively build tree
-           # else:
-            #################
 
 def build_tree(gamestate):
     for c in gamestate.name.hand:
