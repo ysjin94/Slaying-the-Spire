@@ -9,21 +9,22 @@ from spirecomm.spire.screen import RestOption
 from spirecomm.communication.action import *
 from spirecomm.ai.priorities import *
 
-class SimGame:
-    self.in_combat = False
-    self.player = None
-    self.monsters = []
-    self.draw_pile = []
-    self.discard_pile = []
-    self.exhaust_pile = []
-    self.hand = []
-    self.limbo = []
-    self.card_in_play = None
-    self.turn = 0
-    self.cards_discarded_this_turn = 0
+class SimGame():
+    def __init__(self):
+        self.in_combat = False
+        self.player = None
+        self.monsters = []
+        self.draw_pile = []
+        self.discard_pile = []
+        self.exhaust_pile = []
+        self.hand = []
+        self.limbo = []
+        self.card_in_play = None
+        self.turn = 0
+        self.cards_discarded_this_turn = 0
     #--------- Additional
-    self.energy = 3
-    self.decisions = []
+        self.energy = 3
+        self.decisions = []
     #--------- Card switches needed for combat
     # self.Barricade = False
     # self.Battle_Trace = False
