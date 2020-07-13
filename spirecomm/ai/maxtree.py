@@ -2,6 +2,13 @@ import random
 from anytree import Node, RenderTree, LevelOrderGroupIter
 from sys import stdout
 
+from spirecomm.spire.game import Game
+from spirecomm.spire.character import Intent, PlayerClass
+import spirecomm.spire.card
+from spirecomm.spire.screen import RestOption
+from spirecomm.communication.action import *
+from spirecomm.ai.priorities import *
+
 class SimGame:
     self.in_combat = False
     self.player = None
@@ -83,7 +90,7 @@ def eval_function(gamestate):
     #hp
     eval += (gamestate.current_hp * 2)
     eval += gamestate.gold
-    if gamestate.monsters = []:
+    if gamestate.monsters == []:
         eval += 200
     else:
         for m in gamestate.monsters:
@@ -93,55 +100,55 @@ def eval_function(gamestate):
 
     #have to do player powers
     for ppower in gamestate.player.powers:
-        if ppower.name = 'Strength':
+        if ppower.name == 'Strength':
             eval += ppower.amount
-        if ppower.name = 'Weakened':
+        if ppower.name == 'Weakened':
             eval -= ppower.amount
-        if ppower.name = 'Vulnerable':
+        if ppower.name == 'Vulnerable':
             eval -= ppower.amount
-        if ppower.name = 'Rage':
+        if ppower.name == 'Rage':
             eval += ppower.amount
-        if ppower.name = 'Double Tap':
+        if ppower.name == 'Double Tap':
             eval += (ppower.amount * 25)
-        if ppower.name = 'Flame Barrier':
+        if ppower.name == 'Flame Barrier':
             eval += ppower.amount
-        if ppower.name = 'Dexterity':
+        if ppower.name == 'Dexterity':
             eval += ppower.amount
-        if ppower.name = 'Juggernaut':
+        if ppower.name == 'Juggernaut':
             eval += ppower.amount
-        if ppower.name = 'Dark Embrace':
+        if ppower.name == 'Dark Embrace':
             eval += ppower.amount
-        if ppower.name = 'Feel No Pain':
+        if ppower.name == 'Feel No Pain':
             eval += ppower.amount
-        if ppower.name = 'Sentinel':
+        if ppower.name == 'Sentinel':
             eval += ppower.amount
-        if ppower.name = 'No Draw':
+        if ppower.name == 'No Draw':
             eval -= ppower.amount
-        if ppower.name = 'Evolve':
+        if ppower.name == 'Evolve':
             eval += ppower.amount
-        if ppower.name = 'Fire Breathing':
+        if ppower.name == 'Fire Breathing':
             eval += ppower.amount
-        if ppower.name = 'Combust':
+        if ppower.name == 'Combust':
             eval += ppower.amount
-        if ppower.name = 'Rupture':
+        if ppower.name == 'Rupture':
             eval += ppower.amount
-        if ppower.name = 'Flex':
+        if ppower.name == 'Flex':
             eval += ppower.amount
-        if ppower.name = 'Metallicize':
+        if ppower.name == 'Metallicize':
             #number of block in the end
             eval += (ppower.amount*(ppower.amount + 1))/2
-        if ppower.name = 'Poison':
+        if ppower.name == 'Poison':
             #number of damage in the end
             eval -= (ppower.amount*(ppower.amount + 1))/2
-        if ppower.name = 'Energized':
+        if ppower.name == 'Energized':
             eval += 100
-        if ppower.name = 'Barricade':
+        if ppower.name == 'Barricade':
             eval += (gamestate.player.block * 2)
-        if ppower.name = 'Demon Form':
+        if ppower.name == 'Demon Form':
             eval += (ppower.amount * 100)
-        if ppower.name = 'Brutality':
+        if ppower.name == 'Brutality':
             eval += (ppower.amount * 25)
-        if ppower.name = 'Rupture':
+        if ppower.name == 'Rupture':
             eval += (ppower.amount * 25)
     #have to do potions
 
@@ -201,7 +208,7 @@ def get_next_game_state(play, state, target = False):
         next_state = start_of_turn(next_state)
         decisionlist.append['End_Turn']
 
-    elif target == False
+    elif target == False:
         card = play.name
         next_state = cards[card](next_state, upgrades = play.upgrades)
         decisionlist.append[play]
