@@ -168,6 +168,8 @@ def addblock(gamestate, block):
         if player_power.power_name == "Dexterity":
             newstate.player.block += player_power.amount
 
+    #add block
+    newstate.player.block += block
 
     #juggernaut dealdmg to random monster
     if player_powers.power_name == "Juggernaut":
