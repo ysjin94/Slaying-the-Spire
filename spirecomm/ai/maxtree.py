@@ -96,57 +96,57 @@ def eval_function(gamestate):
         for m in gamestate.monsters:
             eval -= m.current_hp
             eval -= (m.move_adjusted_damage * m.move_hits)
-                for mpower in gamestate.player.powers:
-                    if mpower.name == 'Strength':
-                        eval -= mpower.amount
-                    if mpower.name == 'Weakened':
-                        eval += mpower.amount
-                    if mpower.name == 'Vulnerable':
-                        eval += mpower.amount
-                    if mpower.name == 'Rage':
-                        eval -= mpower.amount
-                    if mpower.name == 'Double Tap':
-                        eval -= (mpower.amount * 25)
-                    if mpower.name == 'Flame Barrier':
-                        eval -= mpower.amount
-                    if mpower.name == 'Dexterity':
-                        eval -= mpower.amount
-                    if mpower.name == 'Juggernaut':
-                        eval -= mpower.amount
-                    if mpower.name == 'Dark Embrace':
-                        eval -= mpower.amount
-                    if mpower.name == 'Feel No Pain':
-                        eval -= mpower.amount
-                    if mpower.name == 'Sentinel':
-                        eval -= mpower.amount
-                    if mpower.name == 'No Draw':
-                        eval += mpower.amount
-                    if mpower.name == 'Evolve':
-                        eval -= mpower.amount
-                    if mpower.name == 'Fire Breathing':
-                        eval -= mpower.amount
-                    if mpower.name == 'Combust':
-                        eval -= mpower.amount
-                    if mpower.name == 'Rupture':
-                        eval -= mpower.amount
-                    if mpower.name == 'Flex':
-                        eval -= mpower.amount
-                    if mpower.name == 'Metallicize':
-                        #number of block in the end
-                        eval -= (mpower.amount*(mpower.amount + 1))/2
-                    if mpower.name == 'Poison':
-                        #number of damage in the end
-                        eval += (mpower.amount*(mpower.amount + 1))/2
-                    if mpower.name == 'Energized':
-                        eval -= 100
-                    if mpower.name == 'Barricade':
-                        eval -= (gamestate.player.block * 2)
-                    if mpower.name == 'Demon Form':
-                        eval -= (mpower.amount * 100)
-                    if mpower.name == 'Brutality':
-                        eval -= (mpower.amount * 25)
-                    if mpower.name == 'Rupture':
-                        eval -= (mpower.amount * 25)
+            for mpower in gamestate.player.powers:
+                if mpower.name == 'Strength':
+                    eval -= mpower.amount
+                if mpower.name == 'Weakened':
+                    eval += mpower.amount
+                if mpower.name == 'Vulnerable':
+                    eval += mpower.amount
+                if mpower.name == 'Rage':
+                    eval -= mpower.amount
+                if mpower.name == 'Double Tap':
+                    eval -= (mpower.amount * 25)
+                if mpower.name == 'Flame Barrier':
+                    eval -= mpower.amount
+                if mpower.name == 'Dexterity':
+                    eval -= mpower.amount
+                if mpower.name == 'Juggernaut':
+                    eval -= mpower.amount
+                if mpower.name == 'Dark Embrace':
+                    eval -= mpower.amount
+                if mpower.name == 'Feel No Pain':
+                    eval -= mpower.amount
+                if mpower.name == 'Sentinel':
+                    eval -= mpower.amount
+                if mpower.name == 'No Draw':
+                    eval += mpower.amount
+                if mpower.name == 'Evolve':
+                    eval -= mpower.amount
+                if mpower.name == 'Fire Breathing':
+                    eval -= mpower.amount
+                if mpower.name == 'Combust':
+                    eval -= mpower.amount
+                if mpower.name == 'Rupture':
+                    eval -= mpower.amount
+                if mpower.name == 'Flex':
+                    eval -= mpower.amount
+                if mpower.name == 'Metallicize':
+                    #number of block in the end
+                    eval -= (mpower.amount*(mpower.amount + 1))/2
+                if mpower.name == 'Poison':
+                    #number of damage in the end
+                    eval += (mpower.amount*(mpower.amount + 1))/2
+                if mpower.name == 'Energized':
+                    eval -= 100
+                if mpower.name == 'Barricade':
+                    eval -= (gamestate.player.block * 2)
+                if mpower.name == 'Demon Form':
+                    eval -= (mpower.amount * 100)
+                if mpower.name == 'Brutality':
+                    eval -= (mpower.amount * 25)
+                if mpower.name == 'Rupture':
+                    eval -= (mpower.amount * 25)
             #have to do monster powers
 
     #have to do player powers
@@ -261,7 +261,10 @@ def get_next_game_state(play, state, target = False):
 
     elif target == False:
         card = play.name
+        next_state.hand.remove(play)
         next_state = cards[card](next_state, upgrades = play.upgrades)
+        if play.exhausts == True:
+            addpile
         decisionlist.append[play]
 
     elif target == True:
