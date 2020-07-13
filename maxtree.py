@@ -359,13 +359,13 @@ def return_path(node, state):
 
 
 
-def get_decision(self):
-    #newstate is type simgame
-    simstate = getstate()
-    root = Node(simstate, parent=None)
-    build_tree(root)
-    eval_tree(root)
-    tree_search(root)
-    return_path(root, simstate)
-
-get_decision(1)
+# def get_decision(gamestate):
+#     #newstate is type simgame
+#     simstate = getstate(gamestate)
+#     root = Node(simstate, parent=None)
+#     build_tree(root)
+#     eval_tree(root)
+#     tree_search(root)
+#     return_path(root, simstate)
+#
+# get_decision(1)
