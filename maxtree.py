@@ -24,6 +24,7 @@ class SimGame():
         self.energy = 3
         self.decisions = []
 
+#returns a SimGame that includes the gamestate stuff but also desisions
 def getstate(gamestate):
     n = SimGame()
     n.player = gamestate.player
@@ -159,6 +160,7 @@ def eval_function(gamestate):
             eval += (ppower.amount * 25)
     #have to do potions
 
+    #print all the powers for troubleshooting later
     original_stdout = sys.stdout # Save a reference to the original standard output
 
     with open('powers .txt', 'a') as f:
@@ -173,7 +175,21 @@ def eval_function(gamestate):
             powerout.append('misc = ' + p.misc)
             powerout.append('just_applied' + p.just_applied)
             powerout.append('card' + p.card)
-        print()
+        print(powerout)
+
+        #Monster powers
+        mpowerout = ['Monster Powers']
+            for m in gamestate.monsters:
+                for p in gamestate.monster.powers:
+                    mpowerout = []
+                    mpowerout.append('power_id = ' + p.power_id)
+                    mpowerout.append('power_name = ' + p.power_name)
+                    mpowerout.append('amount = ' + p.amount)
+                    mpowerout.append('damage = ' + p.damage)
+                    mpowerout.append('misc = ' + p.misc)
+                    mpowerout.append('just_applied' + p.just_applied)
+                    mpowerout.append('card' + p.card)
+        print(mpowerout)
         sys.stdout = original_stdout # Reset the standard output to its original value
     return eval
 
