@@ -43,26 +43,6 @@ To do list:
 
 """
 
-#example pseudocode
-#for cardname, card in Game.hand:
- #   x = cards[card]
- #   check if enough energy to play card
-    #might have to add energy to game state
-    # if SimGame.energy >= x[0]:
-    #    SimGame.energy = Game.energy - x[0]
-        #somehow play card/call card function from dict
-        #PROBLEM: how are monsters stores in gamestate?'
-        #since some cards don't need targets, the card function will loop through the targets if needed?
-    #    if x[1] == False:
-     #       x[2](gamestate)
-     #       gamestate = gamestate.hand.remove(cardname)
-     #       gamestate = gamestate.discard_pile.append(cardname)
-     #   else:
-     #       for target in Game.Monsters:
-     #           x[2](gamestate, target)
-     #           gamestate = gamestate.hand.remove(cardname)
-     #           gamestate = gamestate.discard_pile.append(cardname)
-
 import random
 #from maxtree import SimGame
 from spirecomm.spire.power import Power
@@ -127,7 +107,7 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
 def player_take_damage(gamestate):
 
     newstate = gamestate
-    
+
     #check all monsters
     for monster in range(len(newstate.monsters)):
         # check is_monster_dead
@@ -145,7 +125,7 @@ def player_take_damage(gamestate):
                 # lose hp if no block
                 else:
                     newstate.player.current_hp -= newstate.monsters[monster].move_adjust_damage
-                    
+
                 #flame barrier 2 cost Gain 12 Block. Whenever you are attacked this turn, deal 4 damage to the attacker.
                 for player_power in newstate.player.powers:
                     if player_power.power_name == "Flame Barrier":
@@ -154,22 +134,22 @@ def player_take_damage(gamestate):
     for player_power in newstate.player_power.powers:
         if player_power.power_name == "Flame Barrier":
             del player_power
-        
+
     return newstate
 
 # Dexterity is applied before Frail.
 def addblock(gamestate, block):
     newstate = gamestate
-    
+
     for debuff_player in newstate.player.powers:
         debuff_player.power_name == "Frail":
         #round down
            block = math.floor(block * 0.75)
-    
+
     for player_power in newstate.player.powers:
         if player_power.power_name == "Dexterity":
             newstate.player.block += player_power.amount
-    
+
     #add block
     newstate.player.block += block
 
@@ -204,7 +184,7 @@ def addcard(gamestate, name, pile):
 
             #sentinel Gain 5 Block. If this card is Exhausted, gain 2(3) energy.
             if power_player.power_name == "Sentinel":
-                newstate.energy = newstate.energy + powers.amount
+                newstate.player.energy = newstate.player.energy + powers.amount
 
     return newstate
 
@@ -346,10 +326,10 @@ def upgrade(card):
 # Effect at end of turn
 def end_of_turn(gamestate):
     newstate = gamestate
-    
+
     # Take demage from the monsters
     newstate = player_take_damage(newstate)
-    
+
     #combust At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies
     for power_player in newstate.player.powers:
         if power_player.power_name == "Combust":
@@ -357,12 +337,12 @@ def end_of_turn(gamestate):
             #deal power_player.amount dmage to All
             for monster in range(len(newstate.monsters)):
                 newstate = dealdmg(newstate, power_player.amount, monster)
-                
+
             #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
             for player_power in newstate.player.powers:
                 if player_power.power_name == "Rupture":
                     newstate = player_gain_strength(newstate, player_power.amount)
-                    
+
     #flex At the end of your turn, lose 2(4) Strength.
     for power_player in newstate.player.powers:
         if power_player.power_name == "Flex":
@@ -400,22 +380,22 @@ def end_of_turn(gamestate):
                     newstate.player.block -= power_player.amount
             else:
                 newstate.player.current_hp -= power_player.amunt
-    
+
     #lose buff, and debuff
     for power_player in newstate.player.powers:
-        
+
         if power_player.power_name = "Strength":
             if power_player.amount > 0:
                 power_player.amount -= 1
-        
+
         if power_player.power_name = "Weakened":
             if power_player.amount > 0:
                 power_player.amount -= 1
-        
+
         if power_player.power_name = "Vulnerable":
             if power_player.amount > 0:
                 power_player.amount -= 1
-        
+
         if power_player.power_name = "Dexterity":
             #buff
             if power_player.amount > 0:
@@ -423,25 +403,25 @@ def end_of_turn(gamestate):
             #debuff
             elif power_player.amount <0:
                 power_player.amount += 1
-                
+
         if power_player.power_name = "Frail":
             if power_player.amount > 0:
                 power_player.amount -= 1
-    
+
     for power_monster in newstate.monsters.powers:
-        
+
         if power_monster.power_name = "Strength":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
-        
+
         if power_monster.power_name = "Weakened":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
-        
+
         if power_monster.power_name = "Vulnerable":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
-        
+
         if power_monster.power_name = "Dexterity":
             #buff
             if power_monster.amount > 0:
@@ -449,16 +429,16 @@ def end_of_turn(gamestate):
             #debuff
             elif power_monster.amount < 0:
                 power_monster.amount += 1
-                
+
         if power_monster.power_name = "Frail":
             if ppower_monster.amount > 0:
                 power_monster.amount -= 1
-                
+
     # Lose moster blocks
     for monster in range(len(newstate.monsters)):
         newstate.monsters[monster].block = 0
-    
-    
+
+
 
     #ethereal check, if card is ethereal, exhaust it
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
@@ -476,9 +456,9 @@ def start_of_turn(gamestate):
     #reset energy/mana
     for player_power in newstate.player.powers:
         if player_power.power_name == "Energized":
-            newstate.energy = newstate.energy + player_power.amount
+            newstate.player.energy = newstate.player.energy + player_power.amount
         else:
-            newstate.energy = 3
+            newstate.player.energy = 3
 
     #at the start of your turn, Block no longer expires
     # else do reset the block
@@ -500,7 +480,7 @@ def start_of_turn(gamestate):
         if player_power.power_name == "Brutality":
             newstate.player.current_hp -= 1
             newstate = draw(newstate, 1)
-            
+
             #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
             for player_power in newstate.player.powers:
                 if player_power.power_name == "Rupture":
@@ -529,7 +509,7 @@ def Anger(gamestate, hitmonster, Upgrade):
         return newstate
 
 #armaments 1 cost Gain 5 Block. Upgrade a card in your hand for the rest of combat.
-def Armaments(gamestate, cardtoupgrade, Upgrade):
+def Armaments(gamestate, cardindex, Upgrade):
     newstate = gamestate
     #add 5 block
     newstate = addblock(newstate, 5)
@@ -540,7 +520,7 @@ def Armaments(gamestate, cardtoupgrade, Upgrade):
         return newstate
     else:
         #upgrade one card in your hand.
-        upgrades(newstate.hand[cardtoupgrade])
+        upgrades(newstate.hand[cardindex])
         return newstate
         #somehow return a new gamestate for every card which can be upgraded
 
@@ -633,12 +613,12 @@ def Bloodletting(gamestate, hitmonster, Upgrade):
         # lose 3 HP
         newstate.player.current_hp = newstate.player.current_hp - 3
         # Gain 2 Energy.
-        newstate.energy += 2
+        newstate.player.energy += 2
     else:
         # lose 3 HP
         newstate.player.current_hp = newstate.player.current_hp - 3
         # Gain 1 Energy.
-        newstate.energy += 1
+        newstate.player.energy += 1
 
     return newstate
 
@@ -856,7 +836,7 @@ def Dropkick(gamestate, hitmonster, Upgrade):
     for pmonster in newstate.monsters[hitmonster].powers:
         #Gain 1 energy, and draw 1 card
         if pmonster.power_name ==  "Vulnerable":
-            newstate.energy += 1
+            newstate.player.energy += 1
             newstate = draw(newstate, 1)
     return newstate
 
@@ -1097,7 +1077,7 @@ def Hemokinesis(gamestate, hitmonster, Upgrade):
     else:
         # lose 3 HP
         newstate.player.current_hp =newstate.player.current_hp - 3
-        
+
         #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
         for player_power in newstate.player.powers:
             if player_power.power_name == "Rupture":
@@ -1255,7 +1235,7 @@ def Offering(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade:
         newstate.player.current_hp = newstate.player.current_hp - 6
-        
+
         #rupture 1 cost Whenever you lose HP from a card, gain 1 Strength
         for player_power in newstate.player.powers:
             if player_power.power_name == "Rupture":
@@ -1263,7 +1243,7 @@ def Offering(gamestate, hitmonster, Upgrade):
 
         #add Draw 5 Cards
         #Gain 2 energy
-        newstate.energy = newstate.energy + 2
+        newstate.player.energy = newstate.player.energy + 2
         newstate = draw(newstate, 5)
         newstate = addcard(newstate, "Offering", 'exhaust_pile')
     else:
@@ -1276,7 +1256,7 @@ def Offering(gamestate, hitmonster, Upgrade):
 
         #add Draw 3 Cards
         #Gain 2 energy
-        newstate.energy = newstate.energy + 2
+        newstate.player.energy = newstate.player.energy + 2
         newstate = draw(newstate, 3)
         newstate = addcard(newstate, "Offering", 'exhaust_pile')
 
@@ -1454,11 +1434,11 @@ def Seeing_Red(gamestate, hitmonster, Upgrade):
     if Upgrade:
         # cost is 0
         # Gain 2 energy/cost
-        newstate.energy = newstate.energy + 2
+        newstate.player.energy = newstate.player.energy + 2
         newstate = addcard(newstate, "Seeing Red", 'exhaust_pile')
     else:
         #Gain 2 energy/cost
-        newstate.energy = newstate.energy + 2
+        newstate.player.energy = newstate.player.energy + 2
         newstate = addcard(newstate, "Seeing Red", 'exhaust_pile')
 
     return newstate
@@ -1805,4 +1785,3 @@ cards = {
 #print(cards['Anger'][1])
 #newstate = cards['Anger'][2](gamestate,hitmonster)
 #print(cards['Anger'][3])
-

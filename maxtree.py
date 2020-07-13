@@ -235,7 +235,7 @@ def get_next_game_state(play, state, target = False):
 
 def build_tree(gamestate):
     for c in gamestate.name.hand:
-        if gamestate.name.energy >= c.cost:
+        if gamestate.name.player.energy >= c.cost:
             #get_next_game_state needs to append the decision to gamestate.decisions
 
             #checks if needs target
