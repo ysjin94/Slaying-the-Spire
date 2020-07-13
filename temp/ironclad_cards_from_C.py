@@ -4,7 +4,7 @@ Remove to do list if it is done.
 To do list:
     Debug
     - Function called feed distinguish non-minion and minion
-    - Finsih Help function : end_of_turn -> Ethereal Cards are automatically Exhausted if they are in your hand at the end of your turn.
+    - Finish Help function : end_of_turn -> take monster damage
                              start_of_turn  -> reduce player.powers after few turns
 
     <list of cards that need to work>
