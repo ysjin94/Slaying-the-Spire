@@ -108,8 +108,8 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
                 # remain
                 left = damage - newstate.monsters[monster].block
 
-                newstate.monster[monster].block = 0
-                newstate.monster[monster].current_hp -= left
+                newstate.monsters[monster].block = 0
+                newstate.monsters[monster].current_hp -= left
                 if newstate.monsters[monster].current_hp <= 0:
                     del newstate.monsters[monster]
 
@@ -135,8 +135,8 @@ def player_take_damage(gamestate):
             for attackmum in range(newstate.monsters[monster].move_hit):
                 # lose block first
                 if newstate.player.block > 0:
-                    if newstate.monsters[monster].block < newstate.monster[monster].move_adjust_damage:
-                        left = newstate.monster[monster].move_adjust_damage - newstate.monsters[monster].block
+                    if newstate.monsters[monster].block < newstate.monsters[monster].move_adjust_damage:
+                        left = newstate.monsters[monster].move_adjust_damage - newstate.monsters[monster].block
                         newstate.player.block = 0
                         newstate.player.current_hp - left
                     else:
@@ -168,6 +168,8 @@ def addblock(gamestate, block):
         if player_power.power_name == "Dexterity":
             newstate.player.block += player_power.amount
 
+    #add block
+    newstate.player.block += block
 
     #juggernaut dealdmg to random monster
     if player_powers.power_name == "Juggernaut":
