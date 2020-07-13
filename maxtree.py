@@ -21,7 +21,6 @@ class SimGame():
         self.turn = 0
         self.cards_discarded_this_turn = 0
     #--------- Additional
-        self.energy = 3
         self.decisions = []
 
 #returns a SimGame that includes the gamestate stuff but also desisions
