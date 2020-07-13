@@ -15,6 +15,7 @@ class SimGame:
     self.cards_discarded_this_turn = 0
     #--------- Additional
     self.energy = 3
+    self.decisions = []
     #--------- Card switches needed for combat
     # self.Barricade = False
     # self.Battle_Trace = False
@@ -51,7 +52,7 @@ def getstate():
     n.card_in_play = Game.card_in_play
     n.turn = Game.turn
     n.cards_discarded_this_turn = Game.cards_discarded_this_turn
-    n.decisions = n.hand + ['END TURN']
+    n.decisions = []
     return n
 
 #---------------
@@ -76,8 +77,8 @@ def getstate():
 
 #return a random evaluation number for given game state
 def eval_function(gamestate):
-    #eval is a number between -100 and 100
-    eval = random.randrange(-100, 101)
+    eval = 0
+
     return eval
 
 # root_node.state = getstate()
@@ -107,20 +108,30 @@ def eval_function(gamestate):
 # @param decision: the decision chosen for the next game state
 # decision is either the card to be played or the end turn function
 # @param state: the current state to be copied and modified
-def get_next_game_state(decision, state):
+def get_next_game_state(play, state, target = False):
 
     # copy current state
     next_state = copy.deepcopy(state)
 
-    # if this decision is a card,
-    # remove from hand and add to discard pile
-    if decision != 'END TURN':
-        next_state.hand.remove(decision)
-        next_state.discard_pile.append(decision)
+    decisionlist = []
+    if play == 'End_Turn':
+        next_state = end_of_turn(next_state)
+        next_state = start_of_turn(next_state)
+        decisionlist.append['End_Turn']
 
-    # remove decision from list of decisions
-    next_state.decisions.remove(decision)
-    # next_state.energy -= card energy cost
+    elif target == False
+        card = play.name
+        next_state = cards[card](next_state, upgrades = play.upgrades)
+        decisionlist.append[play]
+
+    elif target == True:
+        card = play.name
+        next_state = cards[card](next_state, hitmonster = target, upgrades = play.upgrades)
+        decisionlist.append[play]
+        decisionlist.append[target]
+
+
+    next_state.decision.append(decisionlist)
     return next_state
 
 # recursively builds a decision tree using current gamestate
@@ -156,6 +167,30 @@ def build_tree(gamestate):
            #         build_tree(child2) #recursively build tree
            # else:
             #################
+
+def build_tree(gamestate):
+    for c in gamestate.name.hand:
+        if gamestate.name.energy >= c.cost:
+            #get_next_game_state needs to append the decision to gamestate.decisions
+
+            #checks if needs target
+            card = c.name
+            if cards[card][1] == True:
+                for monsterindex in range(len(gamestate.name.monsters)):
+                    next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
+                    child = Node(next_state, parent = gamestate)
+                    build_tree(child)
+
+            #don't need target
+            else:
+                next_state = get_next_game_state(c, gamestate.name)
+                child = Node(next_state, parent = gamestate)
+                build_tree(child)
+
+    #end turn
+    next_state = get_next_game_state('End_Turn', gamestate.name)
+    child = Node(next_state, parent = gamestate)
+    build_tree(child)
 
 
 # assigns evaluation values to the leaves of the tree only
