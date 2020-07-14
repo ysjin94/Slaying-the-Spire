@@ -1,20 +1,21 @@
 """
 Remove to do list if it is done.
+these are for later
+double tap :Is only CardType.ATTACK or deal damage?
+I think need to change help function :
+addcard() : newcard = card(name = name, upgrades = 0, cost = cards[name][0])
 
 To do list:
-    Debug
     Need help function : choose_armaments()
                          choose_headbut()
-                         
-    - Function called feed() : distinguish non-minion and minion
-                      warcry() : will need to take new parameter, cardindex, reference armaments
+    Fucntion that have problmes :
+                      feed() : distinguish non-minion and minion
                       headbutt() : will need to take new parameter cardindex
                       havoc() : Play the top card of your draw pile and Exhaust it. random for now
                       infernal_blade() : Add a random Attack to your hand.
                       blood_for blood() : Cost 1 less energy for each time you lose HP in combat.
                       rampage() : Every time this card is played, increase its damage by 8 for this combat.
                       reaper() : Heal for unblocked damage. apply function: healing()
-                      dual_wield() : will need to take cardindex
                       
     <Data From AI>:
      Sending message:{
@@ -50,9 +51,10 @@ from spirecomm.spire.power import Power
 from spirecomm.spire.card import Card, CardType
 from spirecomm.spire.character import Intent
 import math
-import help_function
+from help_function import *
 #THIS IS PARTLY PSEUDOCODE
 #WEAK AND VULNERABLE APPLIES AFTER STRENGTH
+
 #anger 0 cost Deal 6 damage. Add a copy of this card to your discard pile.
 def Anger(gamestate, hitmonster, Upgrade):
     #gamestate class = Game (Object)
@@ -69,18 +71,17 @@ def Anger(gamestate, hitmonster, Upgrade):
         #add a copy of this card to your discard pile
         newstate = addcard(newstate, "anger", 'discard_pile')
         return newstate
-
 #helper function for armaments
 def choose_armaments (gamestate, cardindex, upgrade):
-	newstate = gamestate
-	a_list = []
-	for card in range(len(newstate.hand)):
-		if card.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
-			if (card.upgrades == 0) or (card.name == "Searing Blow"):
-				list.append(-1, card)
-				
-	return a_list
-
+    newstate = gamestate
+    a_list = []
+    for card in range(len(newstate.hand)):
+        if card.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
+            if (card.upgrades == 0) or (card.name == "Searing Blow"):
+                list.append(-1, card)
+                
+    return a_list
+    
 #armaments 1 cost Gain 5 Block. Upgrade a card in your hand for the rest of combat.
 def Armaments(gamestate, cardindex, Upgrade):
     newstate = gamestate
@@ -89,11 +90,11 @@ def Armaments(gamestate, cardindex, Upgrade):
     if Upgrade:
         #upgrade all card in your hand for the rest of combat
         for card in newstate.hand:
-            upgrades(card)
+            newstate = upgrade(card)
         return newstate
     else:
         #upgrade one card in your hand.
-        upgrades(newstate.hand[cardindex])
+        newstate = upgrade(newstate.hand[cardindex])
         return newstate
         #somehow return a new gamestate for every card which can be upgraded
 
@@ -104,12 +105,6 @@ def Barricade(gamestate, Upgrade):
     New_power = Power("Barricade", "Barricade", 0)
     newstate.player.powers.append(New_power)
 
-    #cost is taken from game
-    # if Upgrade:
-    #     #cost is 2
-    # else:
-    #     #cost is 3
-
     return newstate
 
 #bash 2 cost Deal 8damage. Apply 2 Vulnerable.
@@ -119,13 +114,13 @@ def Bash(gamestate, hitmonster, Upgrade):
     if Upgrade:
         #deal 10 damage
         newstate = dealdmg(newstate, 10, hitmonster)
-        #apply 3 vulnerable, write function for add vulnerable
+        #apply 3 vulnerable
         newstate = dealvulnerable(newstate, 3, hitmonster)
         return newstate
     else:
         #deal 8 damage
         newstate = dealdmg(newstate, 8, hitmonster)
-        #apply 2 vulnerable, write function for add vulnerable
+        #apply 2 vulnerable
         newstate = dealvulnerable(newstate, 2, hitmonster)
         return newstate
 
@@ -242,7 +237,7 @@ def Burning_Pact(gamestate, chosen_card, Upgrade):
          newstate = draw(newstate, 2)
     return newstate
 
-#carnage 2 cost Ethereal. Deal 20(28) damage : Ethereal removed at end of combat.
+#carnage 2 cost Ethereal. Deal 20(28) damage
 def Carnage (gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade :
@@ -290,7 +285,7 @@ def Cleave (gamestate, hitmonster, Upgrade):
 
     return newstate
 
-#clothsline 2 cost Deal 12 damage. Apply 2 Weak. weak : Target deals 25% less attack damage.
+#clothsline 2 cost Deal 12 damage. Apply 2 Weak.
 def Clothesline (gamestate, hitmonster, Upgrade):
     newstate = gamestate
     if Upgrade :
@@ -352,7 +347,7 @@ def Corruption(gamestate, hitmonster, Upgrade):
     return newstate
 
 #dark embrace 2 cost Whenever a card is Exhausted, draw 1 card.
-def Dark_Embrace(gamestate, hitmonster, Upgrade):
+def Dark_Embrace(gamestate, Upgrade):
     newstate = gamestate
 
     New_power = Power("Dark Embrace", "Dark Embrace", 0)
@@ -361,7 +356,7 @@ def Dark_Embrace(gamestate, hitmonster, Upgrade):
     return newstate
 
 #defend 1 cost Gain 5 Block.
-def Defend (gamestate, hitmonster, Upgrade):
+def Defend (gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         #add 8 block
@@ -372,7 +367,7 @@ def Defend (gamestate, hitmonster, Upgrade):
     return newstate
 
 #demon form 3 cost At the start of each turn, gain 2 Strength.
-def Demon_Form(gamestate, hitmonster, Upgrade):
+def Demon_Form(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         #at the start of each turn, gain 3 Strength
@@ -434,19 +429,24 @@ def Dropkick(gamestate, hitmonster, Upgrade):
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
 def Dual_Wield(gamestate, cardindex, Upgrade):
     newstate = gamestate
-    #if Upgrade:
-        #add Create two copy of an Attack or Power Card.
-    #else:
-        #add Create a copy of an Attack or Power Card.
+    if Upgrade:
+        for card in newstate.hand:
+            if card.type == CardType.ATTACK or card.type == CardType.POWER:
+                #add Create two copy of an Attack or Power Card.
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
+                newstate = addcard(newstate, newstate,hand[cardindex].name, 'hand')
+    else:
+        for card in newstate.hand:
+            if card.type == CardType.ATTACK or card.type == CardType.POWER:
+                #add Create a copy of an Attack or Power Card.
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
+                
     return newstate
 
-#entrench 2 cost Double your current Block.
+#entrench 2(1) cost Double your current Block.
 def Entrench(gamestate, hitmonster, Upgrade):
     newstate = gamestate
-    #if Upgrade :
-        #cost is 1
-    #else :
-        #cost is 2
+    
     newstate.player.block = newstate.player.block * 2
 
     return newstate
@@ -610,14 +610,14 @@ def Havoc(gamestate, chosen_card, Upgrade):
 
 #helper function for headbutt
 def choose_Headbutt(gamestate, index, Upgrade):
-	newstate = gamestate
-	a_list = []
-	
-	for monster in range(len(newstate.monsters)):
-		for card in range(len(newstate.discard_pile)):
-			a_list.append([monster,card]);
-	
-	return a_list
+    newstate = gamestate
+    a_list = []
+
+    for monster in range(len(newstate.monsters)):
+        for card in range(len(newstate.discard_pile)):
+            a_list.append([monster,card]);
+
+    return a_list
 
 #headbutt 1 cost Deal 9 damage. Place a card from your discard pile on top of your draw pile.
 def Headbutt(gamestate, hitmonster, Upgrade):
@@ -834,7 +834,7 @@ def Metallicize(gamestate, hitmonster, Upgrade):
     return newstate
 
 #offering 0 cost Lose 6 HP. Gain 2 energy. Draw 3 cards. Exhaust.
-def Offering(gamestate, hitmonster, Upgrade):
+def Offering(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         newstate.player.current_hp = newstate.player.current_hp - 6
@@ -1015,7 +1015,7 @@ def Searing_Blow(gamestate, hitmonster, Upgrade):
     return newstate
 
 #second wind 1 cost Exhaust all non-Attack cards in your hand and gain 5 Block for each.
-def Second_Wind(gamestate, hitmonster, Upgrade):
+def Second_Wind(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         #Exhaust all non-Attack Cards in your hand.
@@ -1041,7 +1041,7 @@ def Second_Wind(gamestate, hitmonster, Upgrade):
     return newstate
 
 #seeing red 1 cost Gain 2 energy. Exhaust.
-def Seeing_Red(gamestate, hitmonster, Upgrade):
+def Seeing_Red(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         # cost is 0
@@ -1056,7 +1056,7 @@ def Seeing_Red(gamestate, hitmonster, Upgrade):
     return newstate
 
 #sentinel 1 cost Gain 5 Block. If this card is Exhausted, gain 2 energy.
-def Sentinel(gamestate, hitmonster, Upgrade):
+def Sentinel(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         newstate = addblock(newstate, 8)
@@ -1258,12 +1258,14 @@ def Warcry(gamestate, cardindex, Upgrade):
         #Draw 2 Card
         newstate = draw(newstate, 2)
         #Place a Card from your hand on top of your draw pile.
+        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile')
         newstate = addcard(newstate, "Warcry", 'exhaust_pile')
 
     else:
         #Draw 1 Card
         newstate = draw(newstate, 1)
         #Place a Card from your hand on top of your draw pile.
+        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile')
         newstate = addcard(newstate, "Warcry", 'exhaust_pile')
 
     return newstate
@@ -1300,102 +1302,3 @@ def Wildstrike(gamestate, hitmonster, Upgrade):
     return newstate
 
 
-#dict of cards
-#cost, target, function, type, ethereal
-#target true = card can target enemy
-#target false = card just gets played
-#type = A for Attack,  P for Power, S for Skill
-#ethereal = whether the card is exhausted after end of turn
-#choose_headbut(), choose_armaments() = False, if not need
-
-#will need new type for status like the card wound
-
-#WILL NEED MORE FIELD IN ARRAY
-#Ethereal, exhaust, etc.
-#type of card also important
-#need ignore discard field
-
-"""
-cards = {
-    'Anger' : [0, True, Anger, 'A', False, False],
-    'Armaments' : [1, False, Armaments, 'S', False, True], #need upgrade function
-    'Barricade' : [3, False, Barricade, 'P', False, False], #Barricade needs to be a game state field, do not lose block at turn end
-    'Bash' : [2, True, Bash, 'A', False, False],
-    'Battle Trance' : [0, False, Battle_Trance, 'S', False, False], # gamestate, You cannot draw additional cards this turn.
-    'Berserk' : [0, False, Berserk, 'P', False, False], #somehow figure out energy
-    'Blood For Blood' : [4, True, Blood_For_Blood, 'A', False, False],#gamestate, 1 less energy for each time you lose HP in combat
-    'Bloodletting' : [0, False, Bloodletting, 'S', False, False],
-    'Bludgeon' : [3, True, Bludgeon, 'A', False, False],
-    'Body Slam' : [1, True, Body_Slam, 'A', False, False],
-    'Brutality' : [0, True, Brutality, 'P', False, False],
-    'Burning Pact' : [1, False, Burning_Pact, 'S', False, False], #need draw function
-    'Carnage' : [2, True, Carnage, 'A', True, False],
-    'Clash' : [0, True, Clash, 'A', False, False], #Clash does not play if not all cards are attacks, SHOULD IGNORE DISCARD, card itself will handle discard
-    'Cleave' : [1, True, Cleave, 'A', False, False],
-    'Clothesline' : [2, True, Clothesline,'A', False, False],
-    'Combust' :[1, True, Combust, 'P', False, False], # gamestate, At the end of your turn
-    'Corruption' : [3, False, Corruption, 'P', True, False], # gamestate, Whenever you play a Skill, Exhaust it
-    'Dark Embrace' : [2, False, Dark_Embrace,'P', False, False], #gamestate, Whenever a card is Exhausted, draw 1 card.
-    'Defend' : [1, False, Defend, 'S', False, False],
-    'Disarm' : [3, True, Disarm, 'S', False, False], #exhaust
-    'Double Tap' : [1, False, Double_Tap, 'D', False, False], #gamestate, This turn, your next Attack is played twice.
-    'Dropkick' : [1, True, Dropkick, 'A', False, False], #draw if conditions are met
-    'Dual Wield' : [1, False, Dual_Wield,'S', False, False],
-    'Demon Form' : [3, False, Demon_Form, 'P', False, False], # gamestate, at the start of each turn, gain 2 strength
-    'Entrench' :[2, False, Entrench, 'S', False, False],
-    'Evolve' : [1, False, Evolve, 'P', False, False], # gamestate, Whenever you draw a Status, draw 1 card.
-    'Exhume' : [1, False, Exhume, 'S', False, False], #exhaust
-    'Feed' :[1, True, Feed, 'A', False, False], #exhaust
-    'Feel No Pain' : [1, False, Feel_No_Pain, 'P', False, False],#gamestate, Whenever a card is Exhausted, gain 3 Block.
-    'Fiend Fire' : [2, True, Fiend_Fire, 'A', False, False], #exhaust
-    'Fire Breathing' : [1, True, Fire_Breathing, 'P', False, False],#gamestate,  Whenever you draw a Status or Curse card,
-    'Flame Barrier' : [2, False, Flame_Barrier, 'S', False, False], #gamestate,  Whenever you are attacked this turn
-    'Flex' : [0, False, Flex, 'S', False, False], #gamestate, lose 2 strength at end of turn
-    'Ghostly Armor' : [1, False, Ghostly_Armor,'S', True, False],
-    'Havoc' : [1, False, Havoc, 'S', False, False],
-    'Headbutt' : [1, True, Headbutt,'A', False, True], #need new function to return card from discard pile
-    'Heavy Blade' : [2, True, Heavy_Blade, 'A', False, False], #Strength affects heavy blade 3 times
-    'Hemokinesis' : [1, True, Hemokinesis, 'A', False, False],
-    'Immolate' : [2, True, Immolate, 'A', False, False],
-    'Impervious' : [2, False, Impervious, 'S', False, False], #exhaust
-    'Infernal Blade' : [1, False, Infernal_Blade,'S', False, False],
-    'Inflame' : [1, True, Inflame, 'P', False, False],
-    'Intimidate' : [0, True, Intimidate,'S', False, False], # exhaust
-    'Iron wave' : [1, True, Iron_wave,'A', False, False],
-    'Juggernaut' : [2, True, Juggernaut, 'P', False, False], # gamstate, Whenever you gain Block,
-    'Limit Break' : [1, False, Limit_Break, 'S', False, False], #exhaust
-    'Metallicize' : [1, False, Metallicize,'P', False, False], #gamestate,At the end of your turn, gain 3 Block.
-    'Offering' : [0, False, Offering, 'S', False, False], #need add energy/mana function, exhaust
-    'Perfected Strike' : [2, True, Perfected_Strike, 'A', False, False],
-    'Pommel Strike' : [1, True, Pommel_Strike, 'A', False, False], #draw
-    'Power Through' : [1, False, Power_Through, 'S', False, False], #add 2 wounds to hand
-    'Pummel' : [1, True, Pummel, 'A', False, False], #exhaust
-    'Rage' : [0, False, Rage, 'S', False, False], # gamestate, Whenever you play an Attack this turn, gain 3 Block
-    'Rampage' : [1, True, Rampage, 'A', False, False], #need ability to track unique cards of rampage
-    'Reaper' : [2, True, Reaper, 'A', False, False], #exhaust
-    'Reckless Charge' : [0, True, Reckless_Charge, 'A', False, False], #shuffle daze in draw pile
-    'Rupture' : [1, False, Rupture, 'P', False, False], #gamestate, Whenever you lose HP from a card, gain 1 Strength.
-    'Searing Blow' : [2, True, Searing_Blow, 'A', False, False], #can be upgraded nay number of times
-    'Seeing Red' : [0, False, Seeing_Red, 'S', False, False], #exhaust
-    'Sentinel' : [1, False, Sentinel, 'S', False, False], #check gamestate for exhaust skills when used
-    'Sever Soul' : [2, False, Sever_Soul, 'A', False, False],
-    'Shockwave' : [2, False, Shockwave, 'S', False, False], # exhaust
-    'Shrug It Off' : [1, False, Shrug_It_Off, 'S', False, False], #draw
-    'Spot Weakness' : [1, False, Spot_Weakness, 'S', False, False], #check enemy intent
-    'Strike' : [1, True, Strike, 'A', False, False],
-    'Second Wind' : [1, False, Second_Wind, 'S', False, False], # #Exhaust all non-Attack Cards in your hand.
-    'Sword Boomerang' : [1, True, Sword_Boomerang, 'A', False, False], #some way to handle probability
-    'Thunderclap' : [1, True,Thunderclap, 'A', False, False],
-    'True grit' : [1, False, True_Grit, 'S', False, False], #need some way to randomly handle probability
-    'Twin Strike' : [1, True, Twin_Strike, 'A', False, False],
-    'Uppercut' : [2, True, Uppercut, 'A', False, False],
-    'Warcry' : [0, False, Warcry, 'S', False, False],
-    'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
-    'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
-}
-#call the dictionary
-#print(cards['Anger'][0])
-#print(cards['Anger'][1])
-#newstate = cards['Anger'][2](gamestate,hitmonster)
-#print(cards['Anger'][3])
-"""
