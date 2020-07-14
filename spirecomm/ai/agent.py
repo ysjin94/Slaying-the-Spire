@@ -66,7 +66,21 @@ class SimpleAgent:
                 potion_action = self.use_next_potion()
                 if potion_action is not None:
                     return potion_action
-            return self.get_play_card_action()
+
+            #return self.get_play_card_action()
+            pca = self.get_play_card_action()
+            if pca == 'End_Turn':
+                return EndTurnAction()
+            else:
+                if len(pca) == 1:
+                    return PlayCardAction(pca[0])
+                #if card needs a target
+                if len(pca) == 2:
+                    if len(pca[1]) == 2:
+                        return DoubleAction(pca)
+                    else:
+                        return PlayCardAction(pca[0], pca[1])
+
         if self.game.end_available:
             return EndTurnAction()
         if self.game.cancel_available:
@@ -311,6 +325,28 @@ class SimpleAgent:
             decisionlist.append(play)
             decisionlist.append(target)
 
+        else:
+            card = play.name
+            next_state.hand.remove(play)
+            next_state = cards[card](next_state, target, play.upgrades)
+            if play.exhausts == True:
+                addcard(newstate, play.name, 'exhaust_pile')
+            else:
+                addcard(newstate, play.name, 'discard_pile')
+            decisionlist.append(play)
+            indexlist = []
+            if target[0] == -1:
+                indexlist.append('No Monster Target')
+                indexlist.append(newstate.player.hand[target[1]])
+            elif target[1] == -1:
+                indexlist.append(newstate.monsters[target[0]])
+                indexlist.append('No Card Target')
+            else:
+                indexlist.append(newstate.monsters[target[0]])
+                indexlist.append(newstate.player.hand[target[1]])
+            decisionlist.append(indexlist)
+
+
 
         next_state.decision.append(decisionlist)
         return next_state
@@ -326,7 +362,7 @@ class SimpleAgent:
         return False
 
     def build_tree(gamestate):
-        if not gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions):
+        if not (gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
             return
         for c in gamestate.name.hand:
             if c not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
@@ -337,7 +373,16 @@ class SimpleAgent:
                     card = c.name
                     if card not in cards:
                         return
-                    if cards[card][1] == True:
+
+                    #special cards
+                    if not cards[play.name][5] == False:
+                        index = cards[card.name][5](gamestate, 0, play.upgrades)
+                        for i in index:
+                            next_state = get_next_game_state(c, gamestate.name, target = i)
+                            child = Node(next_state, parent = gamestate)
+                            build_tree(child)
+
+                    elif cards[card][1] == True:
                         for monsterindex in range(len(gamestate.name.monsters)):
                             next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
                             child = Node(next_state, parent = gamestate)
@@ -376,16 +421,6 @@ class SimpleAgent:
                         max = node.name.grade
         r.name.grade = max #set current node's eval to max of children
 
-    def play_card(first_card):
-	    if first_card == 'End_Turn':
-	        EndTurnAction()
-        else:
-            if len(first_card) == 1:
-                PlayCardAction(first_card[0])
-            #if card needs a target
-            if len(first_card) == 2:
-                PlayCardAction(first_card[0], first_card[1])
-
     #returns first element in decisions list of max leaf
     def max_leaf_decisions(r):
         for children in LevelOrderGroupIter(r, maxlevel=2):
@@ -405,8 +440,7 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
-	card_to_play = max_leaf_decisions(root)
-	play_card(card_to_play)
+        return max_leaf_decisions(root)
 
     def use_next_potion(self):
         for potion in self.game.get_real_potions():
