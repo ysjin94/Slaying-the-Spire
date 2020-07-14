@@ -27,7 +27,7 @@ def Discovery(newstate, hitmonster, upgrade):
     return newstate
 
 #Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
-def Dramatic Enterance(newstate, hitmonster, upgrade):
+def Dramatic_Entrance(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
@@ -112,7 +112,7 @@ def Chrysalis(newstate, hitmonster, upgrade):
     return newstate
 
 #Hand of Greed : cost 2 , Deal 20(25) damage. If this kills a non-minion enemy, gain 20(25) Gold.
-def Hand of Greed(newstate, hitmonster, upgrade):
+def Hand_of_Greed(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
@@ -142,12 +142,12 @@ def Panache(newstate, hitmonster, upgrade):
     return newstate
 
 #Sadistic Nature : cost 0, Whenever you apply a Debuff to an enemy, they take 3(4) damage.
-def Sadistic Nature(newstate, hitmonster, upgrade):
+def Sadistic_Nature(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
 #Secret Technique : cost 0, Choose a Skill from your draw pile and place it into your hand. Exhaust. (Don't Exhaust)
-def Secret Technique(newstate, hitmonster, upgrade):
+def Secret_Technique(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
@@ -157,7 +157,7 @@ def Secret_Weapon(newstate, hitmonster, upgrade):
     return newstate
 
 #The Bomb : cost 2, At the end of 3 turns, deal 40(50) damage to ALL enemies.
-def The Bomb(newstate, hitmonster, upgrade):
+def The_Bomb(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
@@ -237,7 +237,7 @@ def Smite(newstate, hitmonster, upgrade):
     return newstate
 
 #Through Violence : cost 0, Icon Retain Retain. Deal 20(30) damage. Exhaust. (Obtained from Reach Heaven).
-def Through Violence(newstate, hitmonster, upgrade):
+def Through_Violence(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 

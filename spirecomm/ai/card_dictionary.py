@@ -13,6 +13,9 @@
 #type of card also important
 #need ignore discard field
 
+import colorless_card, curse_card, help_function, ironclad_cards, status_card
+
+
 cards = {
     'Anger' : [0, True, Anger, 'A', False, False],
     'Armaments' : [1, False, Armaments, 'S', False, True], #need upgrade function
