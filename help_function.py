@@ -57,7 +57,7 @@ def player_take_damage(gamestate):
     #check all monsters
     for monster in range(len(newstate.monsters)):
         # check is_monster_dead
-        if !monster.is_gone:
+        if not monster.is_gone:
             # Attack n times
             for attackmum in range(newstate.monsters[monster].move_hit):
                 # lose block first
@@ -93,7 +93,7 @@ def addblock(gamestate, block):
     newstate = gamestate
 
     for debuff_player in newstate.player.powers:
-        debuff_player.power_name == "Frail":
+        if debuff_player.power_name == "Frail":
         #round down
            block = math.floor(block * 0.75)
 
@@ -306,7 +306,7 @@ def end_of_turn(gamestate):
 
     #deal poison damage, reduces poison stack
     #monster
-    for monster in range(len(newstate.monster))
+    for monster in range(len(newstate.monster)):
         for pmonster in newstate.monsters[monster].powers:
             if pmonster.power_name == "Poison":
                 if newstate.monsters[monster].block > 0:
@@ -335,19 +335,19 @@ def end_of_turn(gamestate):
     #lose buff, and debuff
     for power_player in newstate.player.powers:
 
-        if power_player.power_name = "Strength":
+        if power_player.power_name == "Strength":
             if power_player.amount > 0:
                 power_player.amount -= 1
 
-        if power_player.power_name = "Weakened":
+        if power_player.power_name == "Weakened":
             if power_player.amount > 0:
                 power_player.amount -= 1
 
-        if power_player.power_name = "Vulnerable":
+        if power_player.power_name =="Vulnerable":
             if power_player.amount > 0:
                 power_player.amount -= 1
 
-        if power_player.power_name = "Dexterity":
+        if power_player.power_name == "Dexterity":
             #buff
             if power_player.amount > 0:
                 power_player.amount -= 1
@@ -355,25 +355,25 @@ def end_of_turn(gamestate):
             elif power_player.amount <0:
                 power_player.amount += 1
 
-        if power_player.power_name = "Frail":
+        if power_player.power_name == "Frail":
             if power_player.amount > 0:
                 power_player.amount -= 1
 
     for power_monster in newstate.monsters.powers:
 
-        if power_monster.power_name = "Strength":
+        if power_monster.power_name == "Strength":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
 
-        if power_monster.power_name = "Weakened":
+        if power_monster.power_name == "Weakened":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
 
-        if power_monster.power_name = "Vulnerable":
+        if power_monster.power_name == "Vulnerable":
             if power_monster.amount > 0:
                 power_monster.amount -= 1
 
-        if power_monster.power_name = "Dexterity":
+        if power_monster.power_name == "Dexterity":
             #buff
             if power_monster.amount > 0:
                 power_monster.amount -= 1
@@ -381,7 +381,7 @@ def end_of_turn(gamestate):
             elif power_monster.amount < 0:
                 power_monster.amount += 1
 
-        if power_monster.power_name = "Frail":
+        if power_monster.power_name == "Frail":
             if ppower_monster.amount > 0:
                 power_monster.amount -= 1
 

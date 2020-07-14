@@ -1163,7 +1163,7 @@ def Thunderclap(gamestate, hitmonster, Upgrade):
         #deal 7 demage to All enemies
             newstate = dealdmg(newstate, 7, x)
         #add apply 1 Vulnerable to All enemies
-        for x in range(len(newstate.monsters):
+        for x in range(len(newstate.monsters)):
             newstate = dealvulnerable(newstate, 1, x)
 
     else:
