@@ -377,14 +377,14 @@ class SimpleAgent:
         r.name.grade = max #set current node's eval to max of children
 
     def play_card(first_card):
-	if first_card == 'End_Turn':
-	    EndTurnAction()
-    else:
-        if len(first_card) == 1:
-            PlayCardAction(first_card[0])
-        #if card needs a target
-        if len(first_card) == 2:
-            PlayCardAction(first_card[0], first_card[1])
+	    if first_card == 'End_Turn':
+	        EndTurnAction()
+        else:
+            if len(first_card) == 1:
+                PlayCardAction(first_card[0])
+            #if card needs a target
+            if len(first_card) == 2:
+                PlayCardAction(first_card[0], first_card[1])
 
     #returns first element in decisions list of max leaf
     def max_leaf_decisions(r):
