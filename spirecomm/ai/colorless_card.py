@@ -1,6 +1,7 @@
 #This is colorless_card
 
 from help_function import *
+import random
 
 #Bandage Up : cost 0, Heal 4(6)HP exhaust
 def Bandage_UP(gamestate, hitmonster, upgrade):
@@ -19,7 +20,7 @@ def Blind(newstate, hitmonster, upgrade):
         for monster in range(len(newstate.monsters)):
             dealweak(newstate, 2, monster)
     else:
-        dealweak(newstatem, 2, histmonster)
+        dealweak(newstate, 2, histmonster)
         
     return newstate
 #modify here : THIS TURN
@@ -62,16 +63,11 @@ def Dramatic_Entrance(newstate, hitmonster, upgrade):
     if upgrade:
         for monster in range(len(newstate.monsters)):
             newstate = dealdmg(newstate, 8, monster)
-    else:
+    else:   
         for monster in range(len(newstate.monsters)):
             newstate = dealdmg(newstate, 6, monster)
-
-    return newstate
-
-
-#Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
-def Dramatic_Entrance(newstate, hitmonster, upgrade):
-    newstate = gamestate
+        
+    newstate = addcard(newstate,"Dramatic Entrance" ,'exhaust_pile')
     return newstate
 
 #Enlightenment : cost 0 , Reduce the cost of cards in your hand to 1 this turn(combat)
@@ -79,14 +75,28 @@ def Enlightenment(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
-#Finesse : cost 0 Gain 2(4) Icon Block Block. Draw 1 card.
+#Finesse : cost 0 Gain 2(4)  Block. Draw 1 card.
 def Finesse(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        newstate = addblock(newstate, 4)
+    else:
+        newstate = addblock(newstate, 2)
+    
+    newstate = addcard(newstate, 1)
+    
     return newstate
 
 #Flash of Steel : cost 0, Deal 3(6) damage. Draw 1 card.
 def Flash_of_Steel(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        newstate = dealdmg(newstate, 6, hitmonster)
+    else:
+        newstate = dealdmg(newstate, 3, hitmonster)
+        
+    newstate = addcard(newstate, 1)
+    
     return newstate
 
 #Forethought : cost, Place a card(any number of cards) from your hand on the bottom of your draw pile. It (They) costs 0 until played.
@@ -94,14 +104,33 @@ def Forthought(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
-#Good instincts : cost 0, Gain 5(8) Icon Block Block.
+#Good instincts : cost 0, Gain 5(8) Block.
 def Good_instincts(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    if upgrade:
+        newstate = addblock(newstate, 8)
+    else:
+        newstate = addblock(newstate, 5)
+        
     return newstate
 
 #impatience : cost 0, If you have no Attack cards in your hand, draw 2(3) cards.
 def impatience(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    is_no_Attack = True
+    
+    for card in newstate.hand:
+        if card.type == CardType.ATTACK
+            is_no_Attack = False
+    
+    if is_no_Attack :
+        if upgrade:
+            newstate = draw(newstate, 3)
+        else:
+            newstate = draw(newstate, 2)
+    
     return newstate
 
 #Jack Of All Trades : cost 0, Add 1(2) random Colorless card(s) to your hand.
@@ -110,28 +139,46 @@ def Jack_Of_All_Trades(newstate, hitmonster, upgrade):
     return newstate
 
 #Madness : cost 1(0), A random card in your hand costs 0 for the rest of combat. Exhaust.
-def Maddness(newstate, hitmonster, upgrade):
+def Madness(newstate, hitmonster, upgrade):
     newstate = gamestate
+
+    x = randomrange(lend(newstate.hand))
+    newstate = newstate.hand[x].cost = 0
+
+    newstate = addcard(newstate, "Madness", 'exhaust_pile')
     return newstate
 
 #Mind Blast : cost 2(1), Innate. Deal damage equal to the number of cards in your draw pile.
 def Mind_Blast(newstate, hitmonster, upgrade):
     newstate = gamestate
+
+    newstate = dealdmg(newstate, len(newstate.draw_pile), hitmonster)
+
     return newstate
 
-#Panacea : cost 0, Gain 1(2) Icon Artifact Artifact.Exhaust.
+#Panacea : cost 0, Gain 1(2)  Artifact.Exhaust.
 def Panacea(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    newstate = addcard(newstate, "Panacea", 'exhaust_pile')
+    
     return newstate
 
-#Panic Button : cost 0, Gain 30(40) Icon Block Block. You cannot gain Icon Block Block from cards for the next 2 turns. Exhaust.
+#Panic Button : cost 0, Gain 30(40) Block. You cannot gain IBlock from cards for the next 2 turns. Exhaust.
+
 def Panic_Button(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        newstate = addblock(newstate, 40)
+    else:
+        newstate = addblock(newstate, 30)
     return newstate
 
 #Purity : cost 0, Choose and exhaust 3(5) cards in your hand. Exhaust.
 def Purity(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    newstate = addcard(newstate, "Purity", 'exhaust_pile')
     return newstate
 
 #Swift Strike : cost 0, Deal 6(9) damage.
@@ -283,4 +330,5 @@ def Smite(newstate, hitmonster, upgrade):
 def Through_Violence(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
+
 
