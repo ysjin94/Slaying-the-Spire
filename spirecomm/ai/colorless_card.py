@@ -1,30 +1,73 @@
 #This is colorless_card
-import help_function
+
+from help_function import *
 
 #Bandage Up : cost 0, Heal 4(6)HP exhaust
 def Bandage_UP(gamestate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        newstate = healing(newstate, 6)
+    else:
+        newstate = healing(newstate, 4)
+    newstate = addcard(newstate, "Bandage Up", 'exhaust_pile')
     return newstate
   
 #Blind : cost 0, Apply 2 weak (to ALL enemies)
 def Blind(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        for monster in range(len(newstate.monsters)):
+            dealweak(newstate, 2, monster)
+    else:
+        dealweak(newstatem, 2, histmonster)
+        
     return newstate
+#modify here : THIS TURN
 
-#Dard shackles : cost 0, Enemy loses 9(15) Icon Strength Strength for the rest of this turn. Exhaust.
+#Dard shackles : cost 0, Enemy loses 9(15) Strength for the rest of this turn. Exhaust.
 def Dard_Shackles(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        monster_lose_strength(newstate, 15, hitmonster)
+    else:
+        monster_lose_strength(newstate, 9, hitmonster)
+        
+    newstate = addcard(newstate, "Dard Shackles", 'exhaust_pile')
     return newstate
 
 #Deep Breath : cost 0 , Shuffle your discard pile into your draw pile. Draw 1(2) card(s).
 def Deep_Breath(newstate, hitmonster, upgrade):
     newstate = gamestate
+    for card in newstate.discard_pile:
+        newstate = addcard(newstate, card.name ,'draw_pile')
+    
+    #delete all discard_pile
+    del newstate.discard_pile
+    
+    if upgrade:
+        newstate = draw(newstate, 2)
+    else:
+        newstate = draw(newstate, 1)
+        
     return newstate
 
 #Discovery : cost 1, Choose 1 of 3 random cards to add to your hand. It costs 0 this turn. Exhaust. (Don't Exhaust.)
 def Discovery(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
+
+#Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
+def Dramatic_Entrance(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    if upgrade:
+        for monster in range(len(newstate.monsters)):
+            newstate = dealdmg(newstate, 8, monster)
+    else:
+        for monster in range(len(newstate.monsters)):
+            newstate = dealdmg(newstate, 6, monster)
+
+    return newstate
+
 
 #Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
 def Dramatic_Entrance(newstate, hitmonster, upgrade):
