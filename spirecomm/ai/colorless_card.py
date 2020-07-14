@@ -1,16 +1,61 @@
 #This is colorless_card
+import help_function
 
 #Bandage Up : cost 0, Heal 4(6)HP exhaust
+def Bandage_UP(gamestate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+  
 #Blind : cost 0, Apply 2 weak (to ALL enemies)
+def Blind(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Dard shackles : cost 0, Enemy loses 9(15) Icon Strength Strength for the rest of this turn. Exhaust.
+def Dard_Shackles(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Deep Breath : cost 0 , Shuffle your discard pile into your draw pile. Draw 1(2) card(s).
+def Deep_Breath(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Discovery : cost 1, Choose 1 of 3 random cards to add to your hand. It costs 0 this turn. Exhaust. (Don't Exhaust.)
+def Discovery(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
+def Dramatic Enterance(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Enlightenment : cost 0 , Reduce the cost of cards in your hand to 1 this turn(combat)
+def Enlightenment(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Finesse : cost 0 Gain 2(4) Icon Block Block. Draw 1 card.
+def Finesse(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Flash of Steel : cost 0, Deal 3(6) damage. Draw 1 card.
+def Flash_of_Steel(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Forethought : cost, Place a card(any number of cards) from your hand on the bottom of your draw pile. It (They) costs 0 until played.
+def Forthought(newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #Good instincts : cost 0, Gain 5(8) Icon Block Block.
+def (newstate, hitmonster, upgrade):
+    newstate = gamestate
+    return newstate
+
 #impatience : cost 0, If you have no Attack cards in your hand, draw 2(3) cards.
 #Jack Of All Trades : cost 0, Add 1(2) random Colorless card(s) to your hand.
 #Madness : cost 1(0), A random card in your hand costs 0 for the rest of combat. Exhaust.
