@@ -1293,6 +1293,7 @@ def Wildstrike(gamestate, hitmonster, Upgrade):
 #type of card also important
 #need ignore discard field
 
+"""
 cards = {
     'Anger' : [0, True, Anger, 'A', False, False],
     'Armaments' : [1, False, Armaments, 'S', False, True], #need upgrade function
@@ -1375,3 +1376,4 @@ cards = {
 #print(cards['Anger'][1])
 #newstate = cards['Anger'][2](gamestate,hitmonster)
 #print(cards['Anger'][3])
+"""
