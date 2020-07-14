@@ -315,7 +315,18 @@ class SimpleAgent:
         next_state.decision.append(decisionlist)
         return next_state
 
+    def three_end_turns(decisions):
+        count = 0
+        for x in decisions:
+            if x == 'End_Turn':
+                count += 1
+                if count > 2:
+                    return True
+        return False
+
     def build_tree(gamestate):
+        if not gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions):
+            return 
         for c in gamestate.name.hand:
             if gamestate.name.player.energy >= c.cost:
                 #get_next_game_state needs to append the decision to gamestate.decisions
@@ -345,7 +356,7 @@ class SimpleAgent:
         for children in LevelOrderGroupIter(r):
             for node in children:
                 if not node.children:
-                    node.name.grade = eval_function(1)
+                    node.name.grade = eval_function(node.name)
 
     # percolates the max evaluation value up to the root of the tree
     # @param r: the root node of the tree
