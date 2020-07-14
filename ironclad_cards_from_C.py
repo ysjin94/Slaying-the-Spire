@@ -50,11 +50,13 @@ from spirecomm.spire.power import Power
 from spirecomm.spire.card import Card, CardType
 from spirecomm.spire.character import Intent
 import math
+import help_function
 #THIS IS PARTLY PSEUDOCODE
 #helper functions
 #need add energy/mana function
 #NEED WEAK and other powers
 #WEAK AND VULNERABLE APPLIES AFTER STRENGTH
+"""
 def dealdmg(gamestate, damage, monster, attacknum = 1):
     newstate = gamestate
 
@@ -496,6 +498,7 @@ def start_of_turn(gamestate):
     newstate = draw(newstate, 5)
 
     return newstate
+"""
 
 #anger 0 cost Deal 6 damage. Add a copy of this card to your discard pile.
 def Anger(gamestate, hitmonster, Upgrade):
