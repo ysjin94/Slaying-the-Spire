@@ -70,6 +70,17 @@ def Anger(gamestate, hitmonster, Upgrade):
         newstate = addcard(newstate, "anger", 'discard_pile')
         return newstate
 
+#helper function for armaments
+def choose_armaments (gamestate, cardindex, upgrade):
+	newstate = gamestate
+	a_list = []
+	for card in range(len(newstate.hand)):
+		if card.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
+			if (card.upgrades == 0) or (card.name == "Searing Blow"):
+				list.append(-1, card)
+				
+	return a_list
+
 #armaments 1 cost Gain 5 Block. Upgrade a card in your hand for the rest of combat.
 def Armaments(gamestate, cardindex, Upgrade):
     newstate = gamestate
@@ -596,6 +607,17 @@ def Havoc(gamestate, chosen_card, Upgrade):
     # Play the top card of your draw pile
     # Exhaust it
     return newstate
+
+#helper function for headbutt
+def choose_Headbutt(gamestate, index, Upgrade):
+	newstate = gamestate
+	a_list = []
+	
+	for monster in range(len(newstate.monsters)):
+		for card in range(len(newstate.discard_pile)):
+			a_list.append([monster,card]);
+	
+	return a_list
 
 #headbutt 1 cost Deal 9 damage. Place a card from your discard pile on top of your draw pile.
 def Headbutt(gamestate, hitmonster, Upgrade):

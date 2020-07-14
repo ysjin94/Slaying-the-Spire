@@ -3,6 +3,20 @@
 from help_function import *
 import random
 
+"""
+    List of card needs to add end of turn
+    
+    #The Bomb : cost 2, At the end of 3 turns, deal 40(50) damage to ALL enemies.
+    #Omega : cost 3 , At the end of your turn deal 50(60) damage to ALL enemies.
+    
+    List of card needs to add start of turn
+    
+    #magnetism : cost 2(1), At the start of each turn, add a random colorless card to your hand.
+    #Mayhem : cost 2(1), At the start of your turn, play the top card of your draw pile.
+    
+    List of card needs to work:
+    
+"""
 #Bandage Up : cost 0, Heal 4(6)HP exhaust
 def Bandage_UP(gamestate, hitmonster, upgrade):
     newstate = gamestate
@@ -60,14 +74,16 @@ def Discovery(newstate, hitmonster, upgrade):
 #Dramatic Entrance : cost 0 , Innate. Deal 6(8) damage to ALL enemies. Exhaust.
 def Dramatic_Entrance(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
     if upgrade:
         for monster in range(len(newstate.monsters)):
             newstate = dealdmg(newstate, 8, monster)
-    else:   
+    else:
         for monster in range(len(newstate.monsters)):
             newstate = dealdmg(newstate, 6, monster)
-        
+    
     newstate = addcard(newstate,"Dramatic Entrance" ,'exhaust_pile')
+    
     return newstate
 
 #Enlightenment : cost 0 , Reduce the cost of cards in your hand to 1 this turn(combat)
@@ -78,6 +94,7 @@ def Enlightenment(newstate, hitmonster, upgrade):
 #Finesse : cost 0 Gain 2(4)  Block. Draw 1 card.
 def Finesse(newstate, hitmonster, upgrade):
     newstate = gamestate
+
     if upgrade:
         newstate = addblock(newstate, 4)
     else:
@@ -184,16 +201,43 @@ def Purity(newstate, hitmonster, upgrade):
 #Swift Strike : cost 0, Deal 6(9) damage.
 def Swift_Strike(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    if upgrade:
+        newstate = dealdmg(newstate, 6, hitmonster)
+    else:
+        newstate = dealdmg(newstate, 9, hitmonster)
+        
     return newstate
 
-#Trip : cost 0, Apply 2 Icon Vulnerable Vulnerable (to ALL enemies).
+#Trip : cost 0, Apply 2 Vulnerable (to ALL enemies).
 def Trip(newstate, hitmonster, upgrade):
     newstate = gamestate
+  
+    if upgrade:
+        for monster in range(len(newstate.monsters)):
+            newstate = dealvulnerable(newstate, 2, monster)
+    else:
+        newstate = dealvulnerable(newstate, 2, hitmonster)
+
     return newstate
 
 #Apotheosis : cost 2(1), Upgrade ALL of your cards for the rest of combat. Exhaust.
 def Apotheosis(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
+    # upgrade all for the rest of combat
+    for card in newstate.hand:
+        newstate = upgrade(card)
+    
+    for card in newstate.draw_pile:
+        newstate = upgrade(card)
+    
+    for card in newstate.exhaust_pile:
+        newstate = upgrade(card)
+        
+    for card in newstate.discard_pile:
+        newstate = upgrade(card)
+        
     return newstate
 
 #Chrysalis : cost 2, Add 3(5) random Skills into your Draw Pile. They cost 0 this combat. Exhaust.
@@ -204,6 +248,13 @@ def Chrysalis(newstate, hitmonster, upgrade):
 #Hand of Greed : cost 2 , Deal 20(25) damage. If this kills a non-minion enemy, gain 20(25) Gold.
 def Hand_of_Greed(newstate, hitmonster, upgrade):
     newstate = gamestate
+    if upgrade:
+        newstate = dealdmg(newstate, 25, hitmonster)
+        # if this kills a non-minion enemy, gain 25 Gold
+    else:
+        newstate = dealdmg(newstate, 20, hitmonster)
+        # if this kills a non-minion enemy, gain 20 Gold
+
     return newstate
 
 #magnetism : cost 2(1), At the start of each turn, add a random colorless card to your hand.
@@ -214,11 +265,18 @@ def Magnetism(newstate, hitmonster, upgrade):
 #Master Of Strategy : cost 0, Draw 3(4) cards. Exhaust.
 def Master_Of_Strategy(newstate, hitmonster, upgrade):
     newstate = gamestate
+
+    if upgrade:
+        newstate = draw(newstate, 4)
+    else:
+        newstate = draw(newstate, 3)
+        
     return newstate
 
 #Mayhem : cost 2(1), At the start of your turn, play the top card of your draw pile.
 def Mayhem(newstate, hitmonster, upgrade):
     newstate = gamestate
+    
     return newstate
 
 #Metamorphosis: cost 2, Add 3(5) random Attacks into your Draw Pile. They cost 0 this combat. Exhaust.
@@ -330,5 +388,6 @@ def Smite(newstate, hitmonster, upgrade):
 def Through_Violence(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
+
 
 
