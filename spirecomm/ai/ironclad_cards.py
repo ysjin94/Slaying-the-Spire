@@ -76,8 +76,8 @@ def choose_armaments (gamestate, cardindex, upgrade):
 	a_list = []
 	for card in range(len(newstate.hand)):
 		if card.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
-			if card.upgrades == 0:
-				list.append(card)
+			if (card.upgrades == 0) or (card.name == "Searing Blow"):
+				list.append(-1, card)
 				
 	return a_list
 
