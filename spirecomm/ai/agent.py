@@ -367,7 +367,7 @@ class SimpleAgent:
     def tree_search(r):
         if not r.children: #if node is a leaf
             return
-        max = -101
+        max = -1001
         for children in LevelOrderGroupIter(r, maxlevel=2):
             for node in children:
                 if node in r.children:
@@ -385,7 +385,7 @@ class SimpleAgent:
                         if not node.children:
                             return node.name.decisions[0] 
                         else:
-                            find_max(node)
+                            max_leaf_decisions(node)
 
     def get_play_card_action(self):
         #make SimGame object containing current real gamestate
