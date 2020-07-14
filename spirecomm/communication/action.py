@@ -29,6 +29,7 @@ class Action:
         coordinator.send_message(self.command)
 
 class DoubleAction(Action):
+    a = Action
     if Action[1][0] == 'No Monster Target':
         PlayCardAction(Action[0])
     elif Action[1][1] == 'No Card Target':
