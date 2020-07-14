@@ -376,8 +376,16 @@ class SimpleAgent:
                         max = node.name.grade
         r.name.grade = max #set current node's eval to max of children
 
-
-
+    #returns first element in decisions list of max leaf
+    def max_leaf_decisions(r):
+        for children in LevelOrderGroupIter(r, maxlevel=2):
+            for node in children:
+                if node in r.children:
+                    if node.name.grade == r.name.grade:
+                        if not node.children:
+                            return node.name.decisions[0] 
+                        else:
+                            find_max(node)
 
     def get_play_card_action(self):
         #make SimGame object containing current real gamestate
