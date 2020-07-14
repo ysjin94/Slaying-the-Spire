@@ -315,6 +315,7 @@ class SimpleAgent:
         next_state.decision.append(decisionlist)
         return next_state
 
+    #returns True if three end turns are in decisions
     def three_end_turns(decisions):
         count = 0
         for x in decisions:
