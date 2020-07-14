@@ -377,8 +377,8 @@ class SimpleAgent:
         r.name.grade = max #set current node's eval to max of children
 
     def play_card(first_card):
-	    if first_card == 'End_Turn':
-	        EndTurnAction()
+        if first_card == 'End_Turn':
+	    EndTurnAction()
         else:
             if len(first_card) == 1:
                 PlayCardAction(first_card[0])
