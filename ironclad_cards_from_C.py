@@ -4,17 +4,15 @@ Remove to do list if it is done.
 To do list:
     Debug
     - Function called feed() : distinguish non-minion and minion
-                      warcry() : Place a card from your hand on top of your draw pile.
-                      headbutt() : Place a card from your discard pile on top of your draw pile.
-                      havoc() : Play the top card of your draw pile and Exhaust it.
+                      warcry() : will need to take new parameter, cardindex, reference armaments
+                      headbutt() : will need to take new parameter cardindex
+                      havoc() : Play the top card of your draw pile and Exhaust it. random for now
                       infernal_blade() : Add a random Attack to your hand.
-                      perfected_strike() : Deals an additional 2 damage for ALL of your cards containing "Strike".
                       blood_for blood() : Cost 1 less energy for each time you lose HP in combat.
                       rampage() : Every time this card is played, increase its damage by 8 for this combat.
-                      whirlwind() : X cost Deal 5 damage to ALL enemies X times.
-                      reaper() :  Deal 4 damage to ALL enemies. Heal for unblocked damage.
-                      dual_wield() : Create a copy of an Attack or Power card in your hand
-                      corruption() : 3 cost Skills cost 0. Whenever you play a Skill, Exhaust it.
+                      whirlwind() : player.energy times damage
+                      reaper() : Heal for unblocked damage. apply function: healing()
+                      dual_wield() : will need to take cardindex
     <Data From AI>:
      Sending message:{
      "combat_state":{"draw_pile":[{"exhausts":false,"is_playable":true,"cost":1,"name":"Strike","id":"Strike_G","type":"ATTACK","uuid":"b0f7e30e-ad01-4f7b-998d-bea4c8078703","upgrades":0,"rarity":"BASIC","has_target":true},
@@ -137,6 +135,11 @@ def player_take_damage(gamestate):
 
     return newstate
 
+def healing(newstate, amount):
+    newstate = gamestate
+    newstate.player.current_hp += amount
+    return newstate
+    
 # Dexterity is applied before Frail.
 def addblock(gamestate, block):
     newstate = gamestate
@@ -753,10 +756,24 @@ def Corruption(gamestate, hitmonster, Upgrade):
     newstate = gamestate
     #cost is taken from game
     # Set the skill cost 0
-    for x in newstate.hand:
-        x.cost = 0
     # When you play the skill
     # Exhaust it
+    
+    for card in newstate.hand:
+        card.cost = 0
+        card.exhaust = True
+        
+    for card in newstate.discard_pile:
+        card.cost = 0
+        card.exhaust = True
+    
+    for card in newstate.deck_pile:
+        card.cost = 0
+        card.exhaust = True
+    
+    for card in newstate.exhaust_pile:
+        card.cost = 0
+        card.exhaust = True
 
     return newstate
 
@@ -841,7 +858,7 @@ def Dropkick(gamestate, hitmonster, Upgrade):
     return newstate
 
 #dual wield 1 cost Create a copy of an Attack or Power card in your hand.
-def Dual_Wield(gamestate, chosen_card, Upgrade):
+def Dual_Wield(gamestate, chosen_card, Upgrade, cardindex):
     newstate = gamestate
     #if Upgrade:
         #add Create two copy of an Attack or Power Card.
@@ -1011,13 +1028,14 @@ def Ghostly_Armor(gamestate, hitmonster, Upgrade):
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
 def Havoc(gamestate, chosen_card, Upgrade):
     newstate = gamestate
-
+    card = randomrange(len(newstate.draw_pile))
+    newstate = addcard(newstate, newstate.hand[card].name, 'hand')
     # Play the top card of your draw pile
     # Exhaust it
     return newstate
 
 #headbutt 1 cost Deal 9 damage. Place a card from your discard pile on top of your draw pile.
-def Headbutt(gamestate, hitmonster, Upgrade):
+def Headbutt(gamestate, hitmonster, Upgrade, cardindex):
     newstate = gamestate
     if Upgrade:
         #deal 12 damage
@@ -1265,12 +1283,21 @@ def Offering(gamestate, hitmonster, Upgrade):
 #perfected strike 2 cost Deal 6 damage. Deals an additional 2 damage for ALL of your cards containing "Strike".
 def Perfected_Strike(gamestate, hitmonster, Upgrade):
     newstate = gamestate
+    
+    count_Strike = 0
+    for card in newstate.hand:
+        if "Strike" in card.name:
+            count_Strike += 1
+            
     if Upgrade:
         newstate =dealdmg(newstate, 6, hitmonster)
         #add Deal an additional 3 damage for All of your cards containing "Strike"
+        newstate = dealdmg(newstate, 3, hitmonster, count_Strike)
     else:
         newstate = dealdmg(newstate, 6, hitmonster)
         #add Deals an additional 2 damage for ALL of your cards containing "Strike".
+        newstate = dealdmg(newstate, 2, hitmonster, count_Strike)
+        
     return newstate
 
 #pommel strike 1 cost Deal 9 damage. Draw 1 card(s).
@@ -1639,7 +1666,7 @@ def Uppercut(gamestate, hitmonster, Upgrade):
     return newstate
 
 #warcry 0 cost Draw 1 card. Place a card from your hand on top of your draw pile. Exhaust.
-def Warcry(gamestate, hitmonster, Upgrade):
+def Warcry(gamestate, hitmonster, Upgrade, cardindex):
     newstate = gamestate
 
     if Upgrade:
@@ -1662,11 +1689,11 @@ def Whirlwind(gamestate, hitmonster, Upgrade):
     if Upgrade:
         #repeat X times, X is cost, deal 8 damage
         for x in range(len(newstate.monsters)):
-            newstate = dealdmg(newstate, 8, hitmonster)
+            newstate = dealdmg(newstate, 8, hitmonster, newstate.player.energy)
     else:
         #repaet X times, X is cost, deal 5 damage
         for x in range(len(hitmonster.monsters)):
-            newstate = dealdmg(newstate, 5, hitmonster)
+            newstate = dealdmg(newstate, 5, hitmonster, newstate.player.energy)
 
     return newstate
 
