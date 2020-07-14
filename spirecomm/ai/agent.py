@@ -376,6 +376,16 @@ class SimpleAgent:
                         max = node.name.grade
         r.name.grade = max #set current node's eval to max of children
 
+    def play_card(first_card):
+	if first_card == 'End_Turn':
+	    EndTurnAction()
+    else:
+        if len(first_card) == 1:
+            PlayCardAction(first_card[0])
+        #if card needs a target
+        if len(first_card) == 2:
+            PlayCardAction(first_card[0], first_card[1])
+
     #returns first element in decisions list of max leaf
     def max_leaf_decisions(r):
         for children in LevelOrderGroupIter(r, maxlevel=2):
@@ -395,6 +405,8 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
+	card_to_play = max_leaf_decisions(root)
+	play_card(card_to_play)
 
     def use_next_potion(self):
         for potion in self.game.get_real_potions():
