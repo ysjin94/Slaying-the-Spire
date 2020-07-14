@@ -90,11 +90,11 @@ def Armaments(gamestate, cardindex, Upgrade):
     if Upgrade:
         #upgrade all card in your hand for the rest of combat
         for card in newstate.hand:
-            newstate = upgrades(card)
+            newstate = upgrade(card)
         return newstate
     else:
         #upgrade one card in your hand.
-        upgrades(newstate.hand[cardindex])
+        newstate = upgrade(newstate.hand[cardindex])
         return newstate
         #somehow return a new gamestate for every card which can be upgraded
 
