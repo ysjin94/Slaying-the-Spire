@@ -322,6 +322,8 @@ class SimpleAgent:
 
                 #checks if needs target
                 card = c.name
+                if card not in cards:
+                    return
                 if cards[card][1] == True:
                     for monsterindex in range(len(gamestate.name.monsters)):
                         next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
