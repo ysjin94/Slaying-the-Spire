@@ -3,7 +3,7 @@ import random
 from sys import stdout
 from anytree import Node, RenderTree, LevelOrderGroupIter
 
-import card_dictionary, colorless_card, curse_card, help_function, iron_cladcards, status_card
+import card_dictionary, colorless_card, curse_card, help_function, ironclad_cards, status_card
 from spirecomm.spire.game import Game
 from spirecomm.spire.character import Intent, PlayerClass
 import spirecomm.spire.card

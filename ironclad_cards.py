@@ -72,7 +72,7 @@ def Anger(gamestate, hitmonster, Upgrade):
         newstate = addcard(newstate, "anger", 'discard_pile')
         return newstate
 #helper function for armaments
-def choose_armaments (gamestate, cardindex, upgrade):
+def choose_Armaments (gamestate, cardindex, upgrade):
     newstate = gamestate
     a_list = []
     for card in range(len(newstate.hand)):

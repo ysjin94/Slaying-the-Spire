@@ -14,8 +14,7 @@
 #need ignore discard field
 
 import colorless_card, curse_card, help_function, ironclad_cards, status_card
-
-
+from ironclad_cards import *
 cards = {
     'Anger' : [0, True, Anger, 'A', False, False],
     'Armaments' : [1, False, Armaments, 'S', False, choose_Armaments], #need upgrade function
