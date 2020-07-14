@@ -1,9 +1,11 @@
 import time
 import random
-from sys import stdout
+import sys
 from anytree import Node, RenderTree, LevelOrderGroupIter
+import copy
 
-import card_dictionary, colorless_card, curse_card, help_function, ironclad_cards, status_card
+from card_dictionary import *
+import ironclad_cards
 from spirecomm.spire.game import Game
 from spirecomm.spire.character import Intent, PlayerClass
 import spirecomm.spire.card
@@ -25,7 +27,278 @@ class SimGame():
         self.turn = 0
         self.cards_discarded_this_turn = 0
     #--------- Additional
-        self.decisions = []
+        self.decision = []
+# assigns evaluation values to the leaves of the tree only
+# @param r: the root node of the tree
+def eval_tree(r):
+    for children in LevelOrderGroupIter(r):
+        for node in children:
+            if not node.children:
+                node.name.grade = eval_function(node.name)
+#return a ballpark evaluation number for given game state
+def eval_function(gamestate):
+    #eval out of 1000 or so, can be more or less
+    eval = 0
+    #hp
+    eval += (gamestate.current_hp * 2)
+    eval += gamestate.gold
+    if gamestate.monsters == []:
+        eval += 200
+    else:
+        for m in gamestate.monsters:
+            eval -= m.current_hp
+            eval -= (m.move_adjusted_damage * m.move_hits)
+            for mpower in gamestate.player.powers:
+                if mpower.name == 'Strength':
+                    eval -= mpower.amount
+                if mpower.name == 'Weakened':
+                    eval += mpower.amount
+                if mpower.name == 'Vulnerable':
+                    eval += mpower.amount
+                if mpower.name == 'Rage':
+                    eval -= mpower.amount
+                if mpower.name == 'Double Tap':
+                    eval -= (mpower.amount * 25)
+                if mpower.name == 'Flame Barrier':
+                    eval -= mpower.amount
+                if mpower.name == 'Dexterity':
+                    eval -= mpower.amount
+                if mpower.name == 'Juggernaut':
+                    eval -= mpower.amount
+                if mpower.name == 'Dark Embrace':
+                    eval -= mpower.amount
+                if mpower.name == 'Feel No Pain':
+                    eval -= mpower.amount
+                if mpower.name == 'Sentinel':
+                    eval -= mpower.amount
+                if mpower.name == 'No Draw':
+                    eval += mpower.amount
+                if mpower.name == 'Evolve':
+                    eval -= mpower.amount
+                if mpower.name == 'Fire Breathing':
+                    eval -= mpower.amount
+                if mpower.name == 'Combust':
+                    eval -= mpower.amount
+                if mpower.name == 'Rupture':
+                    eval -= mpower.amount
+                if mpower.name == 'Flex':
+                    eval -= mpower.amount
+                if mpower.name == 'Metallicize':
+                    #number of block in the end
+                    eval -= (mpower.amount*(mpower.amount + 1))/2
+                if mpower.name == 'Poison':
+                    #number of damage in the end
+                    eval += (mpower.amount*(mpower.amount + 1))/2
+                if mpower.name == 'Energized':
+                    eval -= 100
+                if mpower.name == 'Barricade':
+                    eval -= (gamestate.player.block * 2)
+                if mpower.name == 'Demon Form':
+                    eval -= (mpower.amount * 100)
+                if mpower.name == 'Brutality':
+                    eval -= (mpower.amount * 25)
+                if mpower.name == 'Rupture':
+                    eval -= (mpower.amount * 25)
+            #have to do monster powers
+
+    #have to do player powers
+    for ppower in gamestate.player.powers:
+        if ppower.name == 'Strength':
+            eval += ppower.amount
+        if ppower.name == 'Weakened':
+            eval -= ppower.amount
+        if ppower.name == 'Vulnerable':
+            eval -= ppower.amount
+        if ppower.name == 'Rage':
+            eval += ppower.amount
+        if ppower.name == 'Double Tap':
+            eval += (ppower.amount * 25)
+        if ppower.name == 'Flame Barrier':
+            eval += ppower.amount
+        if ppower.name == 'Dexterity':
+            eval += ppower.amount
+        if ppower.name == 'Juggernaut':
+            eval += ppower.amount
+        if ppower.name == 'Dark Embrace':
+            eval += ppower.amount
+        if ppower.name == 'Feel No Pain':
+            eval += ppower.amount
+        if ppower.name == 'Sentinel':
+            eval += ppower.amount
+        if ppower.name == 'No Draw':
+            eval -= ppower.amount
+        if ppower.name == 'Evolve':
+            eval += ppower.amount
+        if ppower.name == 'Fire Breathing':
+            eval += ppower.amount
+        if ppower.name == 'Combust':
+            eval += ppower.amount
+        if ppower.name == 'Rupture':
+            eval += ppower.amount
+        if ppower.name == 'Flex':
+            eval += ppower.amount
+        if ppower.name == 'Metallicize':
+            #number of block in the end
+            eval += (ppower.amount*(ppower.amount + 1))/2
+        if ppower.name == 'Poison':
+            #number of damage in the end
+            eval -= (ppower.amount*(ppower.amount + 1))/2
+        if ppower.name == 'Energized':
+            eval += 100
+        if ppower.name == 'Barricade':
+            eval += (gamestate.player.block * 2)
+        if ppower.name == 'Demon Form':
+            eval += (ppower.amount * 100)
+        if ppower.name == 'Brutality':
+            eval += (ppower.amount * 25)
+        if ppower.name == 'Rupture':
+            eval += (ppower.amount * 25)
+    #have to do potions
+
+    #print all the powers for troubleshooting later
+    original_stdout = sys.stdout # Save a reference to the original standard output
+
+    with open('powers .txt', 'a') as f:
+        sys.stdout = f # Change the standard output to the file we created.
+        powerout = ['Player Powers']
+        for p in gamestate.player.powers:
+            powerout = []
+            powerout.append('power_id = ' + p.power_id)
+            powerout.append('power_name = ' + p.power_name)
+            powerout.append('amount = ' + p.amount)
+            powerout.append('damage = ' + p.damage)
+            powerout.append('misc = ' + p.misc)
+            powerout.append('just_applied' + p.just_applied)
+            powerout.append('card' + p.card)
+        print(powerout)
+
+        #Monster powers
+        mpowerout = ['Monster Powers']
+        for m in gamestate.monsters:
+             for p in gamestate.monster.powers:
+                mpowerout = []
+                mpowerout.append('power_id = ' + p.power_id)
+                mpowerout.append('power_name = ' + p.power_name)
+                mpowerout.append('amount = ' + p.amount)
+                mpowerout.append('damage = ' + p.damage)
+                mpowerout.append('misc = ' + p.misc)
+                mpowerout.append('just_applied' + p.just_applied)
+                mpowerout.append('card' + p.card)
+        print(mpowerout)
+        sys.stdout = original_stdout # Reset the standard output to its original value
+    return eval
+# returns the next game state after updating a copy of current state
+# @param decision: the decision chosen for the next game state
+# decision is either the card to be played or the end turn function
+# @param state: the current state to be copied and modified
+def get_next_game_state(play, state, target):
+
+    # copy current state
+    next_state = copy.deepcopy(state)
+
+    decisionlist = []
+    if isinstance(play, str):
+        next_state = end_of_turn(next_state)
+        next_state = start_of_turn(next_state)
+        decisionlist.append('End_Turn')
+
+    elif isinstance(target,list):
+        card = play.name
+        next_state.hand.remove(play)
+        next_state = cards[card](next_state, target, play.upgrades)
+        if play.exhausts == True:
+            addcard(next_state, play.name, 'exhaust_pile')
+        else:
+            addcard(next_state, play.name, 'discard_pile')
+        decisionlist.append(play)
+        indexlist = []
+        if target[0] == -1:
+            indexlist.append('No Monster Target')
+            indexlist.append(next_state.player.hand[target[1]])
+        elif target[1] == -1:
+            indexlist.append(next_state.monsters[target[0]])
+            indexlist.append('No Card Target')
+        else:
+            indexlist.append(next_state.monsters[target[0]])
+            indexlist.append(next_state.player.hand[target[1]])
+        decisionlist.append(indexlist)
+
+    elif target == -1:
+        card = play.name
+        next_state.hand.remove(play)
+        next_state = cards[card][2](next_state, Upgrade = play.upgrades)
+        if play.exhausts == True:
+            addcard(next_state, play.name, 'exhaust_pile')
+        else:
+            addcard(next_state, play.name, 'discard_pile')
+        decisionlist.append(play)
+
+    else:
+        card = play.name
+        next_state.hand.remove(play)
+        next_state = cards[card][2](next_state, hitmonster = target, Upgrade = play.upgrades)
+        if play.exhausts == True:
+            addcard(next_state, play.name, 'exhaust_pile')
+        else:
+            addcard(next_state, play.name, 'discard_pile')
+        decisionlist.append(play)
+        decisionlist.append(target)
+
+    next_state.decision.append(decisionlist)
+    return next_state
+
+def getstate(gamestate):
+    n = SimGame()
+    n.player = gamestate.player
+    n.monsters = gamestate.monsters
+    n.draw_pile = gamestate.draw_pile
+    n.discard_pile = gamestate.discard_pile
+    n.exhaust_pile = gamestate.exhaust_pile
+    n.hand = gamestate.hand
+    n.limbo = gamestate.limbo
+    n.card_in_play = gamestate.card_in_play
+    n.turn = gamestate.turn
+    n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
+    n.decisions = []
+    return n
+
+def build_tree(gamestate):
+    if not (gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
+        return
+    for c in gamestate.name.hand:
+        if c.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
+            if gamestate.name.player.energy >= c.cost:
+            #get_next_game_state needs to append the decision to gamestate.decisions
+
+            #checks if needs target
+                card = c.name
+                if card not in cards:
+                    return
+
+                #special cards
+                if not cards[card][5] == False:
+                    index = cards[card.name][5](gamestate, 0, c.upgrades)
+                    for i in index:
+                        next_state = get_next_game_state(c, gamestate.name, i)
+                        child = Node(next_state, parent = gamestate)
+                        build_tree(child)
+
+                elif cards[card][1] == True:
+                    for monsterindex in range(len(gamestate.name.monsters)):
+                        next_state = get_next_game_state(c, gamestate.name, monsterindex)
+                        child = Node(next_state, parent = gamestate)
+                        build_tree(child)
+
+                #don't need target
+                else:
+                    next_state = get_next_game_state(c, gamestate.name, -1)
+                    child = Node(next_state, parent = gamestate)
+                    build_tree(child)
+
+    #end turn
+    next_state = get_next_game_state('End_Turn', gamestate.name, -1)
+    child = Node(next_state, parent = gamestate)
+    build_tree(child)
 
 class SimpleAgent:
 
@@ -121,235 +394,8 @@ class SimpleAgent:
 
 #--------------------------------- new code
 #returns a SimGame that includes the gamestate stuff but also desisions
-    def getstate(gamestate):
-        n = SimGame()
-        n.player = gamestate.player
-        n.monsters = gamestate.monsters
-        n.draw_pile = gamestate.draw_pile
-        n.discard_pile = gamestate.discard_pile
-        n.exhaust_pile = gamestate.exhaust_pile
-        n.hand = gamestate.hand
-        n.limbo = gamestate.limbo
-        n.card_in_play = gamestate.card_in_play
-        n.turn = gamestate.turn
-        n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
-        n.decisions = []
-        return n
-
-#return a ballpark evaluation number for given game state
-    def eval_function(gamestate):
-        #eval out of 1000 or so, can be more or less
-        eval = 0
-        #hp
-        eval += (gamestate.current_hp * 2)
-        eval += gamestate.gold
-        if gamestate.monsters == []:
-            eval += 200
-        else:
-            for m in gamestate.monsters:
-                eval -= m.current_hp
-                eval -= (m.move_adjusted_damage * m.move_hits)
-                for mpower in gamestate.player.powers:
-                    if mpower.name == 'Strength':
-                        eval -= mpower.amount
-                    if mpower.name == 'Weakened':
-                        eval += mpower.amount
-                    if mpower.name == 'Vulnerable':
-                        eval += mpower.amount
-                    if mpower.name == 'Rage':
-                        eval -= mpower.amount
-                    if mpower.name == 'Double Tap':
-                        eval -= (mpower.amount * 25)
-                    if mpower.name == 'Flame Barrier':
-                        eval -= mpower.amount
-                    if mpower.name == 'Dexterity':
-                        eval -= mpower.amount
-                    if mpower.name == 'Juggernaut':
-                        eval -= mpower.amount
-                    if mpower.name == 'Dark Embrace':
-                        eval -= mpower.amount
-                    if mpower.name == 'Feel No Pain':
-                        eval -= mpower.amount
-                    if mpower.name == 'Sentinel':
-                        eval -= mpower.amount
-                    if mpower.name == 'No Draw':
-                        eval += mpower.amount
-                    if mpower.name == 'Evolve':
-                        eval -= mpower.amount
-                    if mpower.name == 'Fire Breathing':
-                        eval -= mpower.amount
-                    if mpower.name == 'Combust':
-                        eval -= mpower.amount
-                    if mpower.name == 'Rupture':
-                        eval -= mpower.amount
-                    if mpower.name == 'Flex':
-                        eval -= mpower.amount
-                    if mpower.name == 'Metallicize':
-                        #number of block in the end
-                        eval -= (mpower.amount*(mpower.amount + 1))/2
-                    if mpower.name == 'Poison':
-                        #number of damage in the end
-                        eval += (mpower.amount*(mpower.amount + 1))/2
-                    if mpower.name == 'Energized':
-                        eval -= 100
-                    if mpower.name == 'Barricade':
-                        eval -= (gamestate.player.block * 2)
-                    if mpower.name == 'Demon Form':
-                        eval -= (mpower.amount * 100)
-                    if mpower.name == 'Brutality':
-                        eval -= (mpower.amount * 25)
-                    if mpower.name == 'Rupture':
-                        eval -= (mpower.amount * 25)
-                #have to do monster powers
-
-        #have to do player powers
-        for ppower in gamestate.player.powers:
-            if ppower.name == 'Strength':
-                eval += ppower.amount
-            if ppower.name == 'Weakened':
-                eval -= ppower.amount
-            if ppower.name == 'Vulnerable':
-                eval -= ppower.amount
-            if ppower.name == 'Rage':
-                eval += ppower.amount
-            if ppower.name == 'Double Tap':
-                eval += (ppower.amount * 25)
-            if ppower.name == 'Flame Barrier':
-                eval += ppower.amount
-            if ppower.name == 'Dexterity':
-                eval += ppower.amount
-            if ppower.name == 'Juggernaut':
-                eval += ppower.amount
-            if ppower.name == 'Dark Embrace':
-                eval += ppower.amount
-            if ppower.name == 'Feel No Pain':
-                eval += ppower.amount
-            if ppower.name == 'Sentinel':
-                eval += ppower.amount
-            if ppower.name == 'No Draw':
-                eval -= ppower.amount
-            if ppower.name == 'Evolve':
-                eval += ppower.amount
-            if ppower.name == 'Fire Breathing':
-                eval += ppower.amount
-            if ppower.name == 'Combust':
-                eval += ppower.amount
-            if ppower.name == 'Rupture':
-                eval += ppower.amount
-            if ppower.name == 'Flex':
-                eval += ppower.amount
-            if ppower.name == 'Metallicize':
-                #number of block in the end
-                eval += (ppower.amount*(ppower.amount + 1))/2
-            if ppower.name == 'Poison':
-                #number of damage in the end
-                eval -= (ppower.amount*(ppower.amount + 1))/2
-            if ppower.name == 'Energized':
-                eval += 100
-            if ppower.name == 'Barricade':
-                eval += (gamestate.player.block * 2)
-            if ppower.name == 'Demon Form':
-                eval += (ppower.amount * 100)
-            if ppower.name == 'Brutality':
-                eval += (ppower.amount * 25)
-            if ppower.name == 'Rupture':
-                eval += (ppower.amount * 25)
-        #have to do potions
-
-        #print all the powers for troubleshooting later
-        original_stdout = sys.stdout # Save a reference to the original standard output
-
-        with open('powers .txt', 'a') as f:
-            sys.stdout = f # Change the standard output to the file we created.
-            powerout = ['Player Powers']
-            for p in gamestate.player.powers:
-                powerout = []
-                powerout.append('power_id = ' + p.power_id)
-                powerout.append('power_name = ' + p.power_name)
-                powerout.append('amount = ' + p.amount)
-                powerout.append('damage = ' + p.damage)
-                powerout.append('misc = ' + p.misc)
-                powerout.append('just_applied' + p.just_applied)
-                powerout.append('card' + p.card)
-            print(powerout)
-
-            #Monster powers
-            mpowerout = ['Monster Powers']
-            for m in gamestate.monsters:
-                 for p in gamestate.monster.powers:
-                    mpowerout = []
-                    mpowerout.append('power_id = ' + p.power_id)
-                    mpowerout.append('power_name = ' + p.power_name)
-                    mpowerout.append('amount = ' + p.amount)
-                    mpowerout.append('damage = ' + p.damage)
-                    mpowerout.append('misc = ' + p.misc)
-                    mpowerout.append('just_applied' + p.just_applied)
-                    mpowerout.append('card' + p.card)
-            print(mpowerout)
-            sys.stdout = original_stdout # Reset the standard output to its original value
-        return eval
-
-    # returns the next game state after updating a copy of current state
-    # @param decision: the decision chosen for the next game state
-    # decision is either the card to be played or the end turn function
-    # @param state: the current state to be copied and modified
-    def get_next_game_state(play, state, target = False):
-
-        # copy current state
-        next_state = copy.deepcopy(state)
-
-        decisionlist = []
-        if play == 'End_Turn':
-            next_state = end_of_turn(next_state)
-            next_state = start_of_turn(next_state)
-            decisionlist.append('End_Turn')
-
-        elif target == False:
-            card = play.name
-            next_state.hand.remove(play)
-            next_state = cards[card](next_state, upgrades = play.upgrades)
-            if play.exhausts == True:
-                addcard(newstate, play.name, 'exhaust_pile')
-            else:
-                addcard(newstate, play.name, 'discard_pile')
-            decisionlist.append(play)
-
-        elif target == True:
-            card = play.name
-            next_state.hand.remove(play)
-            next_state = cards[card](next_state, hitmonster = target, upgrades = play.upgrades)
-            if play.exhausts == True:
-                addcard(newstate, play.name, 'exhaust_pile')
-            else:
-                addcard(newstate, play.name, 'discard_pile')
-            decisionlist.append(play)
-            decisionlist.append(target)
-
-        else:
-            card = play.name
-            next_state.hand.remove(play)
-            next_state = cards[card](next_state, target, play.upgrades)
-            if play.exhausts == True:
-                addcard(newstate, play.name, 'exhaust_pile')
-            else:
-                addcard(newstate, play.name, 'discard_pile')
-            decisionlist.append(play)
-            indexlist = []
-            if target[0] == -1:
-                indexlist.append('No Monster Target')
-                indexlist.append(newstate.player.hand[target[1]])
-            elif target[1] == -1:
-                indexlist.append(newstate.monsters[target[0]])
-                indexlist.append('No Card Target')
-            else:
-                indexlist.append(newstate.monsters[target[0]])
-                indexlist.append(newstate.player.hand[target[1]])
-            decisionlist.append(indexlist)
 
 
-
-        next_state.decision.append(decisionlist)
-        return next_state
 
     #returns True if three end turns are in decisions
     def three_end_turns(decisions):
@@ -361,7 +407,7 @@ class SimpleAgent:
                     return True
         return False
 
-    def build_tree(gamestate):
+    def build_tree(self, gamestate):
         if not (gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
             return
         for c in gamestate.name.hand:
@@ -399,13 +445,6 @@ class SimpleAgent:
         child = Node(next_state, parent = gamestate)
         build_tree(child)
 
-    # assigns evaluation values to the leaves of the tree only
-    # @param r: the root node of the tree
-    def eval_tree(r):
-        for children in LevelOrderGroupIter(r):
-            for node in children:
-                if not node.children:
-                    node.name.grade = eval_function(node.name)
 
     # percolates the max evaluation value up to the root of the tree
     # @param r: the root node of the tree

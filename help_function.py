@@ -87,7 +87,7 @@ def healing(newstate, amount):
     newstate = gamestate
     newstate.player.current_hp += amount
     return newstate
-    
+
 # Dexterity is applied before Frail.
 def addblock(gamestate, block):
     newstate = gamestate
@@ -100,21 +100,19 @@ def addblock(gamestate, block):
     for player_power in newstate.player.powers:
         if player_power.power_name == "Dexterity":
             newstate.player.block += player_power.amount
-
+        #juggernaut dealdmg to random monster
+        if player_powers.power_name == "Juggernaut":
+            x = randomrange(len(newstate.monsters))
+            newstate = dealdmg(newstate, player_power.amount, newstate.monsters[x])
     #add block
     newstate.player.block += block
-
-    #juggernaut dealdmg to random monster
-    if player_powers.power_name == "Juggernaut":
-        x = randomrange(len(newstate.monsters))
-        newstate = dealdmg(newstate, player_power.amount, newstate.monsters[x])
 
     return newstate
 
 def addcard(gamestate, name, pile):
     newstate = gamestate
     #newcard = card(name, name, card_type, "", upgrades=0, has_target=False, cost=0, uuid="", misc=0, price=0, is_playable=False, exhausts=False):
-    newcard = card(name = name, upgrades = 0, cost = cards[name][0])
+    newcard = Card(name = name, upgrades = 0, cost = cards[name][0])
     if pile == 'discard_pile':
         newstate.discard_pile.append(newcard)
     if pile == 'hand':
@@ -280,7 +278,7 @@ def end_of_turn(gamestate):
 
     # Take demage from the monsters
     newstate = player_take_damage(newstate)
-    
+
     #check
     #Pride : Innate, Ate the end of turn, put a copy of this card on top of your draw pile. Exhuast
 	#Innate : Start each combat with this card in your hand
@@ -288,7 +286,7 @@ def end_of_turn(gamestate):
     for card in newstate.hand:
         if card.name == "Pride":
               Pride = True
-                
+
     #combust At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies
     for power_player in newstate.player.powers:
         if power_player.power_name == "Combust":
@@ -449,4 +447,3 @@ def start_of_turn(gamestate):
     newstate = draw(newstate, 5)
 
     return newstate
-
