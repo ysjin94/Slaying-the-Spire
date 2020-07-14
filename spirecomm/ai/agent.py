@@ -317,24 +317,25 @@ class SimpleAgent:
 
     def build_tree(gamestate):
         for c in gamestate.name.hand:
-            if gamestate.name.player.energy >= c.cost:
-                #get_next_game_state needs to append the decision to gamestate.decisions
+		if c not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
+			if gamestate.name.player.energy >= c.cost:
+				#get_next_game_state needs to append the decision to gamestate.decisions
 
-                #checks if needs target
-                card = c.name
+				#checks if needs target
+				card = c.name
                 if card not in cards:
                     return
-                if cards[card][1] == True:
-                    for monsterindex in range(len(gamestate.name.monsters)):
-                        next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
-                        child = Node(next_state, parent = gamestate)
-                        build_tree(child)
+				if cards[card][1] == True:
+					for monsterindex in range(len(gamestate.name.monsters)):
+						next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
+						child = Node(next_state, parent = gamestate)
+						build_tree(child)
 
-                #don't need target
-                else:
-                    next_state = get_next_game_state(c, gamestate.name)
-                    child = Node(next_state, parent = gamestate)
-                    build_tree(child)
+				#don't need target
+				else:
+					next_state = get_next_game_state(c, gamestate.name)
+					child = Node(next_state, parent = gamestate)
+					build_tree(child)
 
         #end turn
         next_state = get_next_game_state('End_Turn', gamestate.name)
