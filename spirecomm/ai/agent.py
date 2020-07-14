@@ -260,16 +260,16 @@ class SimpleAgent:
 
             #Monster powers
             mpowerout = ['Monster Powers']
-                for m in gamestate.monsters:
-                    for p in gamestate.monster.powers:
-                        mpowerout = []
-                        mpowerout.append('power_id = ' + p.power_id)
-                        mpowerout.append('power_name = ' + p.power_name)
-                        mpowerout.append('amount = ' + p.amount)
-                        mpowerout.append('damage = ' + p.damage)
-                        mpowerout.append('misc = ' + p.misc)
-                        mpowerout.append('just_applied' + p.just_applied)
-                        mpowerout.append('card' + p.card)
+            for m in gamestate.monsters:
+                 for p in gamestate.monster.powers:
+                    mpowerout = []
+                    mpowerout.append('power_id = ' + p.power_id)
+                    mpowerout.append('power_name = ' + p.power_name)
+                    mpowerout.append('amount = ' + p.amount)
+                    mpowerout.append('damage = ' + p.damage)
+                    mpowerout.append('misc = ' + p.misc)
+                    mpowerout.append('just_applied' + p.just_applied)
+                    mpowerout.append('card' + p.card)
             print(mpowerout)
             sys.stdout = original_stdout # Reset the standard output to its original value
         return eval
