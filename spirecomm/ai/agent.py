@@ -366,9 +366,11 @@ class SimpleAgent:
     def get_play_card_action(self):
         #make SimGame object containing current real gamestate
         n = getstate(self.game)
-        build_tree(n)
-        eval_tree()
-        tree_search()
+        #root node containing current real gamestate
+        root = Node(n, parent=None)
+        build_tree(root)
+        eval_tree(root)
+        tree_search(root)
 
 
 #---------------------------- new code
