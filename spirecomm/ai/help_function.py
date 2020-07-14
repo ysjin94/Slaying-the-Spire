@@ -280,7 +280,15 @@ def end_of_turn(gamestate):
 
     # Take demage from the monsters
     newstate = player_take_damage(newstate)
-
+    
+    #check
+    #Pride : Innate, Ate the end of turn, put a copy of this card on top of your draw pile. Exhuast
+	#Innate : Start each combat with this card in your hand
+    Pride = False
+    for card in newstate.hand:
+        if card.name == "Pride":
+              Pride = True
+                
     #combust At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies
     for power_player in newstate.player.powers:
         if power_player.power_name == "Combust":
