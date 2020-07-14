@@ -197,7 +197,7 @@ def Expunger(newstate, hitmonster, upgrade):
     return newstate
 
 #insight : cost 0, Icon Retain Retain. Draw 2(3) cards. Exhaust. (Obtained from Evaluate, Pray and Study).
-def insight(newstate, hitmonster, upgrade):
+def Insight(newstate, hitmonster, upgrade):
     newstate = gamestate
     return newstate
 
