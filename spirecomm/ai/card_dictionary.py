@@ -1,5 +1,20 @@
 class IronClad:
 
+#dict of cards
+#cost, target, function, type, ethereal
+#target true = card can target enemy
+#target false = card just gets played
+#type = A for Attack,  P for Power, S for Skill
+#ethereal = whether the card is exhausted after end of turn
+#choose_headbut(), choose_armaments() = False, if not need
+
+#will need new type for status like the card wound
+
+#WILL NEED MORE FIELD IN ARRAY
+#Ethereal, exhaust, etc.
+#type of card also important
+#need ignore discard field
+
     cards = {
         'Anger' : [0, True, Anger, 'A', False, False],
         'Armaments' : [1, False, Armaments, 'S', False, True], #need upgrade function
