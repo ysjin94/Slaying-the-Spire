@@ -18,7 +18,7 @@ import colorless_card, curse_card, help_function, ironclad_cards, status_card
 
 cards = {
     'Anger' : [0, True, Anger, 'A', False, False],
-    'Armaments' : [1, False, Armaments, 'S', False, True], #need upgrade function
+    'Armaments' : [1, False, Armaments, 'S', False, choose_Armaments], #need upgrade function
     'Barricade' : [3, False, Barricade, 'P', False, False], #Barricade needs to be a game state field, do not lose block at turn end
     'Bash' : [2, True, Bash, 'A', False, False],
     'Battle Trance' : [0, False, Battle_Trance, 'S', False, False], # gamestate, You cannot draw additional cards this turn.
@@ -53,7 +53,7 @@ cards = {
     'Flex' : [0, False, Flex, 'S', False, False], #gamestate, lose 2 strength at end of turn
     'Ghostly Armor' : [1, False, Ghostly_Armor,'S', True, False],
     'Havoc' : [1, False, Havoc, 'S', False, False],
-    'Headbutt' : [1, True, Headbutt,'A', False, True], #need new function to return card from discard pile
+    'Headbutt' : [1, True, Headbutt,'A', False, choose_Headbutt], #need new function to return card from discard pile
     'Heavy Blade' : [2, True, Heavy_Blade, 'A', False, False], #Strength affects heavy blade 3 times
     'Hemokinesis' : [1, True, Hemokinesis, 'A', False, False],
     'Immolate' : [2, True, Immolate, 'A', False, False],
