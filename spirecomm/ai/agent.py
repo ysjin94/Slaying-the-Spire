@@ -325,7 +325,7 @@ def three_end_turns(decisions):
             if count > 2:
                 return True
     return False
-    
+
 #returns first element in decisions list of max leaf
 def max_leaf_decisions(r):
     for children in LevelOrderGroupIter(r, maxlevel=2):
