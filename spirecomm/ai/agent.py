@@ -26,6 +26,7 @@ class SimGame():
         self.card_in_play = None
         self.turn = 0
         self.cards_discarded_this_turn = 0
+        self.gold = 0
     #--------- Additional
         self.decision = []
 # assigns evaluation values to the leaves of the tree only
@@ -259,6 +260,7 @@ def getstate(gamestate):
     n.card_in_play = gamestate.card_in_play
     n.turn = gamestate.turn
     n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
+    n.gold = gamestate.gold
     n.decisions = []
     return n
 
