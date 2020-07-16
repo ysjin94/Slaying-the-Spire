@@ -176,7 +176,7 @@ def eval_function(gamestate):
         #Monster powers
         mpowerout = ['Monster Powers']
         for m in gamestate.monsters:
-             for p in gamestate.monster.powers:
+             for p in m.powers:
                 mpowerout = []
                 mpowerout.append('power_id = ' + p.power_id)
                 mpowerout.append('power_name = ' + p.power_name)
