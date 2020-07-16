@@ -261,32 +261,32 @@ def draw(gamestate, amount):
     if can_draw:
         if len(newstate.draw_pile) < amount :
 
-            left = amount - len(newstate.deck_pile)
+            left = amount - len(newstate.draw_pile)
 
-            for x in range(len(newstate.deck_pile)):
+            for x in range(len(newstate.draw_pile)):
                 #max hand
                 if len(newstate.hand_pile) != 10:
                     # chosen_card randomly
-                    chosen_card = randomrange(len(newstate.deck_pile[chosen_card]))
+                    chosen_card = randomrange(len(newstate.draw_pile[chosen_card]))
                     # add chosen_card to hand_pile
-                    newstate.hand_pile.append(newstate.deck_pile[chosen_card])
+                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                             if player_power.power_name == "Evolve":
-                                if newstate.deck_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
 
                     #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6(10) damage to all enemies.
                             if player_power.power_name == "Fire Breathing":
-                                if newstate.deck_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
-                                if newstate.deck_pile[chosen_card].type == CardType.CURSE:
+                                if newstate.draw_pile[chosen_card].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
-                    # remove chosen_card from deck_pile
-                    newstate.deck_pile.pop(chosen_card)
+                    # remove chosen_card from draw_pile
+                    newstate.draw_pile.pop(chosen_card)
 
-            # add discard_pile to deck_pile
-            newstate.deck_pile = newstate.discard_pile
+            # add discard_pile to draw_pile
+            newstate.draw_pile = newstate.discard_pile
             # reset the discard_pile
             newstate.discard_pile.clear()
 
@@ -294,35 +294,35 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand_pile) != 10:
                     # chosen_card randomly
-                    chosen_card = randomrange(len(newstate.deck_pile))
+                    chosen_card = randomrange(len(newstate.draw_pile))
                     # add chosen_card to hand_pile
 
-                    newstate.hand_pile.append(newstate.deck_pile[chosen_card])
+                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
-                            if newstate.deck_pile[chosen_card].type == CardType.STATUS:
+                            if newstate.draw_pile[chosen_card].type == CardType.STATUS:
                                 newstate = draw(newstate, 1)
 
                     #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6(10) damage to all enemies.
                             if player_power.power_name == "Fire Breathing":
-                                if newstate.deck_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
-                                if newstate.deck_pile[chosen_card].type == CardType.CURSE:
+                                if newstate.draw_pile[chosen_card].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
 
-                    # remove chosen_card from deck_pile
-                    newstate.deck_pile.pop(chosen_card)
+                    # remove chosen_card from draw_pile
+                    newstate.draw_pile.pop(chosen_card)
         else:
             for x in range(amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randomrange(len(newstate.hand_pile))
+                    chosen_card = random.randomrange(len(newstate.draw_pile))
                     # add chosen_card to hand_pile
-                    newstate.hand_pile.append(newstate.deck_pile[chosen_card])
-                    # remove chosen_card from deck_pile
-                    newstate.deck_pile.pop(chosen_card)
+                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
+                    # remove chosen_card from draw_pile
+                    newstate.draw_pile.pop(chosen_card)
 
     return newstate
 
@@ -794,7 +794,7 @@ def Corruption(gamestate, hitmonster, Upgrade):
             card.cost = 0
             card.exhaust = True
 
-    for card in newstate.deck_pile:
+    for card in newstate.draw_pile:
         if card.type == CardType.SKILL:
             card.cost = 0
             card.exhaust = True
@@ -1837,4 +1837,6 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
+
+
 
