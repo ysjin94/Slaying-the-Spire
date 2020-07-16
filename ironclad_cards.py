@@ -259,7 +259,7 @@ def draw(gamestate, amount):
              can_draw = False
 
     if can_draw:
-        if len(newstate.deck_pile) < amount :
+        if len(newstate.draw_pile) < amount :
 
             left = amount - len(newstate.deck_pile)
 
@@ -316,9 +316,9 @@ def draw(gamestate, amount):
         else:
             for x in range(amount):
                 #max hand
-                if len(newstate.hand_pile) != 10:
+                if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = randomrange(len(newstate.deck_pile))
+                    chosen_card = random.randomrange(len(newstate.deck_pile))
                     # add chosen_card to hand_pile
                     newstate.hand_pile.append(newstate.deck_pile[chosen_card])
                     # remove chosen_card from deck_pile
@@ -1062,7 +1062,7 @@ def Ghostly_Armor(gamestate, hitmonster, Upgrade):
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
 def Havoc(gamestate, chosen_card, Upgrade):
     newstate = gamestate
-    card = randomrange(len(newstate.draw_pile))
+    card = random.randomrange(len(newstate.draw_pile))
     newstate = addcard(newstate, newstate.hand[card].name, 'hand')
     # Play the top card of your draw pile
     # Exhaust it
@@ -1625,7 +1625,7 @@ def Sword_Boomerang(gamestate, hitmonster, Upgrade):
 
     if Upgrade:
         # a random enemy.
-        x = randomrange(len(hitmonster))
+        x = random.randomrange(len(hitmonster))
         # deal 3 damage, 4 times
         newstate = dealdmg(newstate, 3, x, 4)
 
@@ -1666,7 +1666,7 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         #Gain 9 Block
         newstate = addblock(newstate, 9)
         #Exhaust a random card from your hand
-        x = randomrange(len(hand))
+        x = random.randomrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
         del newstate.hand[x]
     else:
