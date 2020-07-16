@@ -318,7 +318,7 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randomrange(len(newstate.deck_pile))
+                    chosen_card = random.randomrange(len(newstate.hand_pile))
                     # add chosen_card to hand_pile
                     newstate.hand_pile.append(newstate.deck_pile[chosen_card])
                     # remove chosen_card from deck_pile
@@ -1631,7 +1631,7 @@ def Sword_Boomerang(gamestate, hitmonster, Upgrade):
 
     else:
         # a random enemy.
-        x = randomrange(len(hitmonster))
+        x = random.randomrange(len(hitmonster))
         # deal 3 damage, 3 times
         newstate = dealdmg(newstate, 3, x, 3)
 
@@ -1673,7 +1673,7 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         #Gain 7 Block
         newstate = addblock(newstate, 7)
         #Exhaust a random card from your hand
-        x = randomrange(len(hand))
+        x = random.randomrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
         del newstate.hand[x]
 
@@ -1837,3 +1837,4 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
+
