@@ -29,6 +29,20 @@ class SimGame():
         self.gold = 0
     #--------- Additional
         self.decision = []
+
+# percolates the max evaluation value up to the root of the tree
+# @param r: the root node of the tree
+def tree_search(r):
+    if not r.children: #if node is a leaf
+        return
+    max = -1001
+    for children in LevelOrderGroupIter(r, maxlevel=2):
+        for node in children:
+            if node in r.children:
+                tree_search(node)
+                if node.name.grade > max:
+                    max = node.name.grade
+    r.name.grade = max #set current node's eval to max of children
 # assigns evaluation values to the leaves of the tree only
 # @param r: the root node of the tree
 def eval_tree(r):
@@ -302,6 +316,27 @@ def build_tree(gamestate):
     child = Node(next_state, parent = gamestate)
     build_tree(child)
 
+#returns True if three end turns are in decisions
+def three_end_turns(decisions):
+    count = 0
+    for x in decisions:
+        if x == 'End_Turn':
+            count += 1
+            if count > 2:
+                return True
+    return False
+    
+#returns first element in decisions list of max leaf
+def max_leaf_decisions(r):
+    for children in LevelOrderGroupIter(r, maxlevel=2):
+        for node in children:
+            if node in r.children:
+                if node.name.grade == r.name.grade:
+                    if not node.children:
+                        return node.name.decisions[0]
+                    else:
+                        max_leaf_decisions(node)
+
 class SimpleAgent:
 
     def __init__(self, chosen_class=PlayerClass.THE_SILENT):
@@ -394,84 +429,6 @@ class SimpleAgent:
         available_monsters = [monster for monster in self.game.monsters if monster.current_hp > 0 and not monster.half_dead and not monster.is_gone]
         return len(available_monsters) > 1
 
-#--------------------------------- new code
-#returns a SimGame that includes the gamestate stuff but also desisions
-
-
-
-    #returns True if three end turns are in decisions
-    def three_end_turns(decisions):
-        count = 0
-        for x in decisions:
-            if x == 'End_Turn':
-                count += 1
-                if count > 2:
-                    return True
-        return False
-
-    def build_tree(self, gamestate):
-        if not (gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
-            return
-        for c in gamestate.name.hand:
-            if c not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
-                if gamestate.name.player.energy >= c.cost:
-                #get_next_game_state needs to append the decision to gamestate.decisions
-
-                #checks if needs target
-                    card = c.name
-                    if card not in cards:
-                        return
-
-                    #special cards
-                    if not cards[play.name][5] == False:
-                        index = cards[card.name][5](gamestate, 0, play.upgrades)
-                        for i in index:
-                            next_state = get_next_game_state(c, gamestate.name, target = i)
-                            child = Node(next_state, parent = gamestate)
-                            build_tree(child)
-
-                    elif cards[card][1] == True:
-                        for monsterindex in range(len(gamestate.name.monsters)):
-                            next_state = get_next_game_state(c, gamestate.name, target = monsterindex)
-                            child = Node(next_state, parent = gamestate)
-                            build_tree(child)
-
-                    #don't need target
-                    else:
-                        next_state = get_next_game_state(c, gamestate.name)
-                        child = Node(next_state, parent = gamestate)
-                        build_tree(child)
-
-        #end turn
-        next_state = get_next_game_state('End_Turn', gamestate.name)
-        child = Node(next_state, parent = gamestate)
-        build_tree(child)
-
-
-    # percolates the max evaluation value up to the root of the tree
-    # @param r: the root node of the tree
-    def tree_search(r):
-        if not r.children: #if node is a leaf
-            return
-        max = -1001
-        for children in LevelOrderGroupIter(r, maxlevel=2):
-            for node in children:
-                if node in r.children:
-                    tree_search(node)
-                    if node.name.grade > max:
-                        max = node.name.grade
-        r.name.grade = max #set current node's eval to max of children
-
-    #returns first element in decisions list of max leaf
-    def max_leaf_decisions(r):
-        for children in LevelOrderGroupIter(r, maxlevel=2):
-            for node in children:
-                if node in r.children:
-                    if node.name.grade == r.name.grade:
-                        if not node.children:
-                            return node.name.decisions[0]
-                        else:
-                            max_leaf_decisions(node)
 
     def get_play_card_action(self):
         #make SimGame object containing current real gamestate
