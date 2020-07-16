@@ -265,7 +265,7 @@ def getstate(gamestate):
     return n
 
 def build_tree(gamestate):
-    if not (gamestate.name.monsters or gamestate.name.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
+    if not (gamestate.name.monsters or gamestate.name.player.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
         return
     for c in gamestate.name.hand:
         if c.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
