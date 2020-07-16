@@ -168,7 +168,7 @@ def addblock(gamestate, block):
             newstate.player.block += player_power.amount
         #juggernaut dealdmg to random monster
         if player_powers.power_name == "Juggernaut":
-            x = randomrange(len(newstate.monsters))
+            x = random.randrange(len(newstate.monsters))
             newstate = dealdmg(newstate, player_power.amount, newstate.monsters[x])
     #add block
     newstate.player.block += block
@@ -265,11 +265,11 @@ def draw(gamestate, amount):
 
             for x in range(len(newstate.draw_pile)):
                 #max hand
-                if len(newstate.hand_pile) != 10:
+                if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = randomrange(len(newstate.draw_pile[chosen_card]))
-                    # add chosen_card to hand_pile
-                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
+                    chosen_card = random.randrange(len(newstate.draw_pile[chosen_card]))
+                    # add chosen_card to hand
+                    newstate.hand.append(newstate.draw_pile[chosen_card])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                             if player_power.power_name == "Evolve":
@@ -292,12 +292,12 @@ def draw(gamestate, amount):
 
             for x in range(left):
                 #max hand
-                if len(newstate.hand_pile) != 10:
+                if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = randomrange(len(newstate.draw_pile))
-                    # add chosen_card to hand_pile
+                    chosen_card = random.randrange(len(newstate.draw_pile))
+                    # add chosen_card to hand
 
-                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
+                    newstate.hand.append(newstate.draw_pile[chosen_card])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
@@ -318,9 +318,9 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randomrange(len(newstate.draw_pile))
-                    # add chosen_card to hand_pile
-                    newstate.hand_pile.append(newstate.draw_pile[chosen_card])
+                    chosen_card = random.randrange(len(newstate.draw_pile))
+                    # add chosen_card to hand
+                    newstate.hand.append(newstate.draw_pile[chosen_card])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(chosen_card)
 
@@ -1062,7 +1062,7 @@ def Ghostly_Armor(gamestate, hitmonster, Upgrade):
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
 def Havoc(gamestate, chosen_card, Upgrade):
     newstate = gamestate
-    card = random.randomrange(len(newstate.draw_pile))
+    card = random.randrange(len(newstate.draw_pile))
     newstate = addcard(newstate, newstate.hand[card].name, 'hand')
     # Play the top card of your draw pile
     # Exhaust it
@@ -1625,13 +1625,13 @@ def Sword_Boomerang(gamestate, hitmonster, Upgrade):
 
     if Upgrade:
         # a random enemy.
-        x = random.randomrange(len(hitmonster))
+        x = random.randrange(len(hitmonster))
         # deal 3 damage, 4 times
         newstate = dealdmg(newstate, 3, x, 4)
 
     else:
         # a random enemy.
-        x = random.randomrange(len(hitmonster))
+        x = random.randrange(len(hitmonster))
         # deal 3 damage, 3 times
         newstate = dealdmg(newstate, 3, x, 3)
 
@@ -1666,14 +1666,14 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         #Gain 9 Block
         newstate = addblock(newstate, 9)
         #Exhaust a random card from your hand
-        x = random.randomrange(len(hand))
+        x = random.randrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
         del newstate.hand[x]
     else:
         #Gain 7 Block
         newstate = addblock(newstate, 7)
         #Exhaust a random card from your hand
-        x = random.randomrange(len(hand))
+        x = random.randrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
         del newstate.hand[x]
 
@@ -1837,6 +1837,7 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
+
 
 
 
