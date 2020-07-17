@@ -209,45 +209,45 @@ def addcard(gamestate, name, pile, cardobj = False):
                 newstate.player.energy = newstate.player.energy + powers.amount
 
     return newstate
-    
+
 def dealvulnerable(gamestate, amount, monster):
     newstate = gamestate
-    
+
     is_it_exisited = False
-    
-    for pmonster in newstate.monsters[monster].powers:
-        if pmonster.power_name == "Vulnerable":
+
+    for pmonster in newstate.monsters[monster]:
+        if pmonster.powers.power_name == "Vulnerable":
             p.amount = p.amount + amount
             is_it_exisited = True
-    
+
     if not is_it_exisited:
         newvulnerable = Power("Vulnerable", "Vulnerable", amount)
         newvulnerable.just_applied = True
         newstate.monsters[monster].powers.append(newvulnerable)
-            
+
     return newstate
 
 def dealweak(gamestate, amount, monster):
     newstate = gamestate
     is_it_exisited = False
-    
+
     for pmonster in newstate.monsters[monster].powers:
         if pmonster.power_name == "Weakened":
             pmonster.amount = pmonster.amount + amount
             is_it_exisited = True
-    
+
     if not is_it_exisited:
         newweak = Power("Weakened", "Weakened", amount)
         newweak.just_applied = True
         newstate.monsters[monster].powers.append(newweak)
-    
+
     return newstate
 
 def player_gain_strength(newstate, amount):
     newstate = gamestate
-    
+
     is_it_exisited = False
-    
+
     for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_name.amount = power_name.amount + amount
