@@ -211,15 +211,16 @@ def get_next_game_state(play, state, target):
     # copy current state
     next_state = copy.deepcopy(state)
 
+    #end turn
     decisionlist = []
     if isinstance(play, str):
         next_state = end_of_turn(next_state)
         next_state = start_of_turn(next_state)
         decisionlist.append('End_Turn')
 
+    #special cards
     elif isinstance(target,list):
         card = play.name
-        next_state.hand.remove(play)
         next_state = cards[card](next_state, target, play.upgrades)
         if play.exhausts == True:
             addcard(next_state, play.name, 'exhaust_pile')
@@ -238,9 +239,9 @@ def get_next_game_state(play, state, target):
             indexlist.append(next_state.player.hand[target[1]])
         decisionlist.append(indexlist)
 
+    #no target cards
     elif target == -1:
         card = play.name
-        next_state.hand.remove(play)
         next_state = cards[card][2](next_state, Upgrade = play.upgrades)
         if play.exhausts == True:
             addcard(next_state, play.name, 'exhaust_pile')
@@ -248,9 +249,9 @@ def get_next_game_state(play, state, target):
             addcard(next_state, play.name, 'discard_pile')
         decisionlist.append(play)
 
+    #target cards
     else:
         card = play.name
-        next_state.hand.remove(play)
         next_state = cards[card][2](next_state, hitmonster = target, Upgrade = play.upgrades)
         if play.exhausts == True:
             addcard(next_state, play.name, 'exhaust_pile')
@@ -275,16 +276,16 @@ def getstate(gamestate):
     n.turn = gamestate.turn
     n.cards_discarded_this_turn = gamestate.cards_discarded_this_turn
     n.gold = gamestate.gold
-    n.decisions = []
+    n.decision = []
     return n
 
 def build_tree(gamestate):
-    if not (gamestate.name.monsters or gamestate.name.player.current_hp <= 0 or three_end_turns(gamestate.name.decisions)):
+    if not (gamestate.name.monsters or gamestate.name.player.current_hp <= 0 or three_end_turns(gamestate.name.decision)):
         return
     for c in gamestate.name.hand:
         if c.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
             if gamestate.name.player.energy >= c.cost:
-            #get_next_game_state needs to append the decision to gamestate.decisions
+            #get_next_game_state needs to append the decision to gamestate.decision
 
             #checks if needs target
                 card = c.name
@@ -294,20 +295,26 @@ def build_tree(gamestate):
                 #special cards
                 if not cards[card][5] == False:
                     index = cards[card.name][5](gamestate, 0, c.upgrades)
+                    p = c
+                    del c
                     for i in index:
-                        next_state = get_next_game_state(c, gamestate.name, i)
+                        next_state = get_next_game_state(p, gamestate.name, i)
                         child = Node(next_state, parent = gamestate)
                         build_tree(child)
 
                 elif cards[card][1] == True:
+                    p = c
+                    del c
                     for monsterindex in range(len(gamestate.name.monsters)):
-                        next_state = get_next_game_state(c, gamestate.name, monsterindex)
+                        next_state = get_next_game_state(p, gamestate.name, monsterindex)
                         child = Node(next_state, parent = gamestate)
                         build_tree(child)
 
                 #don't need target
                 else:
-                    next_state = get_next_game_state(c, gamestate.name, -1)
+                    p = c
+                    del c
+                    next_state = get_next_game_state(p, gamestate.name, -1)
                     child = Node(next_state, parent = gamestate)
                     build_tree(child)
 
@@ -316,26 +323,26 @@ def build_tree(gamestate):
     child = Node(next_state, parent = gamestate)
     build_tree(child)
 
-#returns True if three end turns are in decisions
-def three_end_turns(decisions):
+#returns True if three end turns are in decision
+def three_end_turns(decision):
     count = 0
-    for x in decisions:
+    for x in decision:
         if x == 'End_Turn':
             count += 1
             if count > 2:
                 return True
     return False
 
-#returns first element in decisions list of max leaf
-def max_leaf_decisions(r):
+#returns first element in decision list of max leaf
+def max_leaf_decision(r):
     for children in LevelOrderGroupIter(r, maxlevel=2):
         for node in children:
             if node in r.children:
                 if node.name.grade == r.name.grade:
                     if not node.children:
-                        return node.name.decisions[0]
+                        return node.name.decision[0]
                     else:
-                        max_leaf_decisions(node)
+                        max_leaf_decision(node)
 
 class SimpleAgent:
 
@@ -438,7 +445,7 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
-        return max_leaf_decisions(root)
+        return max_leaf_decision(root)
 
     def use_next_potion(self):
         for potion in self.game.get_real_potions():
