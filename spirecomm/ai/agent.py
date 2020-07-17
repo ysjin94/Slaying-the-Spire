@@ -260,6 +260,14 @@ def get_next_game_state(play, state, target):
         decisionlist.append(play)
         decisionlist.append(target)
 
+    original_stdout = sys.stdout # Save a reference to the original standard output
+
+    with open('x not in list .txt', 'a') as f:
+        sys.stdout = f # Change the standard output to the file we created.
+        for x in next_state.hand:
+            print(x.name)
+        print('return state')
+        sys.stdout = original_stdout
     next_state.decision.append(decisionlist)
     return next_state
 
@@ -296,25 +304,28 @@ def build_tree(gamestate):
                 if not cards[card][5] == False:
                     index = cards[card.name][5](gamestate, 0, c.upgrades)
                     p = c
-                    del c
+                    next_state = gamestate.name
+                    next_state.hand.remove(c)
                     for i in index:
-                        next_state = get_next_game_state(p, gamestate.name, i)
+                        next_state = get_next_game_state(p, next_state, i)
                         child = Node(next_state, parent = gamestate)
                         build_tree(child)
 
                 elif cards[card][1] == True:
                     p = c
-                    del c
-                    for monsterindex in range(len(gamestate.name.monsters)):
-                        next_state = get_next_game_state(p, gamestate.name, monsterindex)
+                    next_state = gamestate.name
+                    next_state.hand.remove(c)
+                    for monsterindex in range(len(next_state.monsters)):
+                        next_state = get_next_game_state(p, next_state, monsterindex)
                         child = Node(next_state, parent = gamestate)
                         build_tree(child)
 
                 #don't need target
                 else:
                     p = c
-                    del c
-                    next_state = get_next_game_state(p, gamestate.name, -1)
+                    next_state = gamestate.name
+                    next_state.hand.remove(c)
+                    next_state = get_next_game_state(p, next_state, -1)
                     child = Node(next_state, parent = gamestate)
                     build_tree(child)
 

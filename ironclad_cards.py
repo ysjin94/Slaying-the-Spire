@@ -215,8 +215,8 @@ def dealvulnerable(gamestate, amount, monster):
 
     is_it_exisited = False
 
-    for pmonster in newstate.monsters[monster]:
-        if pmonster.powers.power_name == "Vulnerable":
+    for pmonster in newstate.monsters[monster].powers:
+        if pmonster.power_name == "Vulnerable":
             p.amount = p.amount + amount
             is_it_exisited = True
 
@@ -488,10 +488,9 @@ def end_of_turn(gamestate):
     #ethereal check, if card is ethereal, exhaust it
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
     for card in newstate.hand:
-        x = cards[card.name]
-        if x[4] == True:
+        if card.name in ['Apparition', "Ascender's Bane", 'Carnage', "Ascender's Bane+", 'Carnage+', 'Clumsy', 'Clumsy+', 'Dazed', 'Dazed+', 'Echo Form', 'Ghostly Armor', 'Ghostly Armor+', 'Void', 'Void+', 'Deva Form']:
             gamestate = addcard(gamestate, card.name, 'exhaust_pile', card)
-            del card
+            newstate.hand.remove(card)
 
     return newstate
 
