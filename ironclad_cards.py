@@ -175,10 +175,12 @@ def addblock(gamestate, block):
 
     return newstate
 
-def addcard(gamestate, name, pile):
+def addcard(gamestate, name, pile, cardobj = False):
     newstate = gamestate
     #newcard = card(name, name, card_type, "", upgrades=0, has_target=False, cost=0, uuid="", misc=0, price=0, is_playable=False, exhausts=False):
     newcard = Card(name = name, upgrades = 0, cost = cards[name][0], card_id = 'temp', card_type = 1, rarity = 'temp')
+    if not cardobj == False:
+        newcard = cardobj
     if pile == 'discard_pile':
         newstate.discard_pile.append(newcard)
     if pile == 'hand':
@@ -473,7 +475,7 @@ def end_of_turn(gamestate):
     for card in newstate.hand:
         x = cards[card.name]
         if x[4] == True:
-            gamestate = addcard(gamestate, card.name, 'exhaust_pile')
+            gamestate = addcard(gamestate, card.name, 'exhaust_pile', card)
             del card
 
     return newstate
@@ -692,7 +694,7 @@ def Brutality(gamestate, hitmonster, Upgrade):
 def Burning_Pact(gamestate, cardindex, Upgrade):
     newstate = gamestate
     #Exhaust 1 card
-    newstate = addcard (newstate ,newstate.hand[cardindex].name, 'exhaust_pile')
+    newstate = addcard (newstate, newstate.hand[cardindex].name, 'exhaust_pile', newstate.hand[cardindex])
 
     if Upgrade :
          #Draw 3 cards
@@ -899,7 +901,7 @@ def Dual_Wield(gamestate, cardindex, Upgrade):
             if card.type == CardType.ATTACK or card.type == CardType.POWER:
                 #add Create two copy of an Attack or Power Card.
                 newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
-                newstate = addcard(newstate, newstate,hand[cardindex].name, 'hand')
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
     else:
         for card in newstate.hand:
             if card.type == CardType.ATTACK or card.type == CardType.POWER:
