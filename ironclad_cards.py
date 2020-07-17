@@ -44,7 +44,7 @@ To do list:
          }
 
 """
-
+import copy
 import random
 #from maxtree import SimGame
 from spirecomm.spire.power import Power
@@ -202,7 +202,12 @@ def addcard(gamestate, name, pile):
                 newstate.player.energy = newstate.player.energy + powers.amount
 
     return newstate
-
+    
+"""
+    File "/Users/sunjinyoon/Library/Preferences/ModTheSpire/CommunicationMod/Slaying-the-Spire-master/ironclad_cards.py", line 208, in dealvulnerable
+        for pmonster in newstate.monsters[monster].powers:
+    IndexError: list index out of range
+"""
 def dealvulnerable(gamestate, amount, monster):
     newstate = gamestate
     for pmonster in newstate.monsters[monster].powers:
@@ -267,26 +272,26 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randrange(len(newstate.draw_pile[chosen_card]))
+                    cardindex = random.randrange(len(newstate.draw_pile[x]))
                     # add chosen_card to hand
-                    newstate.hand.append(newstate.draw_pile[chosen_card])
+                    newstate.hand.append(newstate.draw_pile[cardindex])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                             if player_power.power_name == "Evolve":
-                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
 
                     #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6(10) damage to all enemies.
                             if player_power.power_name == "Fire Breathing":
-                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
-                                if newstate.draw_pile[chosen_card].type == CardType.CURSE:
+                                if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
                     # remove chosen_card from draw_pile
-                    newstate.draw_pile.pop(chosen_card)
+                    newstate.draw_pile.pop(cardindex)
 
             # add discard_pile to draw_pile
-            newstate.draw_pile = newstate.discard_pile
+            newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
             # reset the discard_pile
             newstate.discard_pile.clear()
 
@@ -294,35 +299,35 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randrange(len(newstate.draw_pile))
+                    cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
 
-                    newstate.hand.append(newstate.draw_pile[chosen_card])
+                    newstate.hand.append(newstate.draw_pile[cardindex])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
-                            if newstate.draw_pile[chosen_card].type == CardType.STATUS:
+                            if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                 newstate = draw(newstate, 1)
 
                     #fire breathing 1 cost Whenever you draw a Status or Curse card, deal 6(10) damage to all enemies.
                             if player_power.power_name == "Fire Breathing":
-                                if newstate.draw_pile[chosen_card].type == CardType.STATUS:
+                                if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                     newstate = draw(newstate, 1)
-                                if newstate.draw_pile[chosen_card].type == CardType.CURSE:
+                                if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
 
                     # remove chosen_card from draw_pile
-                    newstate.draw_pile.pop(chosen_card)
+                    newstate.draw_pile.pop(cardindex)
         else:
             for x in range(amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    chosen_card = random.randrange(len(newstate.draw_pile))
+                    cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
-                    newstate.hand.append(newstate.draw_pile[chosen_card])
+                    newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
-                    newstate.draw_pile.pop(chosen_card)
+                    newstate.draw_pile.pop(cardindex)
 
     return newstate
 
@@ -600,7 +605,7 @@ def Battle_Trance(gamestate, hitmonster, Upgrade):
     return newstate
 
 #berserk 0 cost Gain 2 Vulnerable. Gain 1 Energy at the start of your turn.
-def Berserk(gamestate, hitmonster, Upgrade):
+def Berserk(gamestate, Upgrade):
     newstate = gamestate
 
     New_power = Power("Energized", "Energized", 1)
@@ -684,10 +689,10 @@ def Brutality(gamestate, hitmonster, Upgrade):
     return newstate
 
 #burning pact 1 cost Exhaust 1 card. Draw 2 cards.
-def Burning_Pact(gamestate, chosen_card, Upgrade):
+def Burning_Pact(gamestate, cardindex, Upgrade):
     newstate = gamestate
     #Exhaust 1 card
-    newstate = addcard (newstate ,newstate.hand[chosen_card].name, 'exhaust_pile')
+    newstate = addcard (newstate ,newstate.hand[cardindex].name, 'exhaust_pile')
 
     if Upgrade :
          #Draw 3 cards
@@ -855,7 +860,7 @@ def Disarm(gamestate, hitmonster, Upgrade):
     return newstate
 
 #double tap 1 cost This turn, your next Attack is played twice.
-def Double_Tap(gamestate, hitmonster, Upgrade):
+def Double_Tap(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade :
         # your next 2 Attack are played twice
@@ -926,10 +931,10 @@ def Evolve(gamestate, hitmonster, Upgrade):
     return newstate
 
 #exhume 1 cost Place a card from your Exhaust pile into your hand. Exhaust.
-def Exhume(gamestate, chosen_card, Upgrade):
+def Exhume(gamestate, cardindex, Upgrade):
     newstate = gamestate
     #add Place a card from your Exhaust pile
-    newstate = addcard(gamestate, newstate.exhaust_pile[chosen_card].name, 'hand')
+    newstate = addcard(gamestate, newstate.exhaust_pile[cardindex].name, 'hand')
     #Exhaust
     newstate = addcard(newstate, "Exhume", 'exhaust_pile')
 
@@ -1060,7 +1065,7 @@ def Ghostly_Armor(gamestate, hitmonster, Upgrade):
     return newstate
 
 #havoc 1 cost Play the top card of your draw pile and Exhaust it.
-def Havoc(gamestate, chosen_card, Upgrade):
+def Havoc(gamestate, cardindex, Upgrade):
     newstate = gamestate
     card = random.randrange(len(newstate.draw_pile))
     newstate = addcard(newstate, newstate.hand[card].name, 'hand')
@@ -1152,15 +1157,15 @@ def Hemokinesis(gamestate, hitmonster, Upgrade):
     return newstate
 
 #immolate 2 cost Deal 21 damage to ALL enemies. Add a Burn to your discard pile.
-def Immolate(gamestate, hitmonster, Upgrade):
+def Immolate(gamestate, Upgrade):
     newstate = gamestate
 
     if Upgrade:
-        for x in range(len(hitmonster)):
+        for x in range(len(newstate.mosters)):
             # Deal 28 Damage
             newstate = dealdmg(newstate, 28, hitmonster)
     else:
-        for x in range(len(hitmonster)):
+        for x in range(len(newstate.monsters)):
             # Deal 21 Damage
             newstate = dealdmg(newstate, 21, hitmonster)
     newstate = addcard(newstate, "Burn", 'discard_pile')
@@ -1258,7 +1263,7 @@ def Juggernaut(gamestate, hitmonster, Upgrade):
     return newstate
 
 #limit break 1 cost Double your Strength. Exhaust.
-def Limit_Break(gamestate, hitmonster, Upgrade):
+def Limit_Break(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         # Double your Strength
@@ -1590,7 +1595,7 @@ def Shrug_It_Off(gamestate, hitmonster, Upgrade):
     return newstate
 
 #spot weakness 1 cost If an enemy intends to attack, gain 3 Strength.
-def Spot_Weakness(gamestate, hitmonster, Upgrade):
+def Spot_Weakness(gamestate, Upgrade):
     newstate = gamestate
 
     if Upgrade:
@@ -1837,7 +1842,6 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
-
 
 
 
