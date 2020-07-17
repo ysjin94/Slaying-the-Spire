@@ -202,7 +202,7 @@ def addcard(gamestate, name, pile):
                 newstate.player.energy = newstate.player.energy + powers.amount
 
     return newstate
-    
+
 """
     File "/Users/sunjinyoon/Library/Preferences/ModTheSpire/CommunicationMod/Slaying-the-Spire-master/ironclad_cards.py", line 208, in dealvulnerable
         for pmonster in newstate.monsters[monster].powers:
@@ -1580,7 +1580,7 @@ def Shockwave(gamestate, hitmonster, Upgrade):
     return newstate
 
 #shrug it off 1 cost Gain 8 Block. Draw 1 card.
-def Shrug_It_Off(gamestate, hitmonster, Upgrade):
+def Shrug_It_Off(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         #gain 11 block
@@ -1842,6 +1842,3 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
-
-
-
