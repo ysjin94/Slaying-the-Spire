@@ -5,6 +5,11 @@ double tap :Is only CardType.ATTACK or deal damage?
 I think need to change help function :
 addcard() : newcard = card(name = name, upgrades = 0, cost = cards[name][0])
 
+error :
+file "/Users/sunjinyoon/Library/Preferences/ModTheSpire/CommunicationMod/Slaying-the-Spire-master/ironclad_cards.py", line 181, in addcard
+    newcard = Card(name = name, upgrades = 0, cost = cards[name][0], card_id = 'temp', card_type = 1, rarity = 'temp')
+KeyError: 'Wound'
+
 To do list:
     Need help function : choose_armaments()
                          choose_headbut()
@@ -167,7 +172,7 @@ def addblock(gamestate, block):
         if player_power.power_name == "Dexterity":
             newstate.player.block += player_power.amount
         #juggernaut dealdmg to random monster
-        if player_powers.power_name == "Juggernaut":
+        if player_power.power_name == "Juggernaut":
             x = random.randrange(len(newstate.monsters))
             newstate = dealdmg(newstate, player_power.amount, newstate.monsters[x])
     #add block
@@ -202,44 +207,54 @@ def addcard(gamestate, name, pile):
                 newstate.player.energy = newstate.player.energy + powers.amount
 
     return newstate
-
-"""
-    File "/Users/sunjinyoon/Library/Preferences/ModTheSpire/CommunicationMod/Slaying-the-Spire-master/ironclad_cards.py", line 208, in dealvulnerable
-        for pmonster in newstate.monsters[monster].powers:
-    IndexError: list index out of range
-"""
+    
 def dealvulnerable(gamestate, amount, monster):
     newstate = gamestate
+    
+    is_it_exisited = False
+    
     for pmonster in newstate.monsters[monster].powers:
         if pmonster.power_name == "Vulnerable":
-            pmonster.amount = pmonster.amount + amount
-            return newstate
-    newvulnerable = Power("Vulnerable", "Vulnerable", amount)
-    newvulnerable.just_applied = True
-    newstate.monsters[monster].powers.append(newvulnerable)
+            p.amount = p.amount + amount
+            is_it_exisited = True
+    
+    if not is_it_exisited:
+        newvulnerable = Power("Vulnerable", "Vulnerable", amount)
+        newvulnerable.just_applied = True
+        newstate.monsters[monster].powers.append(newvulnerable)
+            
     return newstate
 
 def dealweak(gamestate, amount, monster):
     newstate = gamestate
+    is_it_exisited = False
+    
     for pmonster in newstate.monsters[monster].powers:
         if pmonster.power_name == "Weakened":
             pmonster.amount = pmonster.amount + amount
-            return newstate
-    newweak = Power("Weakened", "Weakened", amount)
-    newweak.just_applied = True
-    newstate.monsters[monster].powers.append(newweak)
+            is_it_exisited = True
+    
+    if not is_it_exisited:
+        newweak = Power("Weakened", "Weakened", amount)
+        newweak.just_applied = True
+        newstate.monsters[monster].powers.append(newweak)
+    
     return newstate
 
 def player_gain_strength(newstate, amount):
     newstate = gamestate
-
+    
+    is_it_exisited = False
+    
     for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_name.amount = power_name.amount + amount
+            is_it_exisited = True
 
-    New_power = Power("Strength", "Strength", amount)
-    New_power.just_applied = True
-    newstate.player.powers.append(New_power)
+    if not is_it_exisited:
+        New_power = Power("Strength", "Strength", amount)
+        New_power.just_applied = True
+        newstate.player.powers.append(New_power)
 
     return newstate
 
@@ -272,7 +287,7 @@ def draw(gamestate, amount):
                 #max hand
                 if len(newstate.hand) != 10:
                     # chosen_card randomly
-                    cardindex = random.randrange(len(newstate.draw_pile[x]))
+                    cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
@@ -782,7 +797,7 @@ def Combust(gamestate, hitmonster, Upgrade):
 
 #corruption 3 cost Skills cost 0. Whenever you play a Skill, Exhaust it.
 # Need to modify
-def Corruption(gamestate, hitmonster, Upgrade):
+def Corruption(gamestate, Upgrade):
     newstate = gamestate
     #cost is taken from game
     # Set the skill cost 0
@@ -1054,7 +1069,7 @@ def Flex(gamestate, hitmonster, Upgrade):
     return newstate
 
 #ghostly armor 1 cost Ethereal. Gain 10 Block.
-def Ghostly_Armor(gamestate, hitmonster, Upgrade):
+def Ghostly_Armor(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade :
         #Gain 13 Block
