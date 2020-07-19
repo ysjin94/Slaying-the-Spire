@@ -23,7 +23,7 @@ cards = {
     'Battle Trance' : [0, False, Battle_Trance, 'S', False, False], # gamestate, You cannot draw additional cards this turn.
     'Berserk' : [0, False, Berserk, 'P', False, False], #somehow figure out energy
     'Blood For Blood' : [4, True, Blood_For_Blood, 'A', False, False],#gamestate, 1 less energy for each time you lose HP in combat
-    'Bloodletting' : [0, False, Bloodletting, 'S', False, False],
+    'Bloodletting' : [0, True, Bloodletting, 'S', False, False],
     'Bludgeon' : [3, True, Bludgeon, 'A', False, False],
     'Body Slam' : [1, True, Body_Slam, 'A', False, False],
     'Brutality' : [0, True, Brutality, 'P', False, False],
@@ -55,11 +55,11 @@ cards = {
     'Headbutt' : [1, True, Headbutt,'A', False, choose_Headbutt], #need new function to return card from discard pile
     'Heavy Blade' : [2, True, Heavy_Blade, 'A', False, False], #Strength affects heavy blade 3 times
     'Hemokinesis' : [1, True, Hemokinesis, 'A', False, False],
-    'Immolate' : [2, True, Immolate, 'A', False, False],
+    'Immolate' : [2, False, Immolate, 'A', False, False],
     'Impervious' : [2, False, Impervious, 'S', False, False], #exhaust
     'Infernal Blade' : [1, False, Infernal_Blade,'S', False, False],
     'Inflame' : [1, True, Inflame, 'P', False, False],
-    'Intimidate' : [0, True, Intimidate,'S', False, False], # exhaust
+    'Intimidate' : [0, False, Intimidate,'S', False, False], # exhaust
     'Iron wave' : [1, True, Iron_wave,'A', False, False],
     'Juggernaut' : [2, True, Juggernaut, 'P', False, False], # gamstate, Whenever you gain Block,
     'Limit Break' : [1, False, Limit_Break, 'S', False, False], #exhaust
@@ -71,7 +71,7 @@ cards = {
     'Pummel' : [1, True, Pummel, 'A', False, False], #exhaust
     'Rage' : [0, False, Rage, 'S', False, False], # gamestate, Whenever you play an Attack this turn, gain 3 Block
     'Rampage' : [1, True, Rampage, 'A', False, False], #need ability to track unique cards of rampage
-    'Reaper' : [2, True, Reaper, 'A', False, False], #exhaust
+    'Reaper' : [2, False, Reaper, 'A', False, False], #exhaust
     'Reckless Charge' : [0, True, Reckless_Charge, 'A', False, False], #shuffle daze in draw pile
     'Rupture' : [1, False, Rupture, 'P', False, False], #gamestate, Whenever you lose HP from a card, gain 1 Strength.
     'Searing Blow' : [2, True, Searing_Blow, 'A', False, False], #can be upgraded nay number of times
@@ -92,6 +92,7 @@ cards = {
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
+    
     #call the dictionary
     #print(cards['Anger'][0])
     #print(cards['Anger'][1])
