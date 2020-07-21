@@ -139,7 +139,7 @@ def impatience(newstate, hitmonster, upgrade):
     is_no_Attack = True
     
     for card in newstate.hand:
-        if card.type == CardType.ATTACK
+        if card.type == CardType.ATTACK:
             is_no_Attack = False
     
     if is_no_Attack :
