@@ -180,7 +180,8 @@ def eval_function(gamestate):
             powerout = []
             powerout.append('power_id = ' + p.power_id)
             powerout.append('power_name = ' + p.power_name)
-            powerout.append('amount = ' + p.amount)
+            powerout.append('amount = ')
+            powerout.append(p.amount)
             powerout.append('damage = ' + p.damage)
             powerout.append('misc = ' + p.misc)
             powerout.append('just_applied' + p.just_applied)
@@ -194,7 +195,8 @@ def eval_function(gamestate):
                 mpowerout = []
                 mpowerout.append('power_id = ' + p.power_id)
                 mpowerout.append('power_name = ' + p.power_name)
-                mpowerout.append('amount = ' + p.amount)
+                mpowerout.append('amount = ')
+                mpowerout.append(p.amount)
                 mpowerout.append('damage = ' + p.damage)
                 mpowerout.append('misc = ' + p.misc)
                 mpowerout.append('just_applied' + p.just_applied)
@@ -302,7 +304,7 @@ def build_tree(gamestate):
 
                 #special cards
                 if not cards[card][5] == False:
-                    index = cards[card.name][5](gamestate, 0, c.upgrades)
+                    index = cards[card][5](gamestate, 0, c.upgrades)
                     p = c
                     next_state = gamestate.name
                     next_state.hand.remove(c)
@@ -404,7 +406,7 @@ class SimpleAgent:
                     return PlayCardAction(pca[0])
                 #if card needs a target
                 if len(pca) == 2:
-                    if len(pca[1]) == 2:
+                    if isinstance(pca[1], list):
                         return DoubleAction(pca)
                     else:
                         return PlayCardAction(pca[0], pca[1])
