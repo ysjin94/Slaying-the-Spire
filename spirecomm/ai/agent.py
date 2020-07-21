@@ -182,7 +182,7 @@ def eval_function(gamestate):
             powerout.append('power_name = ' + p.power_name)
             powerout.append('amount = ')
             powerout.append(p.amount)
-            powerout.append('damage = ' + p.damage)
+            powerout.append('damage = ' + str(p.damage))
             powerout.append('misc = ' + p.misc)
             powerout.append('just_applied' + p.just_applied)
             powerout.append('card' + p.card)
@@ -197,7 +197,7 @@ def eval_function(gamestate):
                 mpowerout.append('power_name = ' + p.power_name)
                 mpowerout.append('amount = ')
                 mpowerout.append(p.amount)
-                mpowerout.append('damage = ' + p.damage)
+                mpowerout.append('damage = ' + str(p.damage))
                 mpowerout.append('misc = ' + p.misc)
                 mpowerout.append('just_applied' + p.just_applied)
                 mpowerout.append('card' + p.card)
@@ -225,9 +225,9 @@ def get_next_game_state(play, state, target):
         card = play.name
         next_state = cards[card](next_state, target, play.upgrades)
         if play.exhausts == True:
-            next_state = addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile', play)
         else:
-            next_state = addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile', play)
         decisionlist.append(play)
         indexlist = []
         if target[0] == -1:
@@ -248,9 +248,9 @@ def get_next_game_state(play, state, target):
         card = play.name
         next_state = cards[card][2](next_state, Upgrade = play.upgrades)
         if play.exhausts == True:
-            next_state = addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile', play)
         else:
-            next_state = addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile', play)
         decisionlist.append(play)
 
     #cards requiring target
@@ -258,9 +258,9 @@ def get_next_game_state(play, state, target):
         card = play.name
         next_state = cards[card][2](next_state, hitmonster = target, Upgrade = play.upgrades)
         if play.exhausts == True:
-            next_state = addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile', play)
         else:
-            next_state = addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile', play)
         decisionlist.append(play)
         decisionlist.append(target)
 

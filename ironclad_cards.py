@@ -192,7 +192,7 @@ def addcard(gamestate, name, pile, cardobj = False):
     newstate = gamestate
     #newcard = card(name, name, card_type, "", upgrades=0, has_target=False, cost=0, uuid="", misc=0, price=0, is_playable=False, exhausts=False):
     newcard = Card(name = name, upgrades = 0, cost = cards[name][0], card_id = 'temp', card_type = 1, rarity = 'temp')
-    if not cardobj == False:
+    if isinstance(cardobj, bool):
         newcard = cardobj
     if pile == 'discard_pile':
         newstate.discard_pile.append(newcard)
@@ -326,8 +326,8 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
-                    
+
+
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                             if player_power.power_name == "Evolve":
@@ -344,7 +344,7 @@ def draw(gamestate, amount):
                 # add discard_pile to draw_pile
                 newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
                 original_stdout_0 = sys.stdout
-                with open('monster_2.txt', 'w') as b:
+                with open('monster_2.txt', 'a') as b:
                      sys.stdout = b  # Change the standard output to the file we created.
                      print("AMOUNT: "+str(amount))
                      print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
@@ -365,7 +365,7 @@ def draw(gamestate, amount):
                      print("LEFT: " + str(left))
                      print("hand: " + str(len(newstate.hand)))
                      sys.stdout = original_stdout_0  # Reset the standard output to its original value
-                
+
                 # reset the discard_pile
                 newstate.discard_pile.clear()
 
@@ -396,7 +396,7 @@ def draw(gamestate, amount):
                          print("hand: " + str(len(newstate.hand)))
                          sys.stdout = original_stdout_0  # Reset the standard output to its original value
                     """
-                                        
+
                     # chosen_card randomly
                     cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
@@ -405,7 +405,7 @@ def draw(gamestate, amount):
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
+
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
                             if newstate.draw_pile[cardindex].type == CardType.STATUS:
@@ -429,14 +429,14 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                
-    
+
+
     if len(newstate.draw_pile) == 0:
         # add discard_pile to draw_pile
         newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
         # reset the discard_pile
         newstate.discard_pile.clear()
-    
+
 
     return newstate
 
@@ -581,7 +581,9 @@ def end_of_turn(gamestate):
     for card in newstate.hand:
         if card.name in ['Apparition', "Ascender's Bane", 'Carnage', "Ascender's Bane+", 'Carnage+', 'Clumsy', 'Clumsy+', 'Dazed', 'Dazed+', 'Echo Form', 'Ghostly Armor', 'Ghostly Armor+', 'Void', 'Void+', 'Deva Form']:
             newstate = addcard(gamestate, card.name, 'exhaust_pile', card)
-            newstate.hand.remove(card)
+        else:
+            newstate = addcard(gamestate, card.name, 'discard_pile', card)
+    newstate.hand.clear()
 
     return newstate
 
@@ -1005,13 +1007,13 @@ def Dual_Wield(gamestate, Upgrade):
         for card in newstate.hand:
             if card.type == CardType.ATTACK or card.type == CardType.POWER:
                 #add Create two copy of an Attack or Power Card.
-                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
-                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand', newstate.hand[cardindex])
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand', newstate.hand[cardindex])
     else:
         for card in newstate.hand:
             if card.type == CardType.ATTACK or card.type == CardType.POWER:
                 #add Create a copy of an Attack or Power Card.
-                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand')
+                newstate = addcard(newstate, newstate.hand[cardindex].name, 'hand', newstate.hand[cardindex])
 
     return newstate
 
@@ -1094,7 +1096,7 @@ def Fiend_Fire(gamestate, hitmonster, Upgrade):
     number_of_exhaust = len(newstate.hand)
     #exhaust your all hand
     for current_hand in newstate.hand:
-        newstate = addcard(newstate, current_hand.name, 'exhaust_pile')
+        newstate = addcard(newstate, current_hand.name, 'exhaust_pile', current_hand)
     newstate.hand = []
 
     if Upgrade:
@@ -1653,7 +1655,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
         #add exhaust all non-Attack Cards in your hand
         for card in newstate.hand:
             if card.type != CardType.ATTACK:
-                newstate = addcard(newstate, card.name, 'exhaust_pile')
+                newstate = addcard(newstate, card.name, 'exhaust_pile', card)
                 del card
         #Deal 20 Damage
         newstate = dealdmg(newstate, 20, hitmonster)
@@ -1661,7 +1663,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
         # add exhaust all non-Attack Cards in your hand
         for card in newstate.hand:
             if card.type != CardType.ATTACK:
-                newstate = addcard(newstate, card.name, 'exhaust_pile')
+                newstate = addcard(newstate, card.name, 'exhaust_pile', card)
                 del card
         # Deal 16 damage.
         newstate = dealdmg(newstate, 16, hitmonster)
@@ -1779,14 +1781,14 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         newstate = addblock(newstate, 9)
         #Exhaust a random card from your hand
         x = random.randrange(len(hand))
-        newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
+        newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile', newstate.hand[x])
         del newstate.hand[x]
     else:
         #Gain 7 Block
         newstate = addblock(newstate, 7)
         #Exhaust a random card from your hand
         x = random.randrange(len(hand))
-        newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile')
+        newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile', newstate.hand[x])
         del newstate.hand[x]
 
     return newstate
@@ -1830,15 +1832,13 @@ def Warcry(gamestate, cardindex, Upgrade):
         #Draw 2 Card
         newstate = draw(newstate, 2)
         #Place a Card from your hand on top of your draw pile.
-        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile')
-        newstate = addcard(newstate, "Warcry", 'exhaust_pile')
+        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile', newstate.hand[cardindex])
 
     else:
         #Draw 1 Card
         newstate = draw(newstate, 1)
         #Place a Card from your hand on top of your draw pile.
-        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile')
-        newstate = addcard(newstate, "Warcry", 'exhaust_pile')
+        newstate = addcard(newstate, newstate.hand[cardindex].name, 'draw_pile', newstate.hand[cardindex])
 
     return newstate
 
@@ -1950,4 +1950,3 @@ cards = {
     'Whirlwind' : ['Whirlwind', False, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
-
