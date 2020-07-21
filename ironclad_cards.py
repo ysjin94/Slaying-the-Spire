@@ -84,9 +84,9 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
         if pplayer.power_name == "Weakened":
             #round down
             damage = math.floor(damage * 0.75)
-            
-    
-        
+
+
+
 #    if gamestate.monsters[monster].powers:
 #        for x in range(len(newstate.monsters[monster].powers)):
 #            if newstate.monsters[monster].powers[x].power_name == "Vulnerable":
@@ -224,20 +224,20 @@ def dealvulnerable(gamestate, amount, monster):
    # original_stdout = sys.stdout
    # with open('monster.txt', 'w') as f:
    #     sys.stdout = f  # Change the standard output to the file we created.
-        
+
    #     print("hitmonster type: " + str(monster) )
    #     print(str(newstate.monsters[monster].name))
         #print("length " + str(len(newstate.monsters[monster].powers)))
         #print("monster power : " + str(newstate.monsters[monster].powers[0].power_name))
    #     sys.stdout = original_stdout  # Reset the standard output to its original value
-    
+
     is_it_exisited = False
     if len(gamestate.monsters[monster].powers) != 0:
         for x in range(len(newstate.monsters[monster].powers)):
             if newstate.monsters[monster].powers[x].power_name == "Vulnerable":
                 pmonster.amount = pmonster.amount + amount
                 is_it_exisited = True
-    
+
     #for pmonster in newstate.monsters[monster].powers[x]:
     #    if pmonster.power_name == "Vulnerable":
     #        pmonster.amount = pmonster.amount + amount
@@ -253,13 +253,13 @@ def dealvulnerable(gamestate, amount, monster):
 def dealweak(gamestate, amount, monster):
     newstate = gamestate
     is_it_exisited = False
-    
+
     if newstate.monsters[monster].powers :
         for x in range(len(newstate.monsters[monster].powers)):
             if newstate.monsters[monster].powers[x].power_name == "Weakened":
                 pmonster.amount = pmonster.amount + amount
                 is_it_exisited = True
-            
+
     #for pmonster in newstate.monsters[monster].powers:
     #    if pmonster.power_name == "Weakened":
     #        pmonster.amount = pmonster.amount + amount
@@ -276,7 +276,7 @@ def player_gain_strength(gamestate, amount):
     newstate = gamestate
 
     is_it_exisited = False
-    
+
     for power_player in newstate.player.powers:
         if power_player.power_name == "Strength":
             power_player.amount = power_player.amount + amount
@@ -301,7 +301,7 @@ def monster_lose_strength(newstate, amount, monster):
 
 def draw(gamestate, amount):
     newstate = gamestate
-    
+
     #check deck
     #if not enough cards add discards_pile to deck, and reset discard_pile
     can_draw = True # it is for "Battle Trance", which is cannot draw card for this turn
@@ -309,10 +309,10 @@ def draw(gamestate, amount):
     for power_player in newstate.player.powers:
          if power_player.power_name == "No Draw":
              can_draw = False
-    
-        
+
+
     if can_draw:
-    
+
         if len(newstate.draw_pile) < amount :
             left = amount - len(newstate.draw_pile)
             if len(newstate.draw_pile) == 0:
@@ -320,7 +320,7 @@ def draw(gamestate, amount):
                 newstate.draw_pile = newstate.discard_pile
                 # reset the discard_pile
                 newstate.discard_pile.clear()
-                
+
             #original_stdout = sys.stdout
             #with open('monster.txt', 'w') as f:
             #     sys.stdout = f  # Change the standard output to the file we created.
@@ -328,21 +328,21 @@ def draw(gamestate, amount):
             #     print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
             #     for card in newstate.draw_pile:
             #         print("cardname : " + str(card.name))
-                 
+
             #     print("LEFT: " + str(left))
             #     sys.stdout = original_stdout  # Reset the standard output to its original value
-                   
+
             for x in range(len(newstate.draw_pile)):
                 #max hand
                 if len(newstate.hand) != 10:
-                   
+
                     # chosen_card randomly
                     cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-        
+
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
                             if player_power.power_name == "Evolve":
@@ -355,7 +355,7 @@ def draw(gamestate, amount):
                                     newstate = draw(newstate, 1)
                                 if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
-                    
+
             # add discard_pile to draw_pile
             #newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
             # reset the discard_pile
@@ -371,7 +371,7 @@ def draw(gamestate, amount):
                         # reset the discard_pile
                         newstate.discard_pile.clear()
 
-                    
+
                     cardindex = random.randrange(len(newstate.draw_pile))
                         # add chosen_card to hand
 
@@ -401,7 +401,7 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-    
+
     return newstate
 
 def upgrade(card):
@@ -426,6 +426,7 @@ def end_of_turn(gamestate):
     #check
     #Pride : Innate, Ate the end of turn, put a copy of this card on top of your draw pile. Exhuast
 	#Innate : Start each combat with this card in your hand
+    ##what does this do? -anthony
     Pride = False
     for card in newstate.hand:
         if card.name == "Pride":
@@ -445,12 +446,10 @@ def end_of_turn(gamestate):
                     newstate = player_gain_strength(newstate, player_power.amount)
 
     #flex At the end of your turn, lose 2(4) Strength.
-    for power_player in newstate.player.powers:
         if power_player.power_name == "Flex":
             newstate = player_gain_strength(newstate, power_player.amount)
 
     #metallicize At the end of your turn, gain 3(4) Block.
-    for power_player in newstate.player.powers:
         if power_player.power_name == "Metallicize":
             newstate = addblock(newstate, power_player.amount)
 
@@ -545,7 +544,7 @@ def end_of_turn(gamestate):
     #ethereal : If you manage to discard the card from your hand, it won't get Exhausted.
     for card in newstate.hand:
         if card.name in ['Apparition', "Ascender's Bane", 'Carnage', "Ascender's Bane+", 'Carnage+', 'Clumsy', 'Clumsy+', 'Dazed', 'Dazed+', 'Echo Form', 'Ghostly Armor', 'Ghostly Armor+', 'Void', 'Void+', 'Deva Form']:
-            gamestate = addcard(gamestate, card.name, 'exhaust_pile', card)
+            newstate = addcard(gamestate, card.name, 'exhaust_pile', card)
             newstate.hand.remove(card)
 
     return newstate
@@ -562,13 +561,14 @@ def start_of_turn(gamestate):
 
     #at the start of your turn, Block no longer expires
     # else do reset the block
+    barricadetrigger = False
     for player_power in newstate.player.powers:
         if player_power.power_name == "Barricade":
             # keep the block
-            newstate.player.block = newstate.player.block
-        else:
-            newstate.player.block = 0
+            barricadetrigger = True
 
+    if not barricadetrigger:
+        newstate.player.block = 0
     #demon form 3 cost At the start of each turn, gain 2 Strength.
     for player_power in newstate.player.powers:
         if player_power.power_name == "Demon Form":
@@ -576,7 +576,6 @@ def start_of_turn(gamestate):
 
     #brutality 0 cost (Innate.) At the start of your turn, lose 1 HP and draw 1 card.
     #Warning : Even if player has block, lose hp
-    for player_power in newstate.player.powers:
         if player_power.power_name == "Brutality":
             newstate.player.current_hp -= 1
             newstate = draw(newstate, 1)
@@ -587,7 +586,7 @@ def start_of_turn(gamestate):
                     newstate = player_gain_strength(newstate, player_power.amount)
 
     #Draw Cards initial is 5
-    #newstate = draw(newstate, 5)
+    newstate = draw(newstate, 5)
 
     return newstate
 
@@ -1837,7 +1836,7 @@ def Wildstrike(gamestate, hitmonster, Upgrade):
         newstate = addcard(newstate, "Wound", 'draw_pile')
 
     return newstate
-    
+
 cards = {
     'Anger' : [0, True, Anger, 'A', False, False],
     'Armaments' : [1, False, Armaments, 'S', False, choose_Armaments], #need upgrade function
@@ -1915,4 +1914,3 @@ cards = {
     'Whirlwind' : ['Whirlwind', False, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
-

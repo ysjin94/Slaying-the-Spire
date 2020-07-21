@@ -290,7 +290,9 @@ def getstate(gamestate):
     return n
 
 def build_tree(gamestate):
-    if not (gamestate.name.monsters or gamestate.name.player.current_hp <= 0 or three_end_turns(gamestate.name.decision)):
+    #bad code
+    #if not (gamestate.name.monsters or gamestate.name.player.current_hp <= 0 or three_end_turns(gamestate.name.decision)):
+    if (not gamestate.name.monsters) or (gamestate.name.player.current_hp <= 0) or (three_end_turns(gamestate.name.decision)):
         return
     for c in gamestate.name.hand:
         if c.name not in ["Ascender's Bane","Clumsy","Curse of the Bell","Doubt","Injury","Necronomicurse","Normality","Pain","Parasite","Regret","Shame","Writhe","Burn","Dazed","Void","Wound"]:
@@ -397,7 +399,7 @@ class SimpleAgent:
                 if potion_action is not None:
                     return potion_action
 
-            #return self.get_play_card_action()
+
             pca = self.get_play_card_action()
             if pca == 'End_Turn':
                 return EndTurnAction()
