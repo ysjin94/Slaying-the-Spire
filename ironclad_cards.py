@@ -1808,7 +1808,7 @@ def Warcry(gamestate, cardindex, Upgrade):
     return newstate
 
 #whirlwind X cost Deal 5 damage to ALL enemies X times.
-def Whirlwind(gamestate, hitmonster, Upgrade):
+def Whirlwind(gamestate, Upgrade):
     newstate = gamestate
     if Upgrade:
         #repeat X times, X is cost, deal 8 damage
@@ -1822,7 +1822,7 @@ def Whirlwind(gamestate, hitmonster, Upgrade):
     return newstate
 
 #wildstrike 1 cost Deal 12 damage. Shuffle a Wound into your draw pile.
-def Wildstrike(gamestate, Upgrade):
+def Wildstrike(gamestate, hitmonster, Upgrade):
     newstate = gamestate
 
     if Upgrade:
@@ -1912,7 +1912,7 @@ cards = {
     'Twin Strike' : [1, True, Twin_Strike, 'A', False, False],
     'Uppercut' : [2, True, Uppercut, 'A', False, False],
     'Warcry' : [0, False, Warcry, 'S', False, False],
-    'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
-    'Wild Strike' : [1, False, Wildstrike,'A', False, False], #shuffle wound to draw pile
+    'Whirlwind' : ['Whirlwind', False, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
+    'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
 
