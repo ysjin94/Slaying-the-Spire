@@ -225,9 +225,9 @@ def get_next_game_state(play, state, target):
         card = play.name
         next_state = cards[card](next_state, target, play.upgrades)
         if play.exhausts == True:
-            addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile')
         else:
-            addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile')
         decisionlist.append(play)
         indexlist = []
         if target[0] == -1:
@@ -240,36 +240,30 @@ def get_next_game_state(play, state, target):
             indexlist.append(next_state.monsters[target[0]])
             indexlist.append(next_state.player.hand[target[1]])
         decisionlist.append(indexlist)
+        #this makes len(decision[x]) == 3 so we can discriminate for special
+        decisionlist.append('special')
 
-    #no target cards
+    #cards requiring no target
     elif target == -1:
         card = play.name
         next_state = cards[card][2](next_state, Upgrade = play.upgrades)
         if play.exhausts == True:
-            addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile')
         else:
-            addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile')
         decisionlist.append(play)
 
-    #target cards
+    #cards requiring target
     else:
         card = play.name
         next_state = cards[card][2](next_state, hitmonster = target, Upgrade = play.upgrades)
         if play.exhausts == True:
-            addcard(next_state, play.name, 'exhaust_pile')
+            next_state = addcard(next_state, play.name, 'exhaust_pile')
         else:
-            addcard(next_state, play.name, 'discard_pile')
+            next_state = addcard(next_state, play.name, 'discard_pile')
         decisionlist.append(play)
         decisionlist.append(target)
 
-    original_stdout = sys.stdout # Save a reference to the original standard output
-
-    with open('x not in list .txt', 'a') as f:
-        sys.stdout = f # Change the standard output to the file we created.
-        for x in next_state.hand:
-            print(x.name)
-        print('return state')
-        sys.stdout = original_stdout
     next_state.decision.append(decisionlist)
     return next_state
 
@@ -399,19 +393,22 @@ class SimpleAgent:
                 if potion_action is not None:
                     return potion_action
 
-
             pca = self.get_play_card_action()
-            if pca == 'End_Turn':
+
+            #end turn should be the only string
+            if isinstance(pca, str):
                 return EndTurnAction()
             else:
                 if len(pca) == 1:
                     return PlayCardAction(pca[0])
-                #if card needs a target
+                #if card needs a target(s)
+                #format card, target or special
                 if len(pca) == 2:
-                    if isinstance(pca[1], list):
-                        return DoubleAction(pca)
-                    else:
-                        return PlayCardAction(pca[0], pca[1])
+                    return PlayCardAction(card = pca[0], target_monster = pca[1])
+                else:
+                    #special
+                    #card and queue choose_card_action
+                    return DoubleAction([pca[0],pca[1]])
 
         if self.game.end_available:
             return EndTurnAction()
@@ -453,6 +450,13 @@ class SimpleAgent:
 
 
     def get_play_card_action(self):
+        #test a card like strike, card 1 may not be strike so watch out
+        #return [self.game.hand[1], self.game.monsters[0]]
+
+        #test end turn
+        #return "End_Turn"
+
+
         #make SimGame object containing current real gamestate
         n = getstate(self.game)
         #root node containing current real gamestate
