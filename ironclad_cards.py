@@ -79,7 +79,7 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
 
     for pplayer in newstate.player.powers:
         if pplayer.power_name == "Strength":
-            damage += p.amount
+            damage += pplayer.amount
     for pplayer in newstate.player.powers:
         if pplayer.power_name == "Weakened":
             #round down
@@ -97,9 +97,9 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
             damage = math.floor(damage * 1.5)
 
     #rage 0 cost Whenever you play an Attack this turn, gain 3 Block
-    for power_player in newstate.player.powers:
-        if power_player.power_name == "Rage":
-            newstate = addblock(newstate, power_player.amount)
+    for p_player in newstate.player.powers:
+        if p_player.power_name == "Rage":
+            newstate = addblock(newstate, p_player.amount)
 
     #double tap  This turn, your next 1(2) Attack is played twice.
     for power_player in newstate.player.powers:
@@ -230,7 +230,7 @@ def dealvulnerable(gamestate, amount, monster):
         #print("length " + str(len(newstate.monsters[monster].powers)))
         #print("monster power : " + str(newstate.monsters[monster].powers[0].power_name))
    #     sys.stdout = original_stdout  # Reset the standard output to its original value
-    """
+    
     is_it_exisited = False
     if len(gamestate.monsters[monster].powers) != 0:
         for x in range(len(newstate.monsters[monster].powers)):
@@ -247,7 +247,7 @@ def dealvulnerable(gamestate, amount, monster):
         newvulnerable = Power("Vulnerable", "Vulnerable", amount)
         newvulnerable.just_applied = True
         newstate.monsters[monster].powers.append(newvulnerable)
-"""
+
     return newstate
 
 def dealweak(gamestate, amount, monster):
@@ -315,26 +315,27 @@ def draw(gamestate, amount):
     
         if len(newstate.draw_pile) < amount :
             left = amount - len(newstate.draw_pile)
-            
-            original_stdout = sys.stdout
-            with open('monster.txt', 'w') as f:
-                 sys.stdout = f  # Change the standard output to the file we created.
-                 print("AMOUNT: "+str(amount))
-                 print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
-                 for card in newstate.draw_pile:
-                     print("cardname : " + str(card.name))
+            if len(newstate.draw_pile) == 0:
+                # add discard_pile to draw_pile
+                newstate.draw_pile = newstate.discard_pile
+                # reset the discard_pile
+                newstate.discard_pile.clear()
+                
+            #original_stdout = sys.stdout
+            #with open('monster.txt', 'w') as f:
+            #     sys.stdout = f  # Change the standard output to the file we created.
+            #     print("AMOUNT: "+str(amount))
+            #     print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
+            #     for card in newstate.draw_pile:
+            #         print("cardname : " + str(card.name))
                  
-                 print("LEFT: " + str(left))
-                 sys.stdout = original_stdout  # Reset the standard output to its original value
+            #     print("LEFT: " + str(left))
+            #     sys.stdout = original_stdout  # Reset the standard output to its original value
                    
             for x in range(len(newstate.draw_pile)):
                 #max hand
                 if len(newstate.hand) != 10:
-                    if len(newstate.draw_pile) == 0:
-                        # add discard_pile to draw_pile
-                        newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
-                        # reset the discard_pile
-                        newstate.discard_pile.clear()
+                   
                     # chosen_card randomly
                     cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
@@ -1821,7 +1822,7 @@ def Whirlwind(gamestate, hitmonster, Upgrade):
     return newstate
 
 #wildstrike 1 cost Deal 12 damage. Shuffle a Wound into your draw pile.
-def Wildstrike(gamestate, hitmonster, Upgrade):
+def Wildstrike(gamestate, Upgrade):
     newstate = gamestate
 
     if Upgrade:
@@ -1912,6 +1913,6 @@ cards = {
     'Uppercut' : [2, True, Uppercut, 'A', False, False],
     'Warcry' : [0, False, Warcry, 'S', False, False],
     'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
-    'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
+    'Wild Strike' : [1, False, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
 
