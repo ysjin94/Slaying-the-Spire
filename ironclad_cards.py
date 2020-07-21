@@ -1392,7 +1392,7 @@ def Limit_Break(gamestate, Upgrade):
     return newstate
 
 #metallicize 1 cost At the end of your turn, gain 3 Block.
-def Metallicize(gamestate, hitmonster, Upgrade):
+def Metallicize(gamestate, Upgrade):
     newstate = gamestate
 
     if Upgrade:
