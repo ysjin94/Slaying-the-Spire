@@ -410,8 +410,17 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
-	card_to_play = max_leaf_decisions(root)
-	play_card(card_to_play)
+	    card_to_play = max_leaf_decisions(root)
+	    play_card(card_to_play)
+        #print tree
+        original_stdout = sys.stdout
+        with open('tree.txt', 'a') as f:
+            sys.stdout = f
+            for pre, fill, node in RenderTree(root):
+                print("%s%s" % (pre, node.name.hand)) 
+        sys.stdout = original_stdout
+        
+        
 
     def use_next_potion(self):
         for potion in self.game.get_real_potions():
