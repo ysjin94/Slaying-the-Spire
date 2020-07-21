@@ -89,7 +89,7 @@ cards = {
     'Twin Strike' : [1, True, Twin_Strike, 'A', False, False],
     'Uppercut' : [2, True, Uppercut, 'A', False, False],
     'Warcry' : [0, False, Warcry, 'S', False, False],
-    'Whirlwind' : ['Whirlwind', True, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
+    'Whirlwind' : ['Whirlwind', False, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
     
