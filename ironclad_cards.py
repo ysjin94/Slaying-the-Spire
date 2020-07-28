@@ -119,7 +119,7 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
                 newstate.monsters[monster].current_hp -= damage
                 if newstate.monsters[monster].current_hp <= 0:
                     del newstate.monsters[monster]
-    
+
     return newstate
 
 # monster.move_base_damage = basic damage without monster.powers
@@ -187,7 +187,7 @@ def addcard(gamestate, name, pile, cardobj = False):
     newstate = gamestate
     #newcard = card(name, name, card_type, "", upgrades=0, has_target=False, cost=0, uuid="", misc=0, price=0, is_playable=False, exhausts=False):
     newcard = Card(name = name, upgrades = 0, cost = cards[name][0], card_id = 'temp', card_type = 1, rarity = 'temp')
-    if not cardobj == False:
+    if isinstance(cardobj,bool):
         newcard = cardobj
     if pile == 'discard_pile':
         newstate.discard_pile.append(newcard)
@@ -214,7 +214,7 @@ def addcard(gamestate, name, pile, cardobj = False):
     return newstate
 
 def dealvulnerable(gamestate, amount, monster):
-    newstate = gamestate 
+    newstate = gamestate
     """
     original_stdout = sys.stdout
     with open('a_test.txt', 'a') as f:
@@ -227,7 +227,7 @@ def dealvulnerable(gamestate, amount, monster):
         sys.stdout = original_stdout  # Reset the standard output to its original value
     """
     is_it_exisited = False
-    
+
     if len(gamestate.monsters) != 0:
         for x in range(len(newstate.monsters[monster].powers)):
             if newstate.monsters[monster].powers[x].power_name == "Vulnerable":
@@ -243,7 +243,7 @@ def dealvulnerable(gamestate, amount, monster):
             newvulnerable = Power("Vulnerable", "Vulnerable", amount)
             newvulnerable.just_applied = True
             newstate.monsters[monster].powers.append(newvulnerable)
-    
+
 
     return newstate
 
@@ -306,9 +306,9 @@ def draw(gamestate, amount):
     for power_player in newstate.player.powers:
          if power_player.power_name == "No Draw":
              can_draw = False
-             
+
     left = amount - len(newstate.draw_pile)
-    
+
     original_stdout_ = sys.stdout
     """
     with open('a0_test.txt', 'a') as f:
@@ -349,7 +349,7 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
+
                     #Could be infinite loops.
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
@@ -362,7 +362,7 @@ def draw(gamestate, amount):
                                 if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                     for monster in range(len(newstate.monsters)):
                                         newstate = dealdmg(newstate, power_player.amount, monster)
-                                    
+
                                 if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     for monster in range(len(newstate.monsters)):
                                         newstate = dealdmg(newstate, power_player.amount, monster)
@@ -391,10 +391,10 @@ def draw(gamestate, amount):
                      print("NEXT")
                      print(" ")
                      sys.stdout = original_stdout_4  # Reset the standard output to its original value
-                
+
                 # add discard_pile to draw_pile
                 #newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
-                
+
                 original_stdout_0 = sys.stdout
                 with open('a2_test.txt', 'a') as b:
                      sys.stdout = b  # Change the standard output to the file we created.
@@ -419,18 +419,18 @@ def draw(gamestate, amount):
                      print("NEXT")
                      print(" ")
                      sys.stdout = original_stdout_0  # Reset the standard output to its original value
-                
+
                 # reset the discard_pile
                 #newstate.discard_pile.clear()
-            
-            
+
+
             """
-            
+
             """
             for x in range(left):
                 #max hand
                 if len(newstate.hand) != 10:
-                    
+
                     original_stdout_1 = sys.stdout
                     with open('a3_test.txt', 'a') as c:
                          sys.stdout = c  # Change the standard output to the file we created.
@@ -455,7 +455,7 @@ def draw(gamestate, amount):
                          print("NEXT")
                          print(" ")
                          sys.stdout = original_stdout_1  # Reset the standard output to its original value
-                    
+
                     # chosen_card randomly
                     cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
@@ -464,7 +464,7 @@ def draw(gamestate, amount):
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
+
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
                             if newstate.draw_pile[cardindex].type == CardType.STATUS:
@@ -476,7 +476,7 @@ def draw(gamestate, amount):
                                     newstate = draw(newstate, 1)
                                 if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
-                
+
                 """
 
         else:
@@ -489,14 +489,14 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                
-    
+
+
     if len(newstate.draw_pile) == 0:
         # add discard_pile to draw_pile
         newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
         # reset the discard_pile
         newstate.discard_pile.clear()
-    
+
 
     return newstate
 
@@ -1514,8 +1514,8 @@ def Perfected_Strike(gamestate, hitmonster, Upgrade):
         newstate = dealdmg(newstate, 6, hitmonster)
         #add Deals an additional 2 damage for ALL of your cards containing "Strike".
         newstate = dealdmg(newstate, 2, hitmonster, count_Strike)
-    
-    
+
+
     return newstate
 
 #pommel strike 1 cost Deal 9 damage. Draw 1 card(s).
@@ -1790,7 +1790,7 @@ def Strike(gamestate, hitmonster, Upgrade):
     else:
         # deal 6 damage
         newstate = dealdmg(newstate, 6, hitmonster)
-        
+
     #newstate = addcard(newstate, "Strike", 'discard_pile')
     return newstate
 
@@ -2013,4 +2013,3 @@ cards = {
     'Whirlwind' : ['Whirlwind', False, Whirlwind, 'A', False, False], #COST IS VARIABLE PAY ATTENTION
     'Wild Strike' : [1, True, Wildstrike,'A', False, False], #shuffle wound to draw pile
     }
-

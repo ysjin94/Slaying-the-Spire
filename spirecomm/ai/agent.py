@@ -173,7 +173,7 @@ def eval_function(gamestate):
     #print all the powers for troubleshooting later
     original_stdout = sys.stdout # Save a reference to the original standard output
 
-    with open('powers .txt', 'a') as f:
+    with open('powers .txt', 'w') as f:
         sys.stdout = f # Change the standard output to the file we created.
         powerout = ['Player Powers']
         for p in gamestate.player.powers:
@@ -183,9 +183,10 @@ def eval_function(gamestate):
             powerout.append('amount = ')
             powerout.append(p.amount)
             powerout.append('damage = ' + str(p.damage))
-            powerout.append('misc = ' + p.misc)
-            powerout.append('just_applied' + p.just_applied)
-            powerout.append('card' + p.card)
+            powerout.append('misc = ' + str(p.misc))
+            powerout.append('just_applied' + str(p.just_applied))
+            powerout.append('card')
+            powerout.append(p.card)
         print(powerout)
 
         #Monster powers
@@ -198,9 +199,10 @@ def eval_function(gamestate):
                 mpowerout.append('amount = ')
                 mpowerout.append(p.amount)
                 mpowerout.append('damage = ' + str(p.damage))
-                mpowerout.append('misc = ' + p.misc)
-                mpowerout.append('just_applied' + p.just_applied)
-                mpowerout.append('card' + p.card)
+                mpowerout.append('misc = ' + str(p.misc))
+                mpowerout.append('just_applied' + str(p.just_applied))
+                mpowerout.append('card')
+                mpowerout.append(p.card)
         print(mpowerout)
         sys.stdout = original_stdout # Reset the standard output to its original value
     return eval
@@ -218,7 +220,8 @@ def get_next_game_state(play, state, target):
     if isinstance(play, str):
         next_state = end_of_turn(next_state)
         next_state = start_of_turn(next_state)
-        decisionlist.append('End_Turn')
+        next_state.decision.append('End_Turn')
+        return next_state
 
     #special cards
     elif isinstance(target,list):
@@ -304,6 +307,7 @@ def build_tree(gamestate):
                     p = c
                     next_state = gamestate.name
                     next_state.hand.remove(c)
+                    next_state.player.energy -= p.cost
                     for i in index:
                         next_state = get_next_game_state(p, next_state, i)
                         child = Node(next_state, parent = gamestate)
@@ -313,6 +317,7 @@ def build_tree(gamestate):
                     p = c
                     next_state = gamestate.name
                     next_state.hand.remove(c)
+                    next_state.player.energy -= p.cost
                     for monsterindex in range(len(next_state.monsters)):
                         next_state = get_next_game_state(p, next_state, monsterindex)
                         child = Node(next_state, parent = gamestate)
@@ -323,6 +328,7 @@ def build_tree(gamestate):
                     p = c
                     next_state = gamestate.name
                     next_state.hand.remove(c)
+                    next_state.player.energy -= p.cost
                     next_state = get_next_game_state(p, next_state, -1)
                     child = Node(next_state, parent = gamestate)
                     build_tree(child)
@@ -342,16 +348,16 @@ def three_end_turns(decision):
                 return True
     return False
 
-#returns first element in decision list of max leaf
-def max_leaf_decision(r):
-    for children in LevelOrderGroupIter(r, maxlevel=2):
-        for node in children:
-            if node in r.children:
-                if node.name.grade == r.name.grade:
-                    if not node.children:
-                        return node.name.decision[0]
-                    else:
-                        max_leaf_decision(node)
+# #returns first element in decision list of max leaf
+# def max_leaf_decision(r):
+#     for children in LevelOrderGroupIter(r, maxlevel=2):
+#         for node in children:
+#             if node in r.children:
+#                 if node.name.grade == r.name.grade:
+#                     if not node.children:
+#                         return node.name.decision[0]
+#                     else:
+#                         max_leaf_decision(node)
 
 class SimpleAgent:
 
@@ -365,6 +371,21 @@ class SimpleAgent:
         self.chosen_class = chosen_class
         self.priorities = Priority()
         self.change_class(chosen_class)
+
+    def max_leaf_decision(self, r):
+        for children in LevelOrderGroupIter(r, maxlevel=2):
+            for node in children:
+                if node in r.children:
+                    if node.name.grade == r.name.grade:
+                        if not node.children:
+                            original_stdout = sys.stdout
+                            with open('MLD.txt', 'w') as f:
+                                sys.stdout = f
+                                print(node.name.decision[0])
+                            sys.stdout = original_stdout
+                            return node.name.decision[0]
+                        else:
+                            self.max_leaf_decision(node)
 
     def change_class(self, new_class):
         self.chosen_class = new_class
@@ -396,6 +417,11 @@ class SimpleAgent:
             pca = self.get_play_card_action()
 
             #end turn should be the only string
+            original_stdout = sys.stdout
+            with open('PCA.txt', 'w') as f:
+                sys.stdout = f
+                print(pca)
+            sys.stdout = original_stdout
             if isinstance(pca, str):
                 return EndTurnAction()
             else:
@@ -464,21 +490,19 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
-<<<<<<< HEAD
-	    card_to_play = max_leaf_decisions(root)
-	    play_card(card_to_play)
-        #print tree
+        # original_stdout = sys.stdout
+        # with open('tree.txt', 'a') as f:
+        #     sys.stdout = f
+        #     for pre, fill, node in RenderTree(root):
+        #         print("%s%s" % (pre, node.name.hand))
+        # sys.stdout = original_stdout
+
         original_stdout = sys.stdout
-        with open('tree.txt', 'a') as f:
+        with open('MLDPCA.txt', 'w') as f:
             sys.stdout = f
-            for pre, fill, node in RenderTree(root):
-                print("%s%s" % (pre, node.name.hand)) 
+            print(self.max_leaf_decision(root))
         sys.stdout = original_stdout
-        
-        
-=======
-        return max_leaf_decision(root)
->>>>>>> 516b69fed3dce2dfb273bb4eb2127def8602e326
+        return self.max_leaf_decision(root)
 
     def use_next_potion(self):
         for potion in self.game.get_real_potions():
