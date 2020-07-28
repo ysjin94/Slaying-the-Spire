@@ -306,10 +306,11 @@ def draw(gamestate, amount):
     for power_player in newstate.player.powers:
          if power_player.power_name == "No Draw":
              can_draw = False
-             
+
     left = amount - len(newstate.draw_pile)
-    """
+
     original_stdout_ = sys.stdout
+    """
     with open('a0_test.txt', 'a') as f:
          sys.stdout = f  # Change the standard output to the file we created.
          print("AMOUNT: "+str(amount))
@@ -348,7 +349,7 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
+
                     #Could be infinite loops.
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     for player_power in newstate.player.powers:
@@ -361,7 +362,7 @@ def draw(gamestate, amount):
                                 if newstate.draw_pile[cardindex].type == CardType.STATUS:
                                     for monster in range(len(newstate.monsters)):
                                         newstate = dealdmg(newstate, power_player.amount, monster)
-                                    
+
                                 if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     for monster in range(len(newstate.monsters)):
                                         newstate = dealdmg(newstate, power_player.amount, monster)
@@ -390,18 +391,18 @@ def draw(gamestate, amount):
                      print("NEXT")
                      print(" ")
                      sys.stdout = original_stdout_4  # Reset the standard output to its original value
-                """
-            # add discard_pile to draw_pile
-            newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
-            """
-            original_stdout_10 = sys.stdout
-            with open('a2_test.txt', 'a') as b:
-                    sys.stdout = b  # Change the standard output to the file we created.
-                    print("AMOUNT: "+str(amount))
-                    print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
-                    print("DISCARD_PILE: " + str(len(gamestate.discard_pile)))
-                    print("LEFT: " + str(left))
-                    print("hand: " + str(len(newstate.hand)))
+
+                # add discard_pile to draw_pile
+                #newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
+
+                original_stdout_0 = sys.stdout
+                with open('a2_test.txt', 'a') as b:
+                     sys.stdout = b  # Change the standard output to the file we created.
+                     print("AMOUNT: "+str(amount))
+                     print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
+                     print("DISCARD_PILE: " + str(len(gamestate.discard_pile)))
+                     print("LEFT: " + str(left))
+                     print("hand: " + str(len(newstate.hand)))
                      #if len(newstate.draw_pile) == 0:
                      # add discard_pile to draw_pile
                         #newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
@@ -415,21 +416,21 @@ def draw(gamestate, amount):
 
                      #print("LEFT: " + str(left))
                      #print("hand: " + str(len(newstate.hand)))
-                    print("NEXT")
-                    print(" ")
-                    sys.stdout = original_stdout_10  # Reset the standard output to its original value
+                     print("NEXT")
+                     print(" ")
+                     sys.stdout = original_stdout_0  # Reset the standard output to its original value
+
+                # reset the discard_pile
+                #newstate.discard_pile.clear()
+
+
             """
-            # reset the discard_pile
-            newstate.discard_pile.clear()
-            
-            
-            
-            
-            
+
+            """
             for x in range(left):
                 #max hand
                 if len(newstate.hand) != 10:
-                    """
+
                     original_stdout_1 = sys.stdout
                     with open('a3_test.txt', 'a') as c:
                          sys.stdout = c  # Change the standard output to the file we created.
@@ -454,7 +455,7 @@ def draw(gamestate, amount):
                          print("NEXT")
                          print(" ")
                          sys.stdout = original_stdout_1  # Reset the standard output to its original value
-                    """
+
                     # chosen_card randomly
                     cardindex = random.randrange(len(newstate.draw_pile))
                     # add chosen_card to hand
@@ -463,7 +464,7 @@ def draw(gamestate, amount):
                     #evolve 1 cost Whenever you draw a Status, draw 1 card to fucntion called draw
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                    
+
                     for player_power in newstate.player.powers:
                         if player_power.power_name == "Evolve":
                             if newstate.draw_pile[cardindex].type == CardType.STATUS:
@@ -475,8 +476,8 @@ def draw(gamestate, amount):
                                     newstate = draw(newstate, 1)
                                 if newstate.draw_pile[cardindex].type == CardType.CURSE:
                                     newstate = draw(newstate, 1)
-         
-                
+
+                """
 
         else:
             for x in range(amount):
@@ -488,40 +489,15 @@ def draw(gamestate, amount):
                     newstate.hand.append(newstate.draw_pile[cardindex])
                     # remove chosen_card from draw_pile
                     newstate.draw_pile.pop(cardindex)
-                
-    
+
+
     if len(newstate.draw_pile) == 0:
         # add discard_pile to draw_pile
         newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
         # reset the discard_pile
         newstate.discard_pile.clear()
-    """
-    original_stdout_14 = sys.stdout
-    
-    with open('a4_test.txt', 'a') as w:
-         sys.stdout = w  # Change the standard output to the file we created.
-         print("AMOUNT: "+str(amount))
-         print("DRAW_PILE: "+str(len(gamestate.draw_pile)))
-         print("DISCARD_PILE: " + str(len(gamestate.discard_pile)))
-         print("LEFT: " + str(left))
-         print("hand: " + str(len(newstate.hand)))
-         #if len(newstate.draw_pile) == 0:
-         # add discard_pile to draw_pile
-            #newstate.draw_pile = copy.deepcopy(newstate.discard_pile)
-         # reset the discard_pile
-            #newstate.discard_pile.clear()
-         #print("After: ")
-         #print("DRAW_PILE: "+str(len(newstate.draw_pile)))
-         #print("DISCARD_PILE: " + str(len(newstate.discard_pile)))
-         #for card in newstate.draw_pile:
-         #    print("cardname : " + str(card.name))
 
-         #print("LEFT: " + str(left))
-         #print("hand: " + str(len(newstate.hand)))
-         print("NEXT")
-         print(" ")
-         sys.stdout = original_stdout_14  # Reset the standard output to its original value
-    """
+
     return newstate
 
 def upgrade(card):
