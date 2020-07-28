@@ -382,6 +382,7 @@ class SimpleAgent:
                             with open('MLD.txt', 'w') as f:
                                 sys.stdout = f
                                 print(node.name.decision[0])
+                                print(type(node.name.decision[0]))
                             sys.stdout = original_stdout
                             return node.name.decision[0]
                         else:
