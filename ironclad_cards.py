@@ -187,7 +187,7 @@ def addcard(gamestate, name, pile, cardobj = False):
     newstate = gamestate
     #newcard = card(name, name, card_type, "", upgrades=0, has_target=False, cost=0, uuid="", misc=0, price=0, is_playable=False, exhausts=False):
     newcard = Card(name = name, upgrades = 0, cost = cards[name][0], card_id = 'temp', card_type = 1, rarity = 'temp')
-    if isinstance(cardobj,bool):
+    if isinstance(cardobj, bool):
         newcard = cardobj
     if pile == 'discard_pile':
         newstate.discard_pile.append(newcard)
