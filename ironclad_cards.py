@@ -82,43 +82,57 @@ def dealdmg(gamestate, damage, monster, attacknum = 1):
             #round down
             damage = math.floor(damage * 0.75)
 
+    #debugging
+    original_stdout = sys.stdout
+    with open('dealdmg.txt', 'w') as f:
+        sys.stdout = f
+        print('param monster = ' + str(monster))
+        for index, object in enumerate(newstate.monsters):
+            print('index = ' + str(index) +' monster = ' + object.name)
+    sys.stdout = original_stdout
 
 
-    if len(gamestate.monsters) != 0:
-        for pmonster in newstate.monsters[monster].powers:
-            if pmonster.power_name == "Vulnerable":
-                #round down
-                damage = math.floor(damage * 1.5)
+    for pmonster in newstate.monsters[monster].powers:
+        if pmonster.power_name == "Vulnerable":
+            #round down
+            damage = math.floor(damage * 1.5)
 
-        #rage 0 cost Whenever you play an Attack this turn, gain 3 Block
-        for p_player in newstate.player.powers:
-            if p_player.power_name == "Rage":
-                newstate = addblock(newstate, p_player.amount)
+    #rage 0 cost Whenever you play an Attack this turn, gain 3 Block
+    ####
 
-        #double tap  This turn, your next 1(2) Attack is played twice.
-        for power_player in newstate.player.powers:
-            if power_player.power_name == "Double Tap":
-                attacknum = attacknum+attacknum
-                power_player.amount = power_player.amount - 1
-                if power_player.amount == 0:
-                    del power_player
+    ### THIS SHOULD NOT BE HERE, Attack refers to the type of card, not damage dealt
 
-        for x in range(attacknum):
-        #need to check block. if block is existed, reduce block. Not the HP
-            if newstate.monsters[monster].block > 0 :
-                if newstate.monsters[monster].block < damage:
-                    # remain
-                    left = damage - newstate.monsters[monster].block
+    ###
+    # for p_player in newstate.player.powers:
+    #     if p_player.power_name == "Rage":
+    #         newstate = addblock(newstate, p_player.amount)
 
-                    newstate.monsters[monster].block = 0
-                    newstate.monsters[monster].current_hp -= left
-                    if newstate.monsters[monster].current_hp <= 0:
-                        del newstate.monsters[monster]
+    #double tap  This turn, your next 1(2) Attack is played twice.
+    for power_player in newstate.player.powers:
+        if power_player.power_name == "Double Tap":
+            attacknum = attacknum+attacknum
+            power_player.amount = power_player.amount - 1
+            if power_player.amount == 0:
+                newstate.player.powers.remove(power_player)
 
-            else:
-                newstate.monsters[monster].current_hp -= damage
-                if newstate.monsters[monster].current_hp <= 0:
-                    del newstate.monsters[monster]
+    for x in range(attacknum):
+    #need to check block. if block is existed, reduce block. Not the HP
+        if newstate.monsters[monster].block > 0 :
+            if newstate.monsters[monster].block < damage:
+                # remain
+                left = damage - newstate.monsters[monster].block
+
+                newstate.monsters[monster].block = 0
+                newstate.monsters[monster].current_hp -= left
+                # if newstate.monsters[monster].current_hp <= 0:
+                #     newstate.monsters.remove(newstate.monsters[monster])
+                #     return newstate
+
+        else:
+            newstate.monsters[monster].current_hp -= damage
+            # if newstate.monsters[monster].current_hp <= 0:
+                # newstate.monsters.remove(newstate.monsters[monster])
+                # return newstate
 
     return newstate
 
@@ -153,7 +167,7 @@ def player_take_damage(gamestate):
     # only this turn
     for player_power in newstate.player.powers:
         if player_power.power_name == "Flame Barrier":
-            del player_power
+            newstate.player.powers.remove(player_power)
 
     return newstate
 
@@ -1658,7 +1672,7 @@ def Second_Wind(gamestate, Upgrade):
             if card.type != CardType.ATTACK:
                 count_non_attack += 1
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
-                del card
+                newstate.hand.remove(card)
         newstate.player.block = newstate.player.block + (7*count_non_attack)
     else:
         #Exhaust all non-Attack Cards in your hand.
@@ -1668,7 +1682,7 @@ def Second_Wind(gamestate, Upgrade):
             if card.type != CardType.ATTACK:
                 count_non_attack += 1
                 newstate = addcard(newstate, card.name, 'exhaust_pile')
-                del card
+                newstate.hand.remove(card)
         newstate.player.block = newstate.player.block + (5*count_non_attack)
 
     return newstate
@@ -1715,7 +1729,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
         for card in newstate.hand:
             if card.type != CardType.ATTACK:
                 newstate = addcard(newstate, card.name, 'exhaust_pile', card)
-                del card
+                newstate.hand.remove(card)
         #Deal 20 Damage
         newstate = dealdmg(newstate, 20, hitmonster)
     else:
@@ -1723,7 +1737,7 @@ def Sever_Soul(gamestate, hitmonster, Upgrade):
         for card in newstate.hand:
             if card.type != CardType.ATTACK:
                 newstate = addcard(newstate, card.name, 'exhaust_pile', card)
-                del card
+                newstate.hand.remove(card)
         # Deal 16 damage.
         newstate = dealdmg(newstate, 16, hitmonster)
     return newstate
@@ -1843,14 +1857,14 @@ def True_Grit(gamestate, hitmonster, Upgrade):
         #Exhaust a random card from your hand
         x = random.randrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile', newstate.hand[x])
-        del newstate.hand[x]
+        newstate.hand.remove(newstate.hand[x])
     else:
         #Gain 7 Block
         newstate = addblock(newstate, 7)
         #Exhaust a random card from your hand
         x = random.randrange(len(hand))
         newstate = addcard(newstate, newstate.hand[x].card.name, 'exhaust_pile', newstate.hand[x])
-        del newstate.hand[x]
+        newstate.hand.remove(newstate.hand[x])
 
     return newstate
 
