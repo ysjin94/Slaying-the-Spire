@@ -61,6 +61,8 @@ def eval_function(gamestate):
         eval += 200
     else:
         for m in gamestate.monsters:
+            if m.current_hp < 0:
+                m.current_hp = 0
             eval -= m.current_hp
             eval -= (m.move_adjusted_damage * m.move_hits)
             for mpower in gamestate.player.powers:
@@ -378,15 +380,9 @@ class SimpleAgent:
                 if node in r.children:
                     if node.name.grade == r.name.grade:
                         if not node.children:
-                            original_stdout = sys.stdout
-                            with open('MLD.txt', 'w') as f:
-                                sys.stdout = f
-                                print(node.name.decision[0])
-                                print(type(node.name.decision[0]))
-                            sys.stdout = original_stdout
                             return node.name.decision[0]
                         else:
-                            self.max_leaf_decision(node)
+                            return self.max_leaf_decision(node)
 
     def change_class(self, new_class):
         self.chosen_class = new_class
@@ -414,28 +410,64 @@ class SimpleAgent:
                 potion_action = self.use_next_potion()
                 if potion_action is not None:
                     return potion_action
+            original_stdout = sys.stdout
+            with open('before get_play_card_action.txt', 'a') as f:
+                sys.stdout = f
+                for c in self.game.hand:
+                    print(c.name + c.uuid)
+            sys.stdout = original_stdout
 
             pca = self.get_play_card_action()
+            #pca returns simulated objects, need to convert them to the real objects
 
             #end turn should be the only string
             original_stdout = sys.stdout
             with open('PCA.txt', 'w') as f:
                 sys.stdout = f
                 print(pca)
+                print(len(pca))
             sys.stdout = original_stdout
             if isinstance(pca, str):
                 return EndTurnAction()
+
+            #simple play the card in pca[0]
             else:
                 if len(pca) == 1:
-                    return PlayCardAction(pca[0])
+                    original_stdout = sys.stdout
+                    with open('simcard vs cards.txt', 'a') as f:
+                        sys.stdout = f
+                        print('card to play = ' + pca[0].name + pca[0].uuid)
+                        for c in self.game.hand:
+                            print(c.name + c.uuid)
+                    sys.stdout = original_stdout
+                    for c in self.game.hand:
+                        if c.uuid == pca[0].uuid:
+                            return PlayCardAction(c)
+
                 #if card needs a target(s)
-                #format card, target or special
-                if len(pca) == 2:
-                    return PlayCardAction(card = pca[0], target_monster = pca[1])
+                #format pca[0] card, pca[1] target index
+                if (len(pca) == 2) and (isinstance(pca[1], int)):
+                    for c in self.game.hand:
+                        if c.uuid == pca[0].uuid:
+                            return PlayCardAction(card = c, target_monster = self.game.monsters[pca[1]])
+
+                #else format is pca[0] is the card to play
+                #pca[1] is the second Action to do
+                #pca[1][0] is the monster target index, can have 'No Monster Target'
+                #pca[1][1] is the card to be selected, can have 'No Card Target'
                 else:
-                    #special
-                    #card and queue choose_card_action
-                    return DoubleAction([pca[0],pca[1]])
+                    for c in self.game.hand:
+                        if c.uuid == pca[0].uuid:
+                            pca[0] = c
+                    #converting monster index to object
+                    if isinstance(pca[1][0],int):
+                        pca[1][0] = self.game.monsters[pca[1][0]]
+                    #convert sim card object to real card
+                    if not (pca[1][1] == 'No Card Target'):
+                        for c in self.game.hand + self.game.draw_pile + self.game.discard_pile + self.game.exhaust_pile:
+                            if c.uuid == pca[1][1].uuid:
+                                pca[1][1] = c
+                                return DoubleAction([pca[0],pca[1]])
 
         if self.game.end_available:
             return EndTurnAction()
@@ -498,11 +530,6 @@ class SimpleAgent:
         #         print("%s%s" % (pre, node.name.hand))
         # sys.stdout = original_stdout
 
-        original_stdout = sys.stdout
-        with open('MLDPCA.txt', 'w') as f:
-            sys.stdout = f
-            print(self.max_leaf_decision(root))
-        sys.stdout = original_stdout
         return self.max_leaf_decision(root)
 
     def use_next_potion(self):
