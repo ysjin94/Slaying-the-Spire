@@ -4,3 +4,4 @@ Changed the  agent.py to be dumb
 - is_monster_attacking()
     swapped True and False
     
+Replace agent.py to apply Dumb_AI
