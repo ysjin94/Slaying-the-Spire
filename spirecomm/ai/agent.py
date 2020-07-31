@@ -523,12 +523,12 @@ class SimpleAgent:
         build_tree(root)
         eval_tree(root)
         tree_search(root)
-        # original_stdout = sys.stdout
-        # with open('tree.txt', 'a') as f:
-        #     sys.stdout = f
-        #     for pre, fill, node in RenderTree(root):
-        #         print("%s%s" % (pre, node.name.hand))
-        # sys.stdout = original_stdout
+        original_stdout = sys.stdout
+        with open('tree.txt', 'a', encoding='utf8') as f:
+            sys.stdout = f
+            for pre, fill, node in RenderTree(root):
+                print("%s%s" % (pre, node.name.decision))
+        sys.stdout = original_stdout
 
         return self.max_leaf_decision(root)
 

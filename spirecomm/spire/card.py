@@ -33,6 +33,9 @@ class Card:
         self.is_playable = is_playable
         self.exhausts = exhausts
 
+    def __repr__(self):
+        return self.name
+
     @classmethod
     def from_json(cls, json_object):
         return cls(
