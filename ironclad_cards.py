@@ -668,6 +668,7 @@ def start_of_turn(gamestate):
             newstate.player.energy = newstate.player.energy + player_power.amount
         else:
             newstate.player.energy = 3
+            raise Exception('energy reset')
 
     #at the start of your turn, Block no longer expires
     # else do reset the block
