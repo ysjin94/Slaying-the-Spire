@@ -1,4 +1,5 @@
 import math
+import random
 
 class Priority:
 
@@ -49,6 +50,10 @@ class Priority:
             4: self.MAP_NODE_PRIORITIES_3  # Doesn't really matter anyway
         }
 
+    def choosen_randomly(self, card_list):
+        x = random.randrange(len(card_list))
+        return card_list[x]
+        
     def get_best_card(self, card_list):
         return min(card_list, key=lambda x: self.CARD_PRIORITIES.get(x.card_id, math.inf) - 0.5 * x.upgrades)
 
