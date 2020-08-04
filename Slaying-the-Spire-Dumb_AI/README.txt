@@ -6,4 +6,4 @@ Changed the  agent.py to be dumb
 - all target monster choosen randomly.
 - all card choosen randomly
 
-Replace agent.py to apply Dumb_AI
+Replace "agent.py", and "priorities.py" to apply Dumb_AI
