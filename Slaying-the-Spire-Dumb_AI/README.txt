@@ -7,3 +7,4 @@ Changed the  agent.py to be dumb
 - all card choosen randomly
 
 Replace "agent.py", and "priorities.py" to apply Dumb_AI
+test
