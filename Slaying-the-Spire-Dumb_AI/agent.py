@@ -129,7 +129,7 @@ class SimpleAgent:
                 target = self.get_random_monster()
             else:
                 #target = self.get_low_hp_target()
-                target = get_random_monster()
+                target = self.get_random_monster()
                 
             return PlayCardAction(card=card_to_play, target_monster=target)
         else:
