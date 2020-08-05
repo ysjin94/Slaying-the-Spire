@@ -118,7 +118,7 @@ class SimpleAgent:
         #    card_to_play = self.priorities.get_best_card_to_play(zero_cost_attacks)
         #else:
             # This shouldn't happen!
-            return EndTurnAction()
+            # return EndTurnAction()
             
         if card_to_play.has_target:
             available_monsters = [monster for monster in self.game.monsters if monster.current_hp > 0 and not monster.half_dead and not monster.is_gone]
